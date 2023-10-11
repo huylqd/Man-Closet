@@ -62,7 +62,7 @@ const Header = () => {
           <div className="section_container flex gap-y-4 md:gap-y-0 flex-row md:items-center justify-between">
             <div className="flex justify-between items-center">
               <div className="flex items-center md:hidden mr-4">
-                <Menu className="w-5 h-5"/>
+                <Menu className="w-5 h-5 cursor-pointer"/>
               </div>
               <div>
                 <Link href={"/"}>
@@ -75,14 +75,14 @@ const Header = () => {
             </div>
             <div className="flex items-center gap-x-4">
               <ActionTooltip label="Tìm kiếm" side="top" align="center">
-                <div className="group hover:bg-zinc-900 rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
-                  <Search className="w-5 h-5  transition group-hover:text-white" />
+                <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
+                  <Search className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
                 </div>
               </ActionTooltip>
               <div className="hidden md:block">
                 <ActionTooltip label="Tài khoản" side="top" align="center">
-                  <div className="group hover:bg-zinc-900 rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
-                    <User className="w-5 h-5 group-hover:text-white transition" />
+                  <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
+                    <User className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
                   </div>
                 </ActionTooltip>
               </div>

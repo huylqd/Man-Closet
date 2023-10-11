@@ -1,4 +1,6 @@
 .grid_view{
+  margin-left: var(--ml);
+
   & > a,
   & > div {
     width: calc((100% / 1) - var(--ml));

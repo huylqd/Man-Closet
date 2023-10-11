@@ -8,7 +8,7 @@ import { BannerCarousel } from "@/components/carousel";
 
 const Home = () => {
   return (
-    <div className="pb-10">
+    <div>
       <section>
         <BannerCarousel/>
       </section>
@@ -24,7 +24,7 @@ const Home = () => {
       <section className="pt-10 md:py-16">
         <ImgProductBanner/>
       </section>
-      <section className="section_container">
+      <section className="section_container pt-10 md:py-16">
         <GridProduct/>
       </section>
     </div>

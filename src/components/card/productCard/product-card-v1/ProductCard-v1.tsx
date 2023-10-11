@@ -34,7 +34,6 @@ const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
   const dynamicStyles = {
     "--ml": marginLeft,
   } as React.CSSProperties;
-  console.log(dynamicStyles);
   return (
     <Link
       href={href}

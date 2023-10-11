@@ -43,9 +43,9 @@ const Banner = ({
 
 const GridProduct = () => {
   return (
-    <div>
+    <div className="py-16">
       <div>
-        <TitleDivide title="Sản Phẩm Trending" align="center" />
+        <TitleDivide title="Sản Phẩm Trending" align="center" /> 
       </div>
       <div>
         <GridView className="py-3 gap-y-6" marginLeft="30px" wrap previews={4}>
@@ -53,7 +53,7 @@ const GridProduct = () => {
             <ProductCardV1 key={uuidv4()} data={item} marginLeft="30px" />
           ))}
         </GridView>
-        <div className="flex md:flex-row flex-col gap-4 md:gap-6 py-4">
+        <div className="flex md:flex-row flex-col gap-4 md:gap-6 md:py-10 py-6">
           {bannerData.map((item) => (
             <div className="flex-1" key={uuidv4()}>
               <Banner {...item} />
