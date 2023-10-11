@@ -1,0 +1,49 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import Image, { StaticImageData } from "next/image";
+import style from "./contentCard.module.scss";
+
+interface Data {
+  imageUrl: string | StaticImageData;
+  title: string;
+  sub: string;
+}
+
+interface ContentCardProps {
+  data: Data;
+  marginLeft?: number;
+}
+
+const ContentCard = ({ data, marginLeft = 0 }: ContentCardProps) => {
+  const { title, imageUrl, sub } = data || {};
+  const marginLeftStyle = {
+    "--mr-left": marginLeft > 0 ? `${marginLeft}px` : 0 + "px",
+  } as React.CSSProperties;
+  return (
+    <div
+      style={marginLeftStyle}
+      className={cn(
+        style.content_card,
+        "bg-white dark:bg-zinc-900 p-8 shadow-sm rounded overflow-hidden flex flex-col gap-4"
+      )}
+    >
+      <div className="relative w-full h-[60px] md:h-[80px]">
+        <Image
+          src={imageUrl}
+          layout="fill"
+          style={{ objectFit: "contain" }}
+          alt="image"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <h3 className="text-center text-md md:text-lg lg:text-xl font-medium">
+          {title}
+        </h3>
+        <p className="ff-secondary text-sm md:text-base">{sub}</p>
+      </div>
+    </div>
+  );
+};
+
+export default ContentCard;
