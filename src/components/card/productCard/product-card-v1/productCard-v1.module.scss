@@ -1,5 +1,5 @@
 .product_card{
-  width: calc((100% / var(--view) - var(--ml)));
+  width: calc((100% / 1) - var(--ml));
   margin-left: var(--ml);
 
   .name{

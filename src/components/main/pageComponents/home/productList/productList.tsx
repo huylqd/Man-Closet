@@ -7,12 +7,12 @@ import { v4 as uuidv4 } from "uuid";
 import { ProductCardV1 } from "@/components/card";
 import { SwiperSlide } from "swiper/react";
 
-
 // css
 import "swiper/css";
 import "swiper/css/pagination";
 import TitleDivide from "@/components/titleDivide";
 import { BasicCarousel } from "@/components/carousel";
+import { GridView } from "@/components/dataViews";
 
 // type
 interface ProductListProps {
@@ -44,18 +44,16 @@ const ProductList = ({ title, data }: ProductListProps) => {
         </ul>
       </div>
       <div className="py-4">
-        <div className="hidden md:flex flex-wrap gap-y-20 ml-[-40]">
+        <GridView marginLeft="40px" previews={4} wrap className="gap-y-6">
           {data.map((item) => (
             <ProductCardV1
               key={uuidv4()}
               data={item}
-              marginLeft={40}
-              previews={4}
+              marginLeft="40px"
             />
           ))}
-        </div>
-
-        <div className="block md:hidden">
+        </GridView>
+        <div className="block sm:hidden">
           <BasicCarousel previews={1}>
             {data.map((item) => (
               <SwiperSlide key={uuidv4()}>

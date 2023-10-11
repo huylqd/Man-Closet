@@ -13,10 +13,10 @@ const Home = () => {
         <BannerCarousel/>
       </section>
       <section className="pt-10 md:py-16 section_container">
-        <ProductCarousel title="Sản phẩm đặc sắc" data={productCarouselData}/>
+        <ProductCarousel title="Sản Phẩm Đặc Sắc" data={productCarouselData}/>
       </section>
       <section className="pt-10 md:py-16 section_container">
-        <ProductList title="Sản phẩm mới nhất" data={productCarouselData}/>
+        <ProductList title="Sản Phẩm Mới Nhất" data={productCarouselData}/>
       </section>
       <section className="pt-10 md:py-16 section_container">
         <OfferList/>

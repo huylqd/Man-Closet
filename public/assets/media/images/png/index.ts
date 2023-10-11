@@ -5,6 +5,7 @@ import _24hService from "./24-hours-service.png";
 import DemoProduct from "./demo-product.png";
 import SaleClock from "./waste.png";
 import WishList from "./list.png";
+import Trending from "./trending.png";
 
 export {
   ShipCar,
@@ -14,4 +15,5 @@ export {
   DemoProduct,
   SaleClock,
   WishList,
+  Trending,
 };

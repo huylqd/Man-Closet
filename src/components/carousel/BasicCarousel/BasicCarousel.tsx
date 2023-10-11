@@ -26,7 +26,7 @@ const BasicCarousel = ({previews, children}: BasicCarousel) => {
           clickable: true,
         }}
         breakpoints={{
-          500: {
+          520: {
             slidesPerView: 2,
             spaceBetween: 20,
           },

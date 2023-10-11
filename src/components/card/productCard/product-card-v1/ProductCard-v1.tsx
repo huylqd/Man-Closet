@@ -25,21 +25,16 @@ interface Data {
 
 interface ProductCardV1Props {
   data: Data;
-  previews?: number;
-  marginLeft?: number;
+  marginLeft?: string;
 }
 
-const ProductCardV1 = ({
-  data,
-  previews = 1,
-  marginLeft = 0,
-}: ProductCardV1Props) => {
+const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
   const { href = "#", imageUrl, name, price } = data || {};
   const priceFormatted = useCurrency(price);
   const dynamicStyles = {
-    "--ml": `${marginLeft}px`,
-    "--view": previews,
+    "--ml": marginLeft,
   } as React.CSSProperties;
+  console.log(dynamicStyles);
   return (
     <Link
       href={href}
