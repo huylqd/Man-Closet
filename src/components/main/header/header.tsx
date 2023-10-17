@@ -82,7 +82,10 @@ const Header = () => {
               <div className="hidden md:block">
                 <ActionTooltip label="Tài khoản" side="top" align="center">
                   <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
+                    <Link href={"/auth"}>
                     <User className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
+                    </Link>
+                   
                   </div>
                 </ActionTooltip>
               </div>
