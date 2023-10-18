@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={cn(font.className, "bg-slate-50 dark:bg-zinc-800 relative")}>
+    <html lang="en" >
+      <body className={cn(font.className, "bg-slate-50 dark:bg-zinc-800 relative ")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
