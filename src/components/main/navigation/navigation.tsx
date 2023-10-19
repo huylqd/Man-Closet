@@ -16,15 +16,15 @@ const Navigation = () => {
         <li className="text-sm md:text-base font-normal text-zinc-800 dark:text-white">
           <Link className=" dark:text-white transition" href={"/"}>
             Home
-          </Link>
+          </Link> 
         </li>
         <li className="text-sm md:text-base font-normal text-zinc-800 dark:text-white ">
-          <Link className=" dark:text-white transition" href={"/"}>
+          <Link className=" dark:text-white transition" href={"/shop"}>
             Shop
           </Link>
         </li>
         <li className="text-sm md:text-base font-normal text-zinc-800 dark:text-white ">
-          <Link className=" dark:text-white transition" href={"/"}>
+          <Link className=" dark:text-white transition" href={"/contact"}>
             Contact
           </Link>
         </li>
