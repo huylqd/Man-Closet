@@ -1,12 +1,23 @@
+'use client'
 import { BannerV2 } from '@/components/banner'
 import { ShopList } from '@/components/main/pageComponents/shoplist'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { productCarouselData } from '../demo.data'
 import { categoryCarouselData } from '../demo.data'
 import TitleDivide from '@/components/titleDivide'
 import Category from '@/components/main/pageComponents/shoplist/category/Category'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { getAll } from '@/services/products/product'
+import { IProduct, IProductResponse } from '@/interfaces/product'
 const Product = () => {
+  const [product, setProduct] = useState<IProductResponse>();
+
+  useEffect(() => {
+
+    getAll().then((data: any) => setProduct(data.data))
+  }, [])
+  console.log(product);
+
   return (
     <div>
       <section>
@@ -27,7 +38,7 @@ const Product = () => {
 
           </div>
           <div className='flex-auto w-4/6 ml-2'>
-            <ShopList title='Product All' data={productCarouselData} />
+            <ShopList title='Product All' data={product?.data} />
             {/* Pagination demo */}
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
               <div className="flex flex-1 justify-between sm:hidden">
