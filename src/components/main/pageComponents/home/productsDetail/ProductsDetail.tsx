@@ -6,7 +6,7 @@ const ProductsDetail = () => {
   return (
     <div className='flex flex-col justify-between lg:flex-row gap-16 lg:items-center p-12'>
             <div className='flex flex-col gap-6 lg:w-2/4'>
-                <img  alt="" className='w-96 h-96 aspect-square object-cover rounded-xl' src='https://xuconcept.com/wp-content/uploads/2021/03/chup-hinh-quan-ao.jpg'/>
+                <img  alt="" className='w-full h-80 aspect-square object-cover rounded-xl' src='https://xuconcept.com/wp-content/uploads/2021/03/chup-hinh-quan-ao.jpg'/>
                 <div className='flex flex-row justify-between h-24'>
                     <img  alt="" className='w-24 h-24 rounded-md cursor-pointer' />
                     <img alt="" className='w-24 h-24 rounded-md cursor-pointer' />
