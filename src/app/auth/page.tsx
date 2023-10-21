@@ -6,13 +6,13 @@ import React from 'react'
 const Auth = () => {
   return (
     <div >
-       
-          <section>
-              <AuthForm/>
-          </section>
-        
 
-        
+      <section>
+        <AuthForm />
+      </section>
+
+
+
 
 
     </div>

@@ -2,5 +2,7 @@ import ProductList from "@/components/main/pageComponents/home/productList/produ
 import OfferList from "./offerList/OfferList";
 import ProductCarousel from "./productCarousel/ProductCarousel";
 import GridProduct from "./gridProduct/gridProduct";
-
-export { ProductList, OfferList, ProductCarousel, GridProduct };
+import ProductsDetail from "./productsDetail/ProductsDetail";
+import Descriptions from "./descriptions/Descriptions";
+import Related from "./related/Related";
+export { ProductList, OfferList, ProductCarousel, GridProduct, ProductsDetail, Descriptions, Related };
