@@ -7,7 +7,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-white dark:bg-zinc-900">
+    <footer className="bg-white dark:bg-zinc-900 border-t-2 ">
       <div className="section_container">
         <div className="py-16 border-b flex flex-col-reverse md:flex-row gap-6">
           <div className="flex grow-[2] flex-col gap-y-4">
