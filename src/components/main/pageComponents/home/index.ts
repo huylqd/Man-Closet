@@ -5,4 +5,6 @@ import GridProduct from "./gridProduct/gridProduct";
 import ProductsDetail from "./productsDetail/ProductsDetail";
 import Descriptions from "./descriptions/Descriptions";
 
-export { ProductList, OfferList, ProductCarousel, GridProduct , ProductsDetail ,Descriptions };
+export { ProductList, OfferList, ProductCarousel, GridProduct, ProductsDetail, Descriptions };
+
+

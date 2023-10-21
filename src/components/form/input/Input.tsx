@@ -23,7 +23,7 @@ const Input: React.FC<IputProp> = ({
   return (
     <div>
       <label
-        className="block text-sm font-medium leading-6 text-gray-900"
+        className="block text-sm font-medium leading-6 text-gray-900 dark:text-black"
         htmlFor={id}
       >
         {label}
@@ -33,11 +33,12 @@ const Input: React.FC<IputProp> = ({
           id={id}
           type={type}
           autoComplete={id}
-          
+
           {...register(id, { required })}
           className={clsx(
             `
-
+            dark:bg-white
+            
             form-input
             block
             w-full
