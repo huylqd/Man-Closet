@@ -1,8 +1,15 @@
+
 import React from 'react'
 import ProductsDetail from '@/components/main/pageComponents/home/productsDetail/ProductsDetail'
 import { Descriptions, Related } from '@/components/main/pageComponents/home'
-import { productCarouselData } from '../(home)/demo.data'
-const page = () => {
+import { productCarouselData } from '../../(home)/demo.data'
+import axios from 'axios'
+import { useParams } from 'next/navigation'
+
+
+
+const Detail  =  () => {
+ 
   return (
     <section className=' section_container'>
       <section>
@@ -20,4 +27,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Detail
