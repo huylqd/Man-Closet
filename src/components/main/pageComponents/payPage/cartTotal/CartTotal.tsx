@@ -1,8 +1,38 @@
-"use cilent"
+"use client"
 import { Button } from '@/components/ui/button'
 import React from 'react'
+import instance from '@/services/instance'
+import { useRouter } from 'next/navigation'
+
 
 const CartTotal = () => {
+
+  // function payment() {
+  //   const res = instance.post('/create_payment_url')
+  //   return res
+  // }
+  const router = useRouter()
+  const payment = async () => { 
+    const body = {
+      amount: '1000000',
+      bankCode: '',
+      language: 'vn'
+    }
+    try {
+      const response = await instance.post('order/create_payment_url', body);
+      if( response.status === 200 ) {
+        router.push(response.data)
+      }
+      console.log('test', response);
+      
+      return response;
+    } catch (error) {
+      console.error('Error', error);
+      
+      throw error; 
+    }
+  }
+  
   return (
     <div className="flex flex-col w-full  h-fit gap-4 p-4 mt-[30px]">
         <p className="text-blue-900 text-xl font-extrabold">Caculate Shopping</p>
@@ -25,9 +55,9 @@ const CartTotal = () => {
               <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Shipping & taxes calculated at checkout</label>
             </div>
             <div className="flex gap-2">
-            <Button variant={'primary'} className="transition-colors text-sm p-2 rounded-sm w-full text-white text-hover shadow-md">
+            <Button onClick={() => {payment()}} variant={'primary'} className="transition-colors text-sm p-2 rounded-sm w-full text-white text-hover shadow-md">
             Processd To Checkout 
-                </Button>
+            </Button>
                  
             </div>
         </div>
