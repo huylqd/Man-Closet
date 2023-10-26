@@ -12,7 +12,7 @@ const page = () => {
         <Descriptions />
       </section>
       <section>
-        <Related title='Related Products'  data={productCarouselData}  />
+        <Related title='Related Products' data={productCarouselData} />
       </section>
 
     </section>

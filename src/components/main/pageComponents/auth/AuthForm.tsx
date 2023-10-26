@@ -49,7 +49,8 @@ const AuthForm = () => {
       //  Register
       try {
         await signUp(data).then(() => {
-          alert("Thanh cong")
+          alert("Thanh cong");
+
         });
 
       } catch (error: any) {

@@ -21,7 +21,7 @@ const Product = () => {
   return (
     <div>
       <section>
-        <BannerV2 title='Shop List' description='Shop List' subTitle='Home . Shop' />
+
       </section>
       <section className="pt-10 md:py-16 section_container ">
         <div className="flex flex-row items-start	">
