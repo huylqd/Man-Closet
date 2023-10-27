@@ -45,11 +45,11 @@ const GridProduct = () => {
   return (
     <div className="py-16">
       <div>
-        <TitleDivide title="Sản Phẩm Trending" align="center" /> 
+        <TitleDivide title="Sản Phẩm Trending" align="center" />
       </div>
       <div>
         <GridView className="py-3 gap-y-6" marginLeft="30px" wrap previews={4}>
-          {trendingProducts.map((item) => (
+          {trendingProducts.map((item: any) => (
             <ProductCardV1 key={uuidv4()} data={item} marginLeft="30px" />
           ))}
         </GridView>
