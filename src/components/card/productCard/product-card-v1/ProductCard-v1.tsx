@@ -30,7 +30,7 @@ interface ProductCardV1Props {
 }
 
 const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
-  const { properties, productName, price } = data || {};
+  const { properties, productName, price, _id } = data || {};
   const priceFormatted = useCurrency(price);
   const dynamicStyles = {
     "--ml": marginLeft,
@@ -66,14 +66,22 @@ const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
           {priceFormatted}
         </h4>
         <div className="flex items-center justify-center gap-y-2 flex-col">
-          <Button variant={"bordered"} className="grow w-full">
-            <span>Chi tiết</span>
-            <ZoomInIcon className="w-4 h-4" />
-          </Button>
-          <Button variant={"primary"} className="grow w-full">
-            <span>Thêm vào</span>
-            <ShoppingCart className="w-4 h-4" />
-          </Button>
+          <Link href={`shop/detail/${_id}`} className="w-full">
+            <Button variant={"bordered"} className="grow w-full">
+
+              <span>Chi tiết</span>
+
+
+              <ZoomInIcon className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href="/paypage" className="w-full">
+
+            <Button variant={"primary"} className="grow w-full">
+              <span>Thêm vào</span>
+              <ShoppingCart className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </Link>
