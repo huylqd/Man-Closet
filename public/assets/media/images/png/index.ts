@@ -7,6 +7,7 @@ import SaleClock from "./waste.png";
 import WishList from "./list.png";
 import Trending from "./trending.png";
 import BannerForm from './banner-form.jpg'
+import Banner1 from './Pet.png'
 export {
   ShipCar,
   CashOnDelivery,
@@ -16,5 +17,6 @@ export {
   SaleClock,
   WishList,
   Trending,
-  BannerForm
+  BannerForm,
+  Banner1,
 };

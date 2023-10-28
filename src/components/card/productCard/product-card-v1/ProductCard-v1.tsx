@@ -13,6 +13,7 @@ import { Heart, ShoppingCart, ZoomInIcon } from "lucide-react";
 
 // css
 import style from "./productCard-v1.module.scss";
+import { IProduct } from "@/interfaces/product";
 
 // type
 interface Data {
@@ -24,19 +25,19 @@ interface Data {
 }
 
 interface ProductCardV1Props {
-  data: Data;
+  data: IProduct;
   marginLeft?: string;
 }
 
 const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
-  const { href = "#", imageUrl, name, price } = data || {};
+  const { properties, productName, price, _id } = data || {};
   const priceFormatted = useCurrency(price);
   const dynamicStyles = {
     "--ml": marginLeft,
   } as React.CSSProperties;
   return (
     <Link
-      href={href}
+      href={''}
       style={dynamicStyles}
       className={cn(
         style.product_card,
@@ -50,7 +51,7 @@ const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
           </div>
         </ActionTooltip>
         <Image
-          src={imageUrl}
+          src={properties?.[0]?.imageUrl}
           layout="fill"
           objectFit="cover"
           alt="anh san pham"
@@ -59,20 +60,28 @@ const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
       </div>
       <div className="p-4 flex flex-col gap-y-4">
         <h4 className={cn(style.name, "text-base md:text-md font-medium")}>
-          {name}
+          {productName}
         </h4>
         <h4 className="text-base md:text-md font-medium text-center">
           {priceFormatted}
         </h4>
         <div className="flex items-center justify-center gap-y-2 flex-col">
-          <Button variant={"bordered"} className="grow w-full">
-            <span>Chi tiết</span>
-            <ZoomInIcon className="w-4 h-4" />
-          </Button>
-          <Button variant={"primary"} className="grow w-full">
-            <span>Thêm vào</span>
-            <ShoppingCart className="w-4 h-4" />
-          </Button>
+          <Link href={`shop/detail/${_id}`} className="w-full">
+            <Button variant={"bordered"} className="grow w-full">
+
+              <span>Chi tiết</span>
+
+
+              <ZoomInIcon className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href="/paypage" className="w-full">
+
+            <Button variant={"primary"} className="grow w-full">
+              <span>Thêm vào</span>
+              <ShoppingCart className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </Link>

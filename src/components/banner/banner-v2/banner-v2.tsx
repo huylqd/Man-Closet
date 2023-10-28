@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 interface BannerV2Props {
- 
- 
+
+
   subTitle?: string;
   title?: string;
   description?: string;
@@ -17,29 +17,29 @@ const BannerV2 = ({
   description,
 }: BannerV2Props) => {
   return (
-    <div className="relative w-full h-[200px] md:h-[200px] bg-zinc-300  text-zinc-800" >
-     
+    <div className="relative w-full h-[200px] md:h-[200px] bg-zinc-300  text-zinc-800 bg-[url('/img/hero-pattern.svg')]" >
+
       <div
         className={cn(
           "section_container h-full flex flex-col justify-center content-center gap-4 md:gap-6"
         )}
       >
-       
+
         <h2 className="text-3xl  font-sans md:text-5xl tracking-wider max-w-2xl leading-snug font-semibold drop-shadow  text-zinc-800	">
           {title}
         </h2>
         <h4 className="text-lg md:text-xl drop-shadow font-medium  text-zinc-800 ">
-          {subTitle} . <span  className="text-lg md:text-xl ff-secondary
+          {subTitle} . <span className="text-lg md:text-xl ff-secondary
           underline
           font-medium drop-shadow-sm max-w-2xl  text-zinc-600 ">
-          {description}
+            {description}
           </span>
         </h4>
-   
-       
-      
-         
-        </div>
+
+
+
+
+      </div>
     </div>
   );
 };
