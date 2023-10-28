@@ -20,7 +20,7 @@ const ProductsDetail = () => {
     }, [])
     // console.log(detail);
 
-    const imgRef = useRef(null)
+    const imgRef = useRef<any>()
     const setImgPreview = (imageUrl: any) => {
         imgRef.current.src = imageUrl
     }
@@ -40,7 +40,8 @@ const ProductsDetail = () => {
                 </div>
             </div>
             {/* ABOUT */}
-            <div className='flex flex-col gap-4 lg:w-2/4'>
+            <form action="" className='flex flex-col gap-4 lg:w-2/4'>
+           
                 <div className="md:flex-1 px-4">
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{detail.productName}</h2>
                     <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
@@ -59,10 +60,18 @@ const ProductsDetail = () => {
                     <div className="mb-4">
                         <span className="font-bold text-gray-700 dark:text-gray-300">Select Color:</span>
                         <div className="flex items-center mt-2">
-                            <button className="w-6 h-6 rounded-full bg-gray-800 dark:bg-gray-200 mr-2"></button>
-                            <button className="w-6 h-6 rounded-full bg-red-500 dark:bg-red-700 mr-2"></button>
-                            <button className="w-6 h-6 rounded-full bg-blue-500 dark:bg-blue-700 mr-2"></button>
-                            <button className="w-6 h-6 rounded-full bg-yellow-500 dark:bg-yellow-700 mr-2"></button>
+                        {detail.properties?.map((url: any) => {
+                                return (
+                                    <button className="w-6 h-6 rounded-full bg-gray-800 dark:bg-gray-200 mr-2" style={
+                                        {
+                                            backgroundColor: url?.color
+                                        }
+                                    }></button>
+                                )
+                            })}
+                          
+                           
+                           
                         </div>
                     </div>
                     <div className="mb-4">
@@ -81,7 +90,9 @@ const ProductsDetail = () => {
                         <Button variant={'primary'} className='  text-white font-semibold py-3 px-16 rounded-xl h-full'>Add to Cart</Button>
                     </div>
                 </div>
-            </div>
+            
+            </form>
+           
         </div>
 
 

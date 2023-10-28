@@ -7,5 +7,8 @@ export const signUp = (user: any) => {
 }
 export const signIn = (user: any) => {
     const res = instance.post("/signIn", user);
+ 
+
+
     return res
 }
