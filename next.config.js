@@ -14,6 +14,11 @@ module.exports = {
       },
       {
         protocol: "https",
+        hostname: "cdn.sforum.vn",
+        port: "",
+      },
+      {
+        protocol: "https",
         hostname: "plus.unsplash.com",
         port: "",
       },
