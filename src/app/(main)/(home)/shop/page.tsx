@@ -9,6 +9,7 @@ import Category from '@/components/main/pageComponents/shoplist/category/Categor
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { getAll } from '@/services/products/product'
 import { IProduct, IProductResponse } from '@/interfaces/product'
+import Breadcrumb from '@/components/breadcrumb'
 const Product = () => {
   const [product, setProduct] = useState<IProductResponse>();
 
@@ -21,7 +22,7 @@ const Product = () => {
   return (
     <div>
       <section>
-
+        <Breadcrumb />
       </section>
       <section className="pt-10 md:py-16 section_container ">
         <div className="flex flex-row items-start	">
