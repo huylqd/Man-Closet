@@ -13,16 +13,12 @@ import TitleDivide from "@/components/titleDivide";
 // css
 import "swiper/css";
 import "swiper/css/pagination";
+import { IProduct } from "@/interfaces/product";
 
 // type
 interface ProductListProps {
   title: string;
-  data: Array<{
-    href: string;
-    name: string;
-    imageUrl: string;
-    price: number;
-  }>;
+  data:IProduct[];
 }
 
 const ProductList = ({ title, data }: ProductListProps) => {
@@ -45,7 +41,7 @@ const ProductList = ({ title, data }: ProductListProps) => {
       </div>
       <div className="py-4">
         <GridView marginLeft="40px" previews={4} wrap className="gap-y-6 hidden sm:flex">
-          {data.map((item) => (
+          {data?.map((item) => (
             <ProductCardV1
               key={uuidv4()}
               data={item}
@@ -55,7 +51,7 @@ const ProductList = ({ title, data }: ProductListProps) => {
         </GridView>
         <div className="block sm:hidden">
           <BasicCarousel previews={1}>
-            {data.map((item) => (
+            {data?.map((item) => (
               <SwiperSlide key={uuidv4()}>
                 <ProductCardV1 data={item} />
               </SwiperSlide>

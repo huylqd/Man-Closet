@@ -11,7 +11,7 @@ import { Logo } from '@/components/Logo';
 import style from './authform.module.scss'
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { signUp } from '@/services/auth/auth';
+import { signIn, signUp } from '@/services/auth/auth';
 type Variant = "LOGIN" | "REGISTER" | "FORGOT_PASSWORD";
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>('LOGIN');
@@ -54,12 +54,21 @@ const AuthForm = () => {
         });
 
       } catch (error: any) {
-        alert(error.response.data.message)
+        alert(error.response.data.message)  
         console.log(error.response.data.message);
 
       }
     }
     if (variant === "LOGIN") {
+      try {
+        signIn(data).then(() => {
+          alert("Thành công");
+          
+        }).catch((error) => alert(error.response.data.message))
+      } catch (error:any) {
+        alert(error.response.data.message)
+        console.log(error.response.data.message);
+      }
       //  Login
     }
 
@@ -146,7 +155,7 @@ const AuthForm = () => {
                   <div className="flex items-start">
                     <div className="flex items-center h-5">
 
-                      <input checked id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-white focus:ring-3 focus:ring-primary-300 dark:text-white dark:border-gray-100 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
+                      <input  id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-white focus:ring-3 focus:ring-primary-300 dark:text-white dark:border-gray-100 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
                             dark:accent-zinc-800" required />
                     </div>
                     <div className="ml-3 text-sm">

@@ -7,6 +7,7 @@ import TitleDivide from "@/components/titleDivide";
 import { SwiperSlide } from "swiper/react";
 import { ProductCardV1 } from "@/components/card";
 import { BasicCarousel } from "@/components/carousel";
+import { IProduct } from "@/interfaces/product";
 
 // css
 
@@ -20,7 +21,7 @@ interface Data {
 
 interface ProductCarouselProps {
   title: string;
-  data: Data[];
+  data: IProduct[];
 }
 
 
