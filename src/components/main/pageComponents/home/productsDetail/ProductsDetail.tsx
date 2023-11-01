@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import { useParams } from 'next/navigation';
 import { getById } from '@/services/products/products';
-
+import Image from 'next/image';
 
 
 const ProductsDetail = () => {
@@ -27,21 +27,21 @@ const ProductsDetail = () => {
 
     return (
         <div className='flex flex-col justify-between lg:flex-row gap-16 lg:items-center p-12'>
-            <div className='flex flex-col gap-6 lg:w-2/4'>
-                <img ref={imgRef} alt="" className='w-full h-80 aspect-square object-cover rounded-xl' src={detail.properties?.[0].imageUrl} />
-                <div className='flex  justify-between h-24'>
-                    {detail.properties?.map((url: any) => {
-                        return (
-                            <a onClick={() => setImgPreview(url?.imageUrl)}>
-                                <img alt="" className='w-24 h-24 rounded-md cursor-pointer' src={url?.imageUrl} />
-                            </a>
-                        )
-                    })}
-                </div>
+        <div className='flex flex-col gap-6 lg:w-2/4'>
+            <img ref={imgRef} alt="" className='w-full h-80 aspect-square object-cover rounded-xl' src={detail.properties?.[0].imageUrl} />
+            <div className='flex  justify-between h-24'>
+                {detail.properties?.map((url: any) => {
+                    return (
+                        <a onClick={() => setImgPreview(url?.imageUrl)}>
+                            <img alt="" className='w-24 h-24 rounded-md cursor-pointer' src={url?.imageUrl} />
+                        </a>
+                    )
+                })}
             </div>
+        </div>
             {/* ABOUT */}
             <form action="" className='flex flex-col gap-4 lg:w-2/4'>
-           
+
                 <div className="md:flex-1 px-4">
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{detail.productName}</h2>
                     <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
@@ -60,7 +60,7 @@ const ProductsDetail = () => {
                     <div className="mb-4">
                         <span className="font-bold text-gray-700 dark:text-gray-300">Select Color:</span>
                         <div className="flex items-center mt-2">
-                        {detail.properties?.map((url: any) => {
+                            {detail.properties?.map((url: any) => {
                                 return (
                                     <button className="w-6 h-6 rounded-full bg-gray-800 dark:bg-gray-200 mr-2" style={
                                         {
@@ -69,9 +69,9 @@ const ProductsDetail = () => {
                                     }></button>
                                 )
                             })}
-                          
-                           
-                           
+
+
+
                         </div>
                     </div>
                     <div className="mb-4">
@@ -90,9 +90,9 @@ const ProductsDetail = () => {
                         <Button variant={'primary'} className='  text-white font-semibold py-3 px-16 rounded-xl h-full'>Add to Cart</Button>
                     </div>
                 </div>
-            
+
             </form>
-           
+
         </div>
 
 
