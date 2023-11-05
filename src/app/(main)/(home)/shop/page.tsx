@@ -10,10 +10,10 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { getAll } from '@/services/products/products'
 import { IProduct, IProductResponse } from '@/interfaces/product'
 import Breadcrumb from '@/components/breadcrumb'
-import { listProduct} from '@/data/product'
+import { listProduct } from '@/data/product'
 import { listCategory } from '@/data/category'
 const Product = () => {
-  
+
 
   return (
     <div>
