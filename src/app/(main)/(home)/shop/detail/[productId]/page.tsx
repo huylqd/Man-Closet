@@ -6,27 +6,30 @@ import { productCarouselData } from '../../../../(home)/demo.data'
 import axios from 'axios'
 import { useParams } from 'next/navigation'
 import { BannerV2 } from '@/components/banner'
+import Breadcrumb from '@/components/breadcrumb'
 
 
 
 const Detail = () => {
 
   return (
-    <section className=' section_container'>
-      <section>
-        <BannerV2 title='Shop List' description='Detail' subTitle='Home . Shop' />
-      </section>
-      <section>
-        <ProductsDetail />
-      </section>
-      <section>
-        <Descriptions />
-      </section>
-      <section>
-        <Related title='Related Products' data={productCarouselData} />
-      </section>
+    <section>
+      <Breadcrumb />
+      <section className=' section_container'>
 
+        <section>
+          <ProductsDetail />
+        </section>
+        <section>
+          <Descriptions />
+        </section>
+        <section>
+          <Related title='Related Products' data={productCarouselData} />
+        </section>
+
+      </section>
     </section>
+
 
   )
 }

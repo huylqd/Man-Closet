@@ -1,3 +1,4 @@
+'use client'
 import TitleDivide from "@/components/titleDivide";
 import React from "react";
 import { bannerData, trendingProducts } from "./demo.data";
@@ -7,6 +8,7 @@ import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GridView } from "@/components/dataViews";
+import { listProduct } from "@/data/product";
 
 const Banner = ({
   label,
@@ -49,7 +51,7 @@ const GridProduct = () => {
       </div>
       <div>
         <GridView className="py-3 gap-y-6" marginLeft="30px" wrap previews={4}>
-          {trendingProducts.map((item: any) => (
+          {listProduct()?.map((item: any) => (
             <ProductCardV1 key={uuidv4()} data={item} marginLeft="30px" />
           ))}
         </GridView>

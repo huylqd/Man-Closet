@@ -3,7 +3,7 @@ import { Caculate, CartTotal, Table } from "@/components/main/pageComponents/pay
 import { productCarouselData } from '../(home)/demo.data';
 const PayPage = () => {
   return (
-    <div className='md:flex flex-row section_container'>
+    <section className='md:flex flex-row section_container'>
       <section className= 'basis-3/4 '>
         <Table data={productCarouselData}/>
       </section>
@@ -16,7 +16,7 @@ const PayPage = () => {
       </section>
       </div>
       
-    </div>
+    </section>
   )
 }
 

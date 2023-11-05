@@ -8,7 +8,7 @@ import React from 'react'
 import { SwiperSlide } from 'swiper/react';
 import { IProduct, IProductResponse, property } from '@/interfaces/product';
 import { useState, useEffect } from 'react'
-import { getAll } from '@/services/products/product';
+
 interface ShopListProp {
   title: string;
   data: IProduct[]
