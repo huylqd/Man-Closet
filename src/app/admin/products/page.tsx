@@ -1,4 +1,4 @@
-import { ListProducts } from '@/components/main/pageComponents/admin'
+import { ListProducts } from '@/components/admin'
 import React from 'react'
 
 const List = () => {

@@ -1,7 +1,7 @@
 
 import React from 'react'
 import ProductsDetail from '@/components/main/pageComponents/home/productsDetail/ProductsDetail'
-import { Descriptions, Related } from '@/components/main/pageComponents/home'
+import { Comment, Descriptions, Related } from '@/components/main/pageComponents/home'
 import { productCarouselData } from '../../../../(home)/demo.data'
 import axios from 'axios'
 import { useParams } from 'next/navigation'
@@ -23,6 +23,7 @@ const Detail = () => {
         <section>
           <Descriptions />
         </section>
+        < Comment />
         <section>
           <Related title='Related Products' data={productCarouselData} />
         </section>

@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import { ICategory } from '@/interfaces/category';
 import { addCategory, updateCategory } from '@/services/categories/category';
-import { getById } from '@/services/products/products';
 
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react'
@@ -16,45 +15,45 @@ interface ModelProp{
 const ModelCategory = ({ isvisible, category, onClose }: ModelProp) => {
     if (!isvisible) return null
  
-
     
+
     const {register,handleSubmit,formState,reset} = useForm()
     //   const router = useRouter();
-   
+    console.log(category);
     
     if(category){
-          useEffect(() => {
-                reset(category);
-              }, [category]);
+        reset(category);
     }
-    const restore = () => {
-        if(category){
-                reset(category);
-        }
-        
-      }
     const onHandleSubmit = async (data: any) => {
+        
         try {
             console.log(data);
-            if(!category){
-                addCategory(data).then(() => {
-                    alert("Add successfully ");
+            if(category){
+              
+                    
+                 
+                updateCategory(data).then(() => {
+                  
+                    alert("Update successfully");
+                    isvisible = false;
                 })
             }else{
-                updateCategory(data).then(() => {
-                    alert("Update successfully");
-                })  
-            }     
+                addCategory(data).then(() => {
+                    alert("Add successfully ");
+                    isvisible = false;
+                })
+            }
+            
+           
+           
         } catch (error:any) {
             console.log(error.response.message);
             
         }
       };
-     
-     
+  
     return (
-     
-        <div aria-hidden="true" className=" fixed inset-0 transition ease-in-out delay-150 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
+        <div aria-hidden="true" className=" fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
         <div className="relative p-4 w-full max-w-2xl max-h-full">
             {/* <!-- Modal content --> */}
             <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
@@ -73,7 +72,7 @@ const ModelCategory = ({ isvisible, category, onClose }: ModelProp) => {
                     <div className="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                            <input type="text"     {...register("name")} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Category Name" required />
+                            <input type="text"     {...register("name")} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required />
                         </div>
                        
                        
@@ -83,13 +82,9 @@ const ModelCategory = ({ isvisible, category, onClose }: ModelProp) => {
                       
                         Save
                     </button>
-                    <button type="reset" className="text-white inline-flex items-center bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 mr-2">
+                    <button type="reset" className="text-white inline-flex items-center bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
                       
                         Reset
-                    </button>
-                    <button type="button" onClick={() => restore()} className="text-white inline-flex items-center bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 mr-2">
-                      
-                        Restore
                     </button>
                 </form>
             </div>

@@ -33,7 +33,7 @@ const updateCategory = async (category:any) => {
     try {
         console.log(category);
         
-        const res = await instance.patch(`api/category/${category._id}`,category)
+        const res = await instance.put(`api/category/${category._id}`,category)
         return res
     } catch (error) {
         console.log(error);
