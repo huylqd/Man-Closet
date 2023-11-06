@@ -10,6 +10,7 @@ interface IputProp {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
+  watch: any
 }
 const Input: React.FC<IputProp> = ({
   label,
@@ -19,6 +20,7 @@ const Input: React.FC<IputProp> = ({
   register,
   errors,
   disabled,
+  watch
 }) => {
   return (
     <div>
@@ -34,7 +36,19 @@ const Input: React.FC<IputProp> = ({
           type={type}
           autoComplete={id}
 
-          {...register(id, { required })}
+          {...register(id, {
+            required: `${id} is required`,
+
+            // password
+            minLength: id === 'password' || id === "confirmPassword" ? { value: 6, message: `${id} must be at least 6 characters long` } : undefined,
+            // confirmPass
+            validate: id === 'confirmPassword' ? (val: string) => {
+              if (watch('password') != val) {
+                return "Your passwords do no match";
+              }
+            } : undefined,
+
+          })}
           className={clsx(
             `
             dark:bg-white

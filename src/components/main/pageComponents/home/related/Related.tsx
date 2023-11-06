@@ -1,7 +1,7 @@
 "use client"
 
 
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 // ui
 import TitleDivide from "@/components/titleDivide";
 import { SwiperSlide } from "swiper/react";
@@ -25,23 +25,23 @@ interface ProductCarouselProps {
 }
 
 
-const Related =  ({ title, data }: ProductCarouselProps) => {
-    return (
-      <div>
-        <div className="py-2 pt-4">
-          <TitleDivide title={title} align="start"/>
-        </div>
-        <div>
-          <BasicCarousel previews={4}>
-            {data.map(item => (
-              <SwiperSlide key={uuidv4()}>
-                <ProductCardV1 data={item}/>
-              </SwiperSlide>
-            ))}
-          </BasicCarousel>
-        </div>
+const Related = ({ title, data }: ProductCarouselProps) => {
+  return (
+    <div>
+      <div className="py-2 pt-4">
+        <TitleDivide title={title} align="start" />
       </div>
-    );
-  };
+      <div>
+        <BasicCarousel previews={4}>
+          {data.map(item => (
+            <SwiperSlide key={uuidv4()}>
+              <ProductCardV1 data={item} />
+            </SwiperSlide>
+          ))}
+        </BasicCarousel>
+      </div>
+    </div>
+  );
+};
 
 export default Related

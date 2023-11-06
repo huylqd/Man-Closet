@@ -4,7 +4,6 @@
 import { Button } from '@/components/ui/button';
 import { ICategory } from '@/interfaces/category';
 import { addCategory, updateCategory } from '@/services/categories/category';
-import { getById } from '@/services/products/products';
 
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react'
@@ -13,10 +12,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 interface ModelProp {
     isvisible: boolean,
     category: ICategory,
+    update: (data: ICategory) => void,
+    add: (data: ICategory) => void,
     onClose: () => void
 }
-const ModelCategory = ({ isvisible, category, onClose }: ModelProp) => {
+const ModelCategory = ({ isvisible, category, update, add, onClose }: ModelProp) => {
     if (!isvisible) return null
+    console.log(category);
+
 
 
 
@@ -36,17 +39,14 @@ const ModelCategory = ({ isvisible, category, onClose }: ModelProp) => {
 
     }
     const onHandleSubmit = async (data: any) => {
+
+
         try {
             console.log(data);
             if (!category) {
-                addCategory(data).then(() => {
-                    alert("Add successfully ");
-                })
+                add(data)
             } else {
-                updateCategory(data).then(() => {
-                    alert("Update successfully");
-
-                })
+                update(data)
             }
         } catch (error: any) {
             console.log(error.response.message);

@@ -1,8 +1,11 @@
 'use client'
 import { ICategory } from '@/interfaces/category'
-import { deleteCategory, getAllCategory } from '@/services/categories/category'
-import React, { useEffect, useState } from 'react'
+import { addCategory, deleteCategory, getAllCategory, updateCategory } from '@/services/categories/category'
+import React, { useEffect, useRef, useState } from 'react'
 import ModelCategory from './ModelCategory'
+import Toaster from '@/components/Toaster/Toaster'
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -10,7 +13,7 @@ const ManagementCategory = () => {
     const [categories, setCategories] = useState<ICategory[]>([])
     const [modal, setModal] = useState(false)
     const [category, setCategory] = useState<any>();
-
+    const toasterRef = useRef<any>(null);
     useEffect(() => {
         getAllCategory()?.then(({ data }) => setCategories(data.data))
     }, [])
@@ -20,11 +23,44 @@ const ManagementCategory = () => {
         const confirm = window.confirm("Bạn có chắc muốn xóa không ?");
         if (confirm) {
             deleteCategory(id).then(({ data }: any) => {
-                alert("Xóa thành công!")
+                // alert("Xóa thành công!");
+                toasterRef.current.showToast('success', 'Delete successfully');
                 setCategories(categories.filter((item) => item._id !== data.data._id))
+            }).catch((err) => {
+                toasterRef.current.showToast('error', 'Delete Fail!');
             })
 
         }
+    }
+    const handleUpdate = async (category: ICategory) => {
+        updateCategory(category).then((cate) => {
+            // console.log(cate);
+            // Gọi hàm showToast bên trong component Toaster
+            toasterRef.current.showToast('success', 'Update successfully!');
+            // toast.success('Cập nhật thành công');
+            setCategories(
+                categories.map((item) => (item._id === category._id ? category : item))
+            )
+            setModal(false)
+        }).catch(() => {
+            toasterRef.current.showToast('error', 'Update Fail!');
+        });
+    }
+    const handleAdd = async (category: ICategory) => {
+        addCategory(category).then(({ data }: any) => {
+            console.log(data);
+
+            // getAllCategory()?.then(({ data }) => setCategories(data.data));
+            const newCategories = [...categories];
+            // Thêm sản phẩm mới vào danh sách
+            newCategories.push(data.data);
+            // Cập nhật state `categories` với danh sách mới
+            setCategories(newCategories);
+            toasterRef.current.showToast('success', 'Add successfully!');
+            setModal(false)
+        }).catch(() => {
+            toasterRef.current.showToast('error', 'Add Fail!');
+        })
     }
 
     return (
@@ -137,10 +173,10 @@ const ManagementCategory = () => {
                     </tbody>
                 </table>
             </div>
+            <Toaster ref={toasterRef} />
+            <ModelCategory isvisible={modal} add={handleAdd} update={handleUpdate} category={category} onClose={() => setModal(false)} />
 
-            <ModelCategory isvisible={modal} category={category} onClose={() => setModal(false)} />
-
-        </div>
+        </div >
     )
 }
 

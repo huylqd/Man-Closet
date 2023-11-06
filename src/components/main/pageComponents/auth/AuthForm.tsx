@@ -1,7 +1,7 @@
 'use client'
 import { BannerV2 } from '@/components/banner';
 import { Input } from '@/components/form';
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import AuthSocialButton from './AuthSocialButton';
@@ -12,11 +12,15 @@ import style from './authform.module.scss'
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { signIn, signUp } from '@/services/auth/auth';
+import Toaster from '@/components/Toaster/Toaster';
+import { useRouter } from 'next/navigation';
+import { validateInput } from '@/components/validation/ValidateForm';
 type Variant = "LOGIN" | "REGISTER" | "FORGOT_PASSWORD";
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>('LOGIN');
   const [isLoading, setIsLoading] = useState(false);
-
+  const toasterRef = useRef<any>(null);
+  const router = useRouter();
   const toggleForgotPassword = useCallback(() => {
     setVariant("FORGOT_PASSWORD");
   }, [variant]);
@@ -32,6 +36,7 @@ const AuthForm = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
@@ -41,6 +46,18 @@ const AuthForm = () => {
       confirmPassword: ''
     },
   });
+  const displayError = (field: string) => {
+    if (errors[field]) {
+
+
+      return (
+        <span className="text-red-600 text-sm">
+          {errors[field]?.message}
+        </span>
+      );
+    }
+    return null;
+  };
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log(data);
 
@@ -48,26 +65,41 @@ const AuthForm = () => {
     if (variant === "REGISTER") {
       //  Register
       try {
-        await signUp(data).then(() => {
-          alert("Thanh cong");
+        // const emailValidationResult = validateInput('require', data.name, 'Invalid email address');
+        // console.log(emailValidationResult);
 
-        });
+        await signUp(data).then(() => {
+          toasterRef.current.showToast('success', 'Register successfully!');
+          setVariant("LOGIN")
+        }).catch((error) => console.log(error)
+        );
 
       } catch (error: any) {
-        alert(error.response.data.message)  
-        console.log(error.response.data.message);
+        toasterRef.current.showToast('error', `${error.response.data.message!}`);
+
 
       }
     }
     if (variant === "LOGIN") {
       try {
-        signIn(data).then(() => {
-          alert("Thành công");
-          
-        }).catch((error) => alert(error.response.data.message))
-      } catch (error:any) {
-        alert(error.response.data.message)
-        console.log(error.response.data.message);
+        signIn(data).then(({ data }) => {
+          console.log(data);
+          const user = data.data;
+          user._id = undefined;
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refresh", data.refreshToken);
+          localStorage.setItem("user", JSON.stringify(user));
+          if (user.role === "admin") {
+            router.push('/admin')
+          } else {
+            router.push('/')
+          }
+
+          toasterRef.current.showToast('success', 'Login successfully!');
+
+        }).catch((error) => console.log(error))
+      } catch (error: any) {
+        toasterRef.current.showToast('error', `${error.response.data.message!}`);
       }
       //  Login
     }
@@ -104,8 +136,13 @@ const AuthForm = () => {
                       label="User name"
                       errors={errors}
                       disabled={isLoading}
+                      watch={watch}
+
+
                     />
+
                   )}
+                  {displayError("name")}
                 </div>
 
 
@@ -118,7 +155,9 @@ const AuthForm = () => {
                     type="email"
                     disabled={isLoading}
                     errors={errors}
+                    watch={watch}
                   />
+                  {displayError("email")}
 
                 </div>
                 <div>
@@ -130,10 +169,11 @@ const AuthForm = () => {
                       label="Password"
                       errors={errors}
                       disabled={isLoading}
+                      watch={watch}
 
                     />
                   )}
-
+                  {displayError("password")}
 
                 </div>
                 <div>
@@ -145,17 +185,18 @@ const AuthForm = () => {
                       label="Confirm Password"
                       errors={errors}
                       disabled={isLoading}
+                      watch={watch}
 
                     />
                   )}
-
+                  {displayError("confirmPassword")}
 
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-start">
                     <div className="flex items-center h-5">
 
-                      <input  id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-white focus:ring-3 focus:ring-primary-300 dark:text-white dark:border-gray-100 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
+                      <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-white focus:ring-3 focus:ring-primary-300 dark:text-white dark:border-gray-100 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
                             dark:accent-zinc-800" required />
                     </div>
                     <div className="ml-3 text-sm">
@@ -208,7 +249,7 @@ const AuthForm = () => {
           </div>
         </div>
       </section>
-
+      <Toaster ref={toasterRef} />
 
     </section>
 
