@@ -1,11 +1,11 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { deletePro, getAll } from '@/services/products/products'
-import React, { useEffect, useState } from 'react'
-import Modal from './Modal'
-import { Fragment_Mono } from 'next/font/google'
-import Link from 'next/link'
-import ModalPro from './ModalPro'
+"use client";
+import { Button } from "@/components/ui/button";
+import { deletePro, getAll, updatePro } from "@/services/products/products";
+import React, { useEffect, useState } from "react";
+import Modal from "./Modal";
+import { Fragment_Mono } from "next/font/google";
+import Link from "next/link";
+import ModalPro from "./ModalPro";
 // import ModalUpdate from './ModalUpdate'
 import { IProduct } from '@/interfaces/product'
 import { v4 as uuidv4 } from 'uuid'
@@ -16,30 +16,37 @@ const ListProducts = () => {
     const [showModalPro, setshowModalPro] = useState(false)
     const [showModalUpdate, setshowModalUpdate] = useState(false)
     const [product, setProduct] = useState<any>({})
-    // const [productId , setProductId] = useState('')
-    // const openModal = (product_id:string) => {
-    //     setshowModalUpdate(true) ;
-    //     setProduct(product_id)
-    // }
+
     useEffect(() => {
         getAll().then(({ data }: any) => setProducts(data.data))
     }, [])
-    const onhandleRemove =  (id: any) => {
+    const onhandleRemove = (id: any) => {
+        if(confirm('Are you sure you want to remove')){
+            deletePro(id)
+            .then(({ data }: any) => {
+                // alert("Xóa thành công!");
+                setProducts(
+                    products.filter((item: any) => item._id !== data.data._id)
+                );
+            })
+            alert("Xóa thành công!");
+        }
+        
         // await deletePro(id)
-        deletePro(id)
-        .then(({ data }: any) => {
-          // alert("Xóa thành công!");
-          setProducts(
-            products.filter((item:any) => item._id !== data.data._id)
-          );
-        })
+       
+    }
+    const onhandleUpdate = async (body : any) => {
+        updatePro(body).then((pro:any) => (
+            setProducts(products.map((item:any) => item._id === pro._id ? pro : item ))
+        ))
+        setshowModalUpdate(false)
     }
     return (
         <div>
             <div className="overflow-x-auto">
-                <button type="submit" onClick={() => { setshowModalPro(true); setProduct(false) }} className=" mb-4 text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                <button type="submit" onClick={() => setshowModalPro(true)} className=" mb-4 text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     <svg className="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
                     New Products
                 </button>
@@ -81,54 +88,29 @@ const ListProducts = () => {
                                     </td>
                                     <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div className="flex items-center space-x-4">
-                                            <button onClick={() => { setshowModalUpdate(true); setProduct(data._id) }} type="button" data-drawer-target="drawer-update-product" data-drawer-show="drawer-update-product" aria-controls="drawer-update-product" className="border border-yellow-300 dark:border-yellow-300 py-2 px-3 flex items-center text-sm font-medium text-center text-yellow-300 hover:text-white  rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                            <button onClick={() => { setshowModalUpdate(true); setProduct(data) }} type="button" data-drawer-target="drawer-update-product" data-drawer-show="drawer-update-product" aria-controls="drawer-update-product" className="border border-yellow-300 dark:border-yellow-300 py-2 px-3 flex items-center text-sm font-medium text-center text-yellow-300 hover:text-white  rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                    <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                                    <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
                                                 </svg>
                                                 Edit
                                             </button>
                                             <button onClick={() => { setshowModal(true); setProduct(data._id) }} type="button" data-drawer-target="drawer-read-product-advanced" data-drawer-show="drawer-read-product-advanced" aria-controls="drawer-read-product-advanced" className="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2 -ml-0.5">
                                                     <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" />
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" />
                                                 </svg>
                                                 Preview
                                             </button>
                                             <button onClick={() => onhandleRemove(data._id)} type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal" className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                                                 </svg>
                                                 Delete
                                             </button>
                                         </div>
                                     </td>
-                                    {/* <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <div className="flex items-center space-x-4 ">
-                                     
-                                            <button onClick={() => { setshowModalPro(true); setProduct(data) }}  type="button" className="text-white w-full inline-flex items-center bg-yellow-500 hover:bg-yellow-600 justify-center focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:focus:ring-primary-800">
-                                                <svg aria-hidden="true" className="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                    <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-                                                </svg>
-                                                Edit
-                                            </button>
-                                            <button onClick={() => onhandleRemove(data._id)} type="button" className="inline-flex w-full items-center text-white justify-center bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
-                                                <svg aria-hidden="true" className="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
-                                                </svg>
-                                                Delete
-                                            </button>
-                                            <button type="button" onClick={() => { setshowModal(true); setProduct(data._id) }} className="flex  items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                </svg>
-                                                Preview
-                                            </button>
 
-                                        </div>
-                                    </td> */}
                                 </tr>
                             )
                         })}
@@ -137,10 +119,10 @@ const ListProducts = () => {
             </div>
             <Modal isvisible={showModal} id={product} onClose={() => setshowModal(false)} />
             <ModalPro isvisiblePro={showModalPro} product={product} onClosePro={() => setshowModalPro(false)} />
-            <ModalUpdate   isvisibleUpdate={showModalUpdate} product_id={product} onClosePro={() => setshowModalUpdate(false)}/>
+            <ModalUpdate isvisibleUpdate={showModalUpdate} update={onhandleUpdate}  products={product} onClosePro={() => setshowModalUpdate(false)} />
 
         </div>
     )
 }
 
-export default ListProducts
+export default ListProducts;

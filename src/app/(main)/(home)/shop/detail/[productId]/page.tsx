@@ -14,7 +14,7 @@ const Detail = () => {
 
   return (
     <section>
-      <Breadcrumb />
+      
       <section className=' section_container'>
 
         <section>

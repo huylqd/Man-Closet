@@ -11,7 +11,7 @@ export interface IProduct {
     description?: string;
     properties: property[];
     categoryId: string;
-    couponId: string;
+    couponId?: string;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date | null;

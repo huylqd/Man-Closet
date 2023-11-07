@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import { useParams } from 'next/navigation';
 import {  getById } from '@/services/products/products';
-
+import { v4 as uuidv4 } from 'uuid'
 
 
 const ProductsDetail = () => {
@@ -57,7 +57,10 @@ const ProductsDetail = () => {
                         {detail.properties?.map((url: any) => {
                            
                             return (
-                            <span className="text-gray-600 dark:text-gray-300">{url?.quantity}</span>)
+                                <div key={uuidv4()}>
+                                    <span className="text-gray-600 dark:text-gray-300">{url?.quantity}</span>
+                                </div>
+                            )
                         })}
                             
                         </div>
