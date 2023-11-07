@@ -2,7 +2,7 @@
 import { BannerV2 } from '@/components/banner';
 import { Input } from '@/components/form';
 import React, { useState, useCallback, useRef } from 'react'
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
+import { useForm, FieldValues, SubmitHandler, FieldErrors } from "react-hook-form";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import AuthSocialButton from './AuthSocialButton';
 import Image from 'next/image';
@@ -33,6 +33,7 @@ const AuthForm = () => {
     }
 
   }, [variant]);
+
   const {
     register,
     handleSubmit,

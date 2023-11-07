@@ -14,9 +14,8 @@ const PrivateRouter = ({ children }: PrivateRouteProps) => {
     if (!isAuthenticated) {
         router.push('/auth'); // Điều hướng đến trang đăng nhập
     }
-    else {
         return children;
-    }
+    
 
 
 }
