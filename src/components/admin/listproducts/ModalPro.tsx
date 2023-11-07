@@ -69,7 +69,7 @@ const ModalPro = ({ isvisiblePro,product,  onClosePro }: any) => {
         }
             createPro(body).then(() => {
                 alert("Add successfully ");
-             
+             onClosePro()
             })
         }
 

@@ -53,8 +53,13 @@ const ProductsDetail = () => {
                             <span className="text-gray-600 dark:text-gray-300">{detail?.price}</span>
                         </div>
                         <div>
-                            <span className="font-bold text-gray-700 dark:text-gray-300">Availability:</span>
-                            <span className="text-gray-600 dark:text-gray-300">In Stock</span>
+                        <span className="font-bold text-gray-700 dark:text-gray-300">Availability:</span>
+                        {detail.properties?.map((url: any) => {
+                           
+                            return (
+                            <span className="text-gray-600 dark:text-gray-300">{url?.quantity}</span>)
+                        })}
+                            
                         </div>
                     </div>
                     <div className="mb-4">

@@ -13,6 +13,7 @@ const Modal = ({ isvisible, id, onClose }: any) => {
     const [detail, setDetail] = useState<any>({});
     const [modalUpdate , setshowModalUpdate] = useState<any>(false)
     const [product, setProduct] = useState<any>({})
+    
     useEffect(() => {
         getById(productId).then(({ data }:any) => setDetail(data.data))
     }, [])
