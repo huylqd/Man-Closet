@@ -7,19 +7,19 @@
 
 // const ModalUpdate = ({ isvisibleUpdate, product_id , onClosePro }: any) => {
 //     if (!isvisibleUpdate) return null
-    
+
 //     const [product, setProduct] = useState({})
 //     const [cate, setCate] = useState<any>([])
 //     useEffect(  () => {
-        
+
 //        const fetchData =async () => {
-//         const initialValue  = await getById(product_id) 
+//         const initialValue  = await getById(product_id)
 //         setProduct(initialValue.data)
 //         }
 //         fetchData()
 //     },[])
 //     console.log('product', product);
-    
+
 //     useEffect(() => {
 //         getAllCategory()?.then(({ data }) => setCate(data.data))
 //     }, [])
@@ -47,7 +47,7 @@
 //         await updatePro(body)
 
 //     }
-    
+
 //     return (
 //         <div className="overflow-y-auto pt-[250px]  fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
 //             <div className=" overflow-y-auto relative p-4 w-full max-w-3xl h-full md:h-auto">
@@ -58,7 +58,7 @@
 //                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Update Product</h3>
 //                         <button type="button" onClick={() => onClosePro()} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-target="createProductModal" data-modal-toggle="createProductModal">
 //                             <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-//                                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+//                                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
 //                             </svg>
 //                             <span className="sr-only">Close modal</span>
 //                         </button>
@@ -123,11 +123,11 @@
 //                         </div>
 
 //                         <button type="submit" className="text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mr-2">
-                      
+
 //                       Save
 //                   </button>
 //                   <button type="reset" className="text-white inline-flex items-center bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
-                      
+
 //                       Reset
 //                   </button>
 //                     </form>
