@@ -1,3 +1,4 @@
+import { ICategory } from "@/interfaces/category";
 import instance from "../instance";
 
 
@@ -8,48 +9,48 @@ const getAllCategory = () => {
     } catch (error) {
         console.log(error);
     }
-  
+
 }
 
-const getCategoryById = async (id:string) => {
+const getCategoryById = async (id: string) => {
     try {
         const res = await instance.get(`api/category/${id}`)
         return res
     } catch (error) {
         console.log(error);
-        
+
     }
 }
-const addCategory = async (category:any) => {
+const addCategory = async (category: any) => {
     try {
-        const res = await instance.post(`api/category`,category)
+        const res = await instance.post(`api/category`, category)
         return res
     } catch (error) {
         console.log(error);
-        
+
     }
 }
-const updateCategory = async (category:any) => {
+const updateCategory = async (category: ICategory) => {
     try {
         console.log(category);
-        
-        const res = await instance.patch(`api/category/${category._id}`,category)
+
+        const res = await instance.patch(`api/category/${category._id}`, category)
         return res
     } catch (error) {
         console.log(error);
-        
+
     }
 }
-const deleteCategory = async (id:any) => {
+const deleteCategory = async (id: any) => {
     try {
         const res = await instance.delete(`api/category/${id}`)
         return res
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-export { getAllCategory,getCategoryById,addCategory,updateCategory,deleteCategory }
+export { getAllCategory, getCategoryById, addCategory, updateCategory, deleteCategory }
 
 

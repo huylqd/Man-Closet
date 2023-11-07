@@ -1,9 +1,12 @@
+import { ManagementUser } from '@/components/admin/pageComponents/users'
 import React from 'react'
 
-const ManagementUser = () => {
+const Users = () => {
   return (
-    <div>page</div>
+    <div className="p-6">
+      <ManagementUser />
+    </div>
   )
 }
 
-export default ManagementUser
+export default Users

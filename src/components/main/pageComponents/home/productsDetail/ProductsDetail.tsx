@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import { useParams } from 'next/navigation';
-import { getById } from '@/services/products/products';
+import {  getById } from '@/services/products/products';
 
 
 
@@ -16,9 +16,9 @@ const ProductsDetail = () => {
 
     const [detail, setDetail] = useState<any>({});
     useEffect(() => {
-        getById(productId).then(({ data }) => setDetail(data.data))
+        getById(productId).then(({ data }:any) => setDetail(data.data))
     }, [])
-    // console.log(detail);
+    console.log(detail);
 
     const imgRef = useRef<any>()
     const setImgPreview = (imageUrl: any) => {
@@ -30,7 +30,7 @@ const ProductsDetail = () => {
             <div className='flex flex-col gap-6 lg:w-2/4'>
                 <img ref={imgRef} alt="" className='w-full h-80 aspect-square object-cover rounded-xl' src={detail.properties?.[0].imageUrl} />
                 <div className='flex  justify-between h-24'>
-                    {detail.properties?.map((url: any) => {
+                    {detail?.properties?.map((url: any) => {
                         return (
                             <a onClick={() => setImgPreview(url?.imageUrl)}>
                                 <img alt="" className='w-24 h-24 rounded-md cursor-pointer' src={url?.imageUrl} />
@@ -43,14 +43,14 @@ const ProductsDetail = () => {
             <form action="" className='flex flex-col gap-4 lg:w-2/4'>
            
                 <div className="md:flex-1 px-4">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{detail.productName}</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{detail?.productName}</h2>
                     <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
                         { }
                     </p>
                     <div className=" mb-4">
                         <div className="mr-4 pb-3">
                             <span className="font-bold text-gray-700 dark:text-gray-300">Price:</span>
-                            <span className="text-gray-600 dark:text-gray-300">{detail.price}</span>
+                            <span className="text-gray-600 dark:text-gray-300">{detail?.price}</span>
                         </div>
                         <div>
                             <span className="font-bold text-gray-700 dark:text-gray-300">Availability:</span>
