@@ -7,6 +7,7 @@ import { useCurrency } from "@/hooks";
 import { IProductInCart } from "@/interfaces/product";
 import { getProductsInCart } from "@/redux/reducer/cart.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -18,6 +19,9 @@ interface ProductInCart extends IProductInCart {
 const testUserId = "65489ed7149281c60f0cefe3";
 
 const CartPage = () => {
+
+  const {user_id} = useParams()
+
   const productList = useAppSelector((state) => state.cart.products);
   const [products, setProducts] = useState<ProductInCart[]>([]);
   const [productsSelected, setProductsSelected] = useState<ProductInCart[]>([]);
@@ -33,7 +37,7 @@ const CartPage = () => {
     const initialProducts = productList.map((item) => {
       return {
         ...item,
-        totalPrice: item.price * item.quantity,
+        totalPrice: item?.price * item?.quantity,
         selected: true,
       };
     });

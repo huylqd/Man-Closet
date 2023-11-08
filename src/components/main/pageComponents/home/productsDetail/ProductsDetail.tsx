@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { getById, getProductById } from "@/services/products/products";
 import { useAppDispatch } from "@/redux/store";
 import { addProductToCart } from "@/redux/reducer/cart.reducer";
-import { useDispatch } from "react-redux";
 import { commonSuccessToast } from "@/utils/notify";
 
 const ProductsDetail = () => {
@@ -25,7 +24,7 @@ const ProductsDetail = () => {
 
     fetchData();
   }, [productId]);
-  console.log(detail);
+
 
   const imgRef = useRef<any>();
   const setImgPreview = (imageUrl: any) => {
@@ -39,7 +38,7 @@ const ProductsDetail = () => {
       price: detail.price,
       color: "red",
       size: "M",
-      imageUrl: "",
+      imageUrl: imgRef.current?.src,
       quantity: 1,
     };
     const user_id = "65489ed7149281c60f0cefe3";
