@@ -4,7 +4,7 @@ import { createPro } from '@/services/products/products'
 import React, {useState, useEffect} from 'react'
 import { useForm } from 'react-hook-form'
 
-const ModalPro = ({isvisiblePro ,product , onClosePro}:any) => {
+const ModalPro = ({isvisiblePro , add ,product , onClosePro}:any) => {
     if (!isvisiblePro) return null
     const [cate, setCate] = useState([])
   useEffect(() => {
@@ -30,7 +30,7 @@ const ModalPro = ({isvisiblePro ,product , onClosePro}:any) => {
      categoryId: data.categoryId
     }
     
-    await createPro(body)
+    await add(body)
     
   }
   console.log(cate);

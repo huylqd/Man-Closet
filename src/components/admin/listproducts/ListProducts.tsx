@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { deletePro, getAll, updatePro } from "@/services/products/products";
-import React, { useEffect, useState } from "react";
+import { createPro, deletePro, getAll, updatePro } from "@/services/products/products";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import { Fragment_Mono } from "next/font/google";
 import Link from "next/link";
@@ -10,13 +10,14 @@ import ModalPro from "./ModalPro";
 import { IProduct } from '@/interfaces/product'
 import { v4 as uuidv4 } from 'uuid'
 import ModalUpdate from './ModalUpdate'
+import Toaster from "@/components/Toaster/Toaster";
 const ListProducts = () => {
     const [products, setProducts] = useState<any>([])
     const [showModal, setshowModal] = useState(false)
     const [showModalPro, setshowModalPro] = useState(false)
     const [showModalUpdate, setshowModalUpdate] = useState(false)
     const [product, setProduct] = useState<any>({})
-
+    const toasterRef = useRef<any>(null);
     useEffect(() => {
         getAll().then(({ data }: any) => setProducts(data.data))
     }, [])
@@ -35,12 +36,43 @@ const ListProducts = () => {
         // await deletePro(id)
        
     }
-    const onhandleUpdate = async (body : any) => {
-        updatePro(body).then((pro:any) => (
-            setProducts(products.map((item:any) => item._id === pro._id ? pro : item ))
-        ))
-        setshowModalUpdate(false)
-    }
+    const onhandleUpdate = async (category: any) => {
+        updatePro(category)
+          .then(({cate}:any) => {
+            // console.log(cate);
+            // Gọi hàm showToast bên trong component Toaster
+            toasterRef.current.showToast("success", "Update successfully!");
+            // toast.success('Cập nhật thành công');
+            setProducts(
+              products.map((item:any) =>
+                item._id === category._id ? category : item
+              )
+            );
+            setshowModalUpdate(false);
+          })
+          .catch(() => {
+            toasterRef.current.showToast("error", "Update Fail!");
+          });
+      };
+
+    const handleAdd = async (prod: any) => {
+        createPro(prod)
+          .then(({ data }: any) => {
+            console.log(data);
+    
+            // getAllCategory()?.then(({ data }) => setCategories(data.data));
+            const newCategories = [...products];
+            // Thêm sản phẩm mới vào danh sách
+            newCategories.push(data.data);
+            // Cập nhật state `categories` với danh sách mới
+            setProducts(newCategories);
+            toasterRef.current.showToast("success", "Add successfully!");
+            setshowModalPro(false);
+          })
+          .catch(() => {
+            toasterRef.current.showToast("error", "Add Fail!");
+          });
+      };
     return (
         <div>
             <div className="overflow-x-auto">
@@ -117,8 +149,9 @@ const ListProducts = () => {
                     </tbody>
                 </table>
             </div>
+            <Toaster ref={toasterRef} />
             <Modal isvisible={showModal} id={product} onClose={() => setshowModal(false)} />
-            <ModalPro isvisiblePro={showModalPro} product={product} onClosePro={() => setshowModalPro(false)} />
+            <ModalPro isvisiblePro={showModalPro} add={handleAdd} product={product} onClosePro={() => setshowModalPro(false)} />
             <ModalUpdate isvisibleUpdate={showModalUpdate} update={onhandleUpdate}  products={product} onClosePro={() => setshowModalUpdate(false)} />
 
         </div>
