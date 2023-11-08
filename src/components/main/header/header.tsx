@@ -91,7 +91,7 @@ const Header = () => {
               <div className="hidden md:block">
                 <ActionTooltip label="Giỏ hàng" side="top" align="center">
                   <Link
-                    href={"/cart/65489ed7149281c60f0cefe3"}
+                    href={"/users/65489ed7149281c60f0cefe3/cart"}
                     className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"
                   >
                     <ShoppingCart className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
