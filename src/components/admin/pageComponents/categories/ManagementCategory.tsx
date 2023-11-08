@@ -9,17 +9,49 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import ModelCategory from "./ModelCategory";
 import Toaster from "@/components/Toaster/Toaster";
+import Pagination from "@/components/pagination/Pagination";
+
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 
 const ManagementCategory = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [categoriesAll, setCategoriesAll] = useState<ICategory[]>([]);
   const [modal, setModal] = useState(false);
+  const [currentPage,setCurrentPage] = useState<number>(1);
+  const [totalPages,setTotalPages] = useState<number>(1);
   const [category, setCategory] = useState<any>();
+  const [key, setKey] = useState<string>('');
   const toasterRef = useRef<any>(null);
-  useEffect(() => {
-    getAllCategory()?.then(({ data }) => setCategories(data.data));
+ useEffect(() => {
+    fetchData(currentPage)
   }, []);
+  
+  
+  const fetchData = async (currentPage: number) => {
+    if(currentPage !== 0){
+      const response = await getAllCategory(currentPage);
+      if (response) {
+        const { data } = response;
+        setCategories(data.data)
+        setTotalPages(data.paginate.totalPages)
+      } else {
+
+      }
+    }else{
+      const response = await getAllCategory(currentPage);
+      if (response) {
+        const { data } = response;
+        setCategoriesAll(data.data)
+        setTotalPages(data.paginate.totalPages)
+      } else {
+
+      }
+    }
+  
+
+  };
+
 
   const handleDelete = (id: string | undefined) => {
     const confirm = window.confirm("Bạn có chắc muốn xóa không ?");
@@ -31,6 +63,7 @@ const ManagementCategory = () => {
           setCategories(
             categories.filter((item) => item._id !== data.data._id)
           );
+   
         })
         .catch((err) => {
           toasterRef.current.showToast("error", "Delete Fail!");
@@ -38,7 +71,7 @@ const ManagementCategory = () => {
     }
   };
   const handleUpdate = async (category: ICategory) => {
-    updateCategory(category)
+   await updateCategory(category)
       .then((cate) => {
         // console.log(cate);
         // Gọi hàm showToast bên trong component Toaster
@@ -56,7 +89,7 @@ const ManagementCategory = () => {
       });
   };
   const handleAdd = async (category: ICategory) => {
-    addCategory(category)
+  await  addCategory(category)
       .then(({ data }: any) => {
         console.log(data);
 
@@ -68,15 +101,54 @@ const ManagementCategory = () => {
         setCategories(newCategories);
         toasterRef.current.showToast("success", "Add successfully!");
         setModal(false);
+        fetchData(currentPage)
       })
       .catch(() => {
         toasterRef.current.showToast("error", "Add Fail!");
       });
   };
+  const handleChangePage = (page:number) => {
+    setCurrentPage(page)
+    fetchData(page)
+  }
+
+  
+  
+  const search = async () => {
+    if(!key ){
+   await  fetchData(currentPage)
+
+    }else{
+      await  fetchData(0)
+      // console.log(categoriesAll);
+      const regex = new RegExp(key, 'i');
+      const temp = await categoriesAll
+      let resultSearch = await  temp.filter((c:ICategory) => {
+         // Chuyển chuỗi `key` và tên danh mục thành chữ thường và tách thành mảng từ
+        const keyWords = key.toLowerCase().split(' ');
+        const categoryWords = c.name?.toLowerCase().split(' ')
+          // Kiểm tra xem có ít nhất một từ trong `keyWords` tồn tại trong `categoryWords`
+        return keyWords.some((word) => categoryWords.some((categoryWord) => categoryWord.includes(word)));
+        // regex.test(c.name)
+      }
+    
+    );
+    console.log(resultSearch);
+    
+    setCategories(resultSearch);
+    // fetchData(currentPage)
+    }
+  }
+  console.log(categories);
+  
+  const handleChange = (e:any) => {
+    setKey(e.target.value)
+  }
 
   return (
     <div>
       <div className="relative overflow-x-auto">
+
         <section>
           <div>
             <h1 className="font-bold text-xl pt-6 pb-6 dark:text-black">
@@ -98,7 +170,7 @@ const ManagementCategory = () => {
                   className="flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                   type="button"
                 >
-                  All categories{" "}
+                  All categories
                   <svg
                     className="w-2.5 h-2.5 ml-2.5"
                     aria-hidden="true"
@@ -160,13 +232,15 @@ const ManagementCategory = () => {
                 <div className="relative w-full">
                   <input
                     type="search"
+                    onChange={handleChange}
                     id="search-dropdown"
                     className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-gray-500"
                     placeholder="Search Mockups, Logos, Design Templates..."
-                    required
+              
                   />
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={() => search()}
                     className="absolute top-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
                     <svg
@@ -300,6 +374,7 @@ const ManagementCategory = () => {
             })}
           </tbody>
         </table>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage}/>
       </div>
       <Toaster ref={toasterRef} />
       <ModelCategory

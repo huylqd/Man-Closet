@@ -5,12 +5,14 @@ import { useEffect, useState } from "react"
 
 
 
-export const listCategory = () => {
-    const [category, setCategory] = useState<any>();
-
-  useEffect(() => {
-    getAllCategory()?.then(({data}:any) => setCategory(data.data))
-  }, [])
-  return category
-//   console.log(category);
-}
+export const fetchData = async (currentPage: number) => {
+  const response = await getAllCategory(currentPage);
+    if (response) {
+      const { data } = response;
+      console.log(data);
+      
+     
+    }
+ 
+    return response?.data
+};
