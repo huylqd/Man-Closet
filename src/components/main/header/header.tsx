@@ -52,7 +52,7 @@ const Header = () => {
                 </a>
               </div>
               <div className="flex gap-x-2 items-center cursor-pointer group">
-                <ModeToggle/>
+                <ModeToggle />
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@ const Header = () => {
           <div className="section_container flex gap-y-4 md:gap-y-0 flex-row md:items-center justify-between">
             <div className="flex justify-between items-center">
               <div className="flex items-center md:hidden mr-4">
-                <Menu className="w-5 h-5 cursor-pointer"/>
+                <Menu className="w-5 h-5 cursor-pointer" />
               </div>
               <div>
                 <Link href={"/"}>
@@ -83,17 +83,19 @@ const Header = () => {
                 <ActionTooltip label="Tài khoản" side="top" align="center">
                   <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
                     <Link href={"/auth"}>
-                    <User className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
+                      <User className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
                     </Link>
-                   
                   </div>
                 </ActionTooltip>
               </div>
               <div className="hidden md:block">
                 <ActionTooltip label="Giỏ hàng" side="top" align="center">
-                  <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
+                  <Link
+                    href={"/cart/65489ed7149281c60f0cefe3"}
+                    className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"
+                  >
                     <ShoppingCart className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
-                  </div>
+                  </Link>
                 </ActionTooltip>
               </div>
             </div>
@@ -101,9 +103,7 @@ const Header = () => {
         </div>
       </header>
 
-      <div className="flex md:hidden">
-
-      </div>
+      <div className="flex md:hidden"></div>
     </>
   );
 };

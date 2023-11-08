@@ -1,17 +1,13 @@
-
+"use client"
 import React from 'react'
 import ProductsDetail from '@/components/main/pageComponents/home/productsDetail/ProductsDetail'
-import { Descriptions, Related } from '@/components/main/pageComponents/home'
-import { productCarouselData } from '../../../../(home)/demo.data'
-import axios from 'axios'
-import { useParams } from 'next/navigation'
-import { BannerV2 } from '@/components/banner'
+
 import Breadcrumb from '@/components/breadcrumb'
 
 
 
-const Detail = () => {
 
+const Detail = () => {
   return (
     <section>
       <Breadcrumb />
@@ -21,10 +17,10 @@ const Detail = () => {
           <ProductsDetail />
         </section>
         <section>
-          <Descriptions />
+          {/* <Descriptions /> */}
         </section>
         <section>
-          <Related title='Related Products' data={productCarouselData} />
+          {/* <Related title='Related Products' data={productCarouselData} /> */}
         </section>
 
       </section>
