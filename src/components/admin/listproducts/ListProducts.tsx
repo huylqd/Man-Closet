@@ -21,7 +21,7 @@ const ListProducts = () => {
   //     setProductId(product_id)
   // }
   useEffect(() => {
-    getAll().then(({ data }: any) => setProducts(data.data));
+    getAll().then(({ data }: any) => setProducts(data));
   }, []);
   const onhandleRemove = async (id: any) => {
     await deletePro(id);

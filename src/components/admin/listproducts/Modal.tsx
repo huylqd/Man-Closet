@@ -14,7 +14,7 @@ const Modal = ({ isvisible, id, onClose }: any) => {
   const [modalUpdate, setshowModalUpdate] = useState<any>(false);
   const [product, setProduct] = useState<any>({});
   useEffect(() => {
-    getById(productId).then(({ data }: any) => setDetail(data.data));
+    getById(productId).then(({ data }: any) => setDetail(data));
   }, []);
   console.log(detail._id);
   const imgRef = useRef<any>();

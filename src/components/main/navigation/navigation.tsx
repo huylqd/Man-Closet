@@ -13,19 +13,19 @@ const Navigation = () => {
           "flex flex-col md:flex-row md:gap-6 gap-2 py-[2px] px-1 ff-secondary"
         )}
       >
-        <li className="text-sm md:text-base font-normal text-zinc-800 dark:text-white">
+        <li className="text-sm dark:after:bg-white md:text-base font-normal text-zinc-800 dark:text-white">
           <Link className=" dark:text-white transition" href={"/"}>
-            Home
+            Trang chủ
           </Link>
         </li>
-        <li className="text-sm md:text-base font-normal text-zinc-800 dark:text-white ">
+        <li className="text-sm dark:after:bg-white md:text-base font-normal text-zinc-800 dark:text-white ">
           <Link className=" dark:text-white transition" href={"/shop"}>
-            Shop
+            Sản phẩm
           </Link>
         </li>
-        <li className="text-sm md:text-base font-normal text-zinc-800 dark:text-white ">
+        <li className="text-sm dark:after:bg-white md:text-base font-normal text-zinc-800 dark:text-white ">
           <Link className=" dark:text-white transition" href={"/contact"}>
-            Contact
+            Liên hệ
           </Link>
         </li>
       </ul>

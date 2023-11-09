@@ -32,7 +32,9 @@ const ManagementCategory = () => {
     if(currentPage !== 0){
       const response = await getAllCategory(currentPage);
       if (response) {
-        const { data } = response;
+        const  data:any  = response;
+      
+        
         setCategories(data.data)
         setTotalPages(data.paginate.totalPages)
       } else {
@@ -41,7 +43,7 @@ const ManagementCategory = () => {
     }else{
       const response = await getAllCategory(currentPage);
       if (response) {
-        const { data } = response;
+        const  data:any  = response;
         setCategoriesAll(data.data)
         setTotalPages(data.paginate.totalPages)
       } else {
@@ -61,7 +63,7 @@ const ManagementCategory = () => {
           // alert("Xóa thành công!");
           toasterRef.current.showToast("success", "Delete successfully");
           setCategories(
-            categories.filter((item) => item._id !== data.data._id)
+            categories.filter((item) => item._id !== data._id)
           );
    
         })
@@ -88,7 +90,7 @@ const ManagementCategory = () => {
         toasterRef.current.showToast("error", "Update Fail!");
       });
   };
-  const handleAdd = async (category: ICategory) => {
+  const handleAdd = async (category: ICategory) => {  
   await  addCategory(category)
       .then(({ data }: any) => {
         console.log(data);
@@ -96,7 +98,7 @@ const ManagementCategory = () => {
         // getAllCategory()?.then(({ data }) => setCategories(data.data));
         const newCategories = [...categories];
         // Thêm sản phẩm mới vào danh sách
-        newCategories.push(data.data);
+        newCategories.push(data);
         // Cập nhật state `categories` với danh sách mới
         setCategories(newCategories);
         toasterRef.current.showToast("success", "Add successfully!");
@@ -303,7 +305,7 @@ const ManagementCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {categories.map((cate, index) => {
+            {categories?.map((cate, index) => {
               return (
                 <tr
                   key={index}

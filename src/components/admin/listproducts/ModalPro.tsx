@@ -8,7 +8,7 @@ const ModalPro = ({ isvisiblePro, product, onClosePro }: any) => {
   if (!isvisiblePro) return null;
   const [cate, setCate] = useState<any>([]);
   useEffect(() => {
-    getAllCategory()?.then(({ data }) => setCate(data.data));
+    getAllCategory(0)?.then(({ data }) => setCate(data));
   }, []);
 
   const { register, handleSubmit, reset } = useForm();
