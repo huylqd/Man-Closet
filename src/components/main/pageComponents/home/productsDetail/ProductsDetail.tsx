@@ -11,20 +11,15 @@ const ProductsDetail = () => {
     //   const router = useRouter();
     const { productId } = useParams();
     // console.log(productId);
-
-
-
     const [detail, setDetail] = useState<any>({});
     useEffect(() => {
         getById(productId).then(({ data }:any) => setDetail(data.data))
     }, [])
-    console.log(detail);
-
+    // console.log(detail);
     const imgRef = useRef<any>()
     const setImgPreview = (imageUrl: any) => {
         imgRef.current.src = imageUrl
     }
-
     return (
         <div className='flex flex-col justify-between lg:flex-row gap-16 lg:items-center p-12'>
             <div className='flex flex-col gap-6 lg:w-2/4'>
