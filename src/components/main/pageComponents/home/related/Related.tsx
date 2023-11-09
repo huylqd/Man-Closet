@@ -13,10 +13,7 @@ import { IProduct } from "@/interfaces/product";
 
 // type
 interface Data {
-  href: string;
-  imageUrl: string;
-  name: string;
-  price: number;
+  productId: string;
 }
 
 interface ProductCarouselProps {
@@ -33,7 +30,7 @@ const Related = ({ title, data }: ProductCarouselProps) => {
       </div>
       <div>
         <BasicCarousel previews={4}>
-          {data.map(item => (
+          {data?.map(item => (
             <SwiperSlide key={uuidv4()}>
               <ProductCardV1 data={item} />
             </SwiperSlide>

@@ -23,7 +23,7 @@ export const createPro = (products: any) => {
   return res;
 };
 export const updatePro = (products: any) => {
-  const res = instance.post(`api/products/${products._id}`, products);
+  const res = instance.patch(`api/products/${products._id}`, products);
   return res;
 };
 export const deletePro = (id: string) => {
