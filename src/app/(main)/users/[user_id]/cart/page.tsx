@@ -79,14 +79,10 @@ const Modal = ({
       language: "vn",
     };
     try {
-      let response;
-      if (body.payment_method === "shipcode") {
-        response = await instance.post("cart", body);
-      } else if (body.payment_method === "vnpay") {
+      let response: any;
+      if (body.payment_method === "vnpay") {
         response = await instance.post("order/create_payment_url", data);
-        if (response.status === 200) {
-          router.push(response.data);
-        }
+        router.push(response);
         // console.log("test", response);
       }
       console.log(response);
@@ -146,7 +142,7 @@ const Modal = ({
             <h4>Total Bill: {useCurrency(totalPriceOfProducts)}</h4>
           </div>
           <div>
-            <Button onClick={() =>  payment()} type="submit" variant={"primary"}>
+            <Button onClick={() => payment()} type="submit" variant={"primary"}>
               Đặt hàng
             </Button>
             <Button type="button" variant={"danger_border"}>
