@@ -73,6 +73,7 @@ const ManagementCategory = () => {
     }
   };
   const handleUpdate = async (category: ICategory) => {
+    
    await updateCategory(category)
       .then((cate) => {
         // console.log(cate);
@@ -128,7 +129,7 @@ const ManagementCategory = () => {
       let resultSearch = await  temp.filter((c:ICategory) => {
          // Chuyển chuỗi `key` và tên danh mục thành chữ thường và tách thành mảng từ
         const keyWords = key.toLowerCase().split(' ');
-        const categoryWords = c.name?.toLowerCase().split(' ')
+        const categoryWords = c.name.toLowerCase().split(' ')
           // Kiểm tra xem có ít nhất một từ trong `keyWords` tồn tại trong `categoryWords`
         return keyWords.some((word) => categoryWords.some((categoryWord) => categoryWord.includes(word)));
         // regex.test(c.name)

@@ -37,6 +37,8 @@ const ListProducts = () => {
        
     }
     const onhandleUpdate = async (category: any) => {
+        console.log(category);
+        
         updatePro(category)
           .then(() => {
             // console.log(cate);

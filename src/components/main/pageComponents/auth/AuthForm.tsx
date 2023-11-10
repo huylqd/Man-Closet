@@ -83,10 +83,10 @@ const AuthForm = () => {
     }
     if (variant === "LOGIN") {
       try {
-        signIn(data).then(({ data }) => {
+        signIn(data).then((data :any) => {
           console.log(data);
           const user = data.data;
-          user._id = undefined;
+
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refresh", data.refreshToken);
           localStorage.setItem("user", JSON.stringify(user));

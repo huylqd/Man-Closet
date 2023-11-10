@@ -64,33 +64,37 @@ const Modal = ({
     });
     setProducts(productsData);
   }, [productsSelected, totalPrice]);
-
+  
   const payment = async () => {
-    const body = {
-      user_id: "65314ba0d0253dbb606a1c4e",
-      shipping_address: address.shipping_address,
-      payment_method: "vnpay",
-      items: products,
-      total_price: totalPriceOfProducts,
-    };
-    const data = {
-      ...body,
-      bankCode: "",
-      language: "vn",
-    };
-    try {
-      let response: any;
-      if (body.payment_method === "vnpay") {
-        response = await instance.post("order/create_payment_url", data);
-        router.push(response);
-        // console.log("test", response);
+    if(localStorage.getItem('user')){
+      const user = JSON.parse(localStorage.getItem('user') as string);
+      const body = {
+        user_id: `${user._id}`,
+        shipping_address: address.shipping_address,
+        payment_method: "vnpay",
+        items: products,
+        total_price: totalPriceOfProducts,
+      };
+      const data = {
+        ...body,
+        bankCode: "",
+        language: "vn",
+      };
+      try {
+        let response: any;
+        if (body.payment_method === "vnpay") {
+          response = await instance.post("order/create_payment_url", data);
+          router.push(response);
+          // console.log("test", response);
+        }
+        console.log(response);
+      } catch (error) {
+        console.error("Error", error);
+  
+        throw error;
       }
-      console.log(response);
-    } catch (error) {
-      console.error("Error", error);
-
-      throw error;
     }
+    
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
