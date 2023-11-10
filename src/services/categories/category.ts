@@ -33,8 +33,6 @@ const addCategory = async (category: any) => {
 }
 const updateCategory = async (category: ICategory) => {
     try {
-        console.log(category);
-
         const res = await instance.patch(`api/category/${category._id}`, category)
         return res
     } catch (error) {
