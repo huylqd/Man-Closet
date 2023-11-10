@@ -1,4 +1,4 @@
-export interface property {
+export interface Property {
     imageUrl: string;
     color: string;
     quantity: number;
@@ -9,9 +9,9 @@ export interface IProduct {
     productName: string;
     price: number;
     description?: string;
-    properties: property[];
+    properties: Property[];
     categoryId: string;
-    couponId: string;
+    couponId?: string;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date | null;
@@ -25,4 +25,16 @@ export interface IProductResponse {
         totalPages: number;
         totalItems: number;
     };
+}
+
+export interface IProductInCart {
+    _id: string,
+    name: string,
+    price: number,
+    quantity: number,
+    color: string,
+    size: string,
+    imageUrl: string,
+    addedAt?: Date,
+    updatedAt?: Date
 }

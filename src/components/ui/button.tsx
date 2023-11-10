@@ -21,7 +21,9 @@ const buttonVariants = cva(
         primary:
           "border-[1px] border-zinc-800 dark:border-white hover:border-zinc-800/80 bg-zinc-800 dark:bg-white text-white dark:text-zinc-800 hover:bg-zinc-800/80 dark:hover:bg-white/80 hover:text-white/80 dark:hover:text-zinc-800/80 cursor-pointer",
         bordered:
-          "border-[1px] border-zinc-800 dark:border-white hover:border-zinc-800/80 bg-white dark:bg-zinc-800  text-zinc800 dark:text-white hover:bg-white/80 dark:hover:bg-zinc-800/80 hover:text-zinc-800/80 dark:hover:text-white/80 cursor-pointer",
+          "border-[1px] bg-transparent border-zinc-800 hover:bg-zinc-800 hover:text-white dark:border-white dark:hover:bg-white dark:hover:text-zinc-800",
+        danger: "bg-rose-500 text-white hover:bg-rose-700",
+        danger_border: "border-[1px] border-rose-500 text-rose-500 bg-transparent hover:bg-rose-500 hover:text-white",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -1,4 +1,4 @@
-
+'use client'
 import React from 'react'
 import ProductsDetail from '@/components/main/pageComponents/home/productsDetail/ProductsDetail'
 import { Comment, Descriptions, Related } from '@/components/main/pageComponents/home'
@@ -6,28 +6,27 @@ import { productCarouselData } from '../../../../(home)/demo.data'
 import axios from 'axios'
 import { useParams } from 'next/navigation'
 import { BannerV2 } from '@/components/banner'
+
 import Breadcrumb from '@/components/breadcrumb'
 
 
 
+
 const Detail = () => {
-
+  
   return (
-    <section>
-      <Breadcrumb />
+    <section> 
       <section className=' section_container'>
-
         <section>
           <ProductsDetail />
         </section>
         <section>
-          <Descriptions />
+          {/* <Descriptions /> */}
         </section>
-        < Comment />
+        {/* < Comment /> */}
         <section>
-          <Related title='Related Products' data={productCarouselData} />
+          <Related title='Related Products' data={[]} />
         </section>
-
       </section>
     </section>
 

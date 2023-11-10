@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 const User = () => {
     const router = useRouter();
     useEffect(() => {
-        router.replace('/user/profile');
+        router.replace('/users/profile');
       }, []);
     
       return null; // You can also provide some loading message here
