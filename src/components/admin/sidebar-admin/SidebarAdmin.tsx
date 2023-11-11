@@ -10,7 +10,7 @@ const SidebarAdmin = () => {
 
   return (
     <div>
-      <div className="fixed hidden left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform ">
+      <div className="fixed  left-0 top-0 w-64 h-full bg-gray-900 p-4 z-1 sidebar-menu transition-transform ">
         <a
           href="#"
           className="flex items-center pb-4 border-b border-b-gray-800"
