@@ -33,7 +33,7 @@ const ModalUpdate = ({ isvisibleUpdate,update, products, onClosePro }: any) => {
     }
 
     return (
-        <div className="overflow-y-auto pt-[250px]  fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
+        <div className="overflow-y-auto pt-[40px]  fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
             <div className=" overflow-y-auto relative p-4 w-full max-w-3xl h-full md:h-auto">
 
                 <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
