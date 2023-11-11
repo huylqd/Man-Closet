@@ -14,8 +14,13 @@ export const getProductById = (product_id: string) => {
   return response;
 };
 
-export const getAll = () => {
-  const res = instance.get(`api/products`);
+export const getProductByCategoryId = (id: string) => {
+  const response = instance.get(`api/products/cate/${id}`);
+  return response
+}
+
+export const getAll = (page: number) => {
+  const res = instance.get(`api/products?_page=${page}`);
   return res;
 };
 export const createPro = (products: any) => {

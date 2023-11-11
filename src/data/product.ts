@@ -7,7 +7,7 @@ export const listProduct = () => {
   const [product, setProduct] = useState<any>();
 
   useEffect(() => {
-    getAll().then(({ data }: any) => setProduct(data));
+    getAll(0).then(({ data }: any) => setProduct(data));
   }, []);
 
   return product;
