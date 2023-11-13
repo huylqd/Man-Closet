@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { getProductsInCart } from "@/redux/reducer/cart.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import instance from "@/services/instance";
+import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -18,6 +19,31 @@ interface ProductInCart extends IProductInCart {
   selected: boolean;
 }
 
+interface Province {
+  name: string,
+  code: number,
+  division_type: string,
+  codename: string,
+  phone_code: number,
+  districts: Array<Districts>
+}
+
+interface Districts {
+  name: string,
+  code: number,
+  division_type: string,
+  codename: string,
+  province_code: number,
+  wards: Array<Wards>
+}
+
+interface Wards {
+  name: string,
+  code: number,
+  division_type: string,
+  codename: string,
+  district_code: number
+}
 interface ProductInPayment {
   product_id: string;
   price: number;
@@ -43,8 +69,12 @@ const Modal = ({
   const [address, setAddress] = useState<{ shipping_address: string }>({
     shipping_address: "",
   });
+  
   const [products, setProducts] = useState<ProductInPayment[]>([]);
   const [totalPriceOfProducts, setTotalPriceOfProducts] = useState(0);
+  const [province, setProvince] = useState<Province[]>([])
+  const [district, setDistrict] = useState<Districts[]>([])
+  const [ward, setWard] = useState<Wards[]>([])
   const router = useRouter();
 
   useEffect(() => {
@@ -64,9 +94,17 @@ const Modal = ({
     });
     setProducts(productsData);
   }, [productsSelected, totalPrice]);
-  
+
+  useEffect(() => {
+    const getAllProvince = async () => {
+      const data = await axios.get('https://provinces.open-api.vn/api/p/')
+      setProvince(data.data)
+    }
+    getAllProvince()
+  }, [])
+
   const payment = async () => {
-    if(localStorage.getItem('user')){
+    if (localStorage.getItem('user')) {
       const user = JSON.parse(localStorage.getItem('user') as string);
       const body = {
         user_id: `${user._id}`,
@@ -90,11 +128,11 @@ const Modal = ({
         console.log(response);
       } catch (error) {
         console.error("Error", error);
-  
+
         throw error;
       }
     }
-    
+
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,6 +146,20 @@ const Modal = ({
     };
     setAddress(addressUpdated);
   };
+
+  const getDistricts = async (code: string) => {
+    const districts = await axios.get(`https://provinces.open-api.vn/api/p/${code}?depth=2`)
+    console.log(districts.data);
+    
+    setDistrict(districts.data.districts)
+  }
+
+  const getWards = async (code: string) => {
+    const wards = await axios.get(`https://provinces.open-api.vn/api/d/${code}?depth=2`)
+    console.log(wards.data);
+    
+    setWard(wards.data.wards)
+  }
 
   return (
     <>
@@ -126,6 +178,38 @@ const Modal = ({
               defaultValue={address.shipping_address}
               required
             />
+          </div>
+          <div>
+
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
+            <select onChange={(e) => getDistricts(e.target.value)} id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option selected>Tỉnh/Thành Phố</option>
+              {province.map((item) => {
+                return (
+                  <option value={item.code}>{item.name}</option>
+                )
+              })}
+            </select>
+
+            <select id="countries" onChange={(e) => getWards(e.target.value)}  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option selected >Quận/Huyện</option>
+              {district.map((item) => {
+                return (
+                  <option value={item.code}>{item.name}</option>
+                )
+              })}
+            </select>
+
+            <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option selected>Phường/Xã</option>
+              {ward.map((item) => {
+                return (
+                  <option value={item.code}>{item.name}</option>
+                )
+              })}
+            </select>
+
+
           </div>
           <div>
             <h4>Products</h4>
@@ -206,16 +290,16 @@ const CartPage = () => {
   const totalBillPrice = useCurrency(
     billPrice.length !== 0
       ? billPrice.reduce(
-          (accumulator, currentValue) => accumulator + currentValue
-        )
+        (accumulator, currentValue) => accumulator + currentValue
+      )
       : 0
   );
 
   const totalBillPriceSendToModal =
     billPrice.length !== 0
       ? billPrice.reduce(
-          (accumulator, currentValue) => accumulator + currentValue
-        )
+        (accumulator, currentValue) => accumulator + currentValue
+      )
       : 0;
 
   const handleUpdateQuantity = (
