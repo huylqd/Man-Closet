@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Logo } from "@/components/Logo";
 import { v4 as uuidv4 } from "uuid";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const data = [
@@ -62,7 +62,7 @@ const SidebarAdmin = () => {
 
   window.onload = function () {
     const sidebar = document.querySelector(".sidebar") as Element;
-    
+
     const sidebarMenuBtn = document.querySelector(
       "#sidebar_menu_btn"
     ) as HTMLElement;
@@ -100,7 +100,7 @@ const SidebarAdmin = () => {
     function menuBtnChange() {
       if (sidebar.classList.contains("open")) {
         layer.style.opacity = "1";
-        layer.style.zIndex = "50";
+        layer.style.zIndex = "40";
       } else {
         layer.style.opacity = "0";
         layer.style.zIndex = "-1";
@@ -111,7 +111,7 @@ const SidebarAdmin = () => {
   return (
     <>
       {/* header sidebar hien khi width:768px */}
-      <div className="header_sidebar bg-white dark:bg-zinc-900 flex md:hidden items-center justify-between px-6 py-3 shadow">
+      <div className="header_sidebar z-10 bg-white dark:bg-zinc-900 flex md:hidden items-center justify-between px-6 py-3 shadow">
         <span>
           <Logo />
         </span>
