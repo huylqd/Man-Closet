@@ -33,6 +33,11 @@ module.exports = {
         hostname: "encrypted-tbn0.gstatic.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "nhanmachatc.com",
+        port: "",
+      },
     ],
   },
 };

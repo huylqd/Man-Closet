@@ -3,30 +3,35 @@ import { getBillByUser } from '@/services/order/order';
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import Pagination from '@/components/pagination/Pagination';
+import { IBill } from '@/interfaces/bill';
+import Modal from '@/components/modal/Modal';
+import ModalExport from './exportBill/ModalExport';
 '@/data/category';
 const Purchase = () => {
-    const [bill,setBill] = useState<any>([])
-    const [bills,setBills] = useState<any>([])
+    const [bill,setBill] = useState<IBill[]>([])
+    const [bills,setBills] = useState<IBill[]>([])
     const [user,setUser] = useState<any>([])
     const [currentPage,setCurrentPage] = useState<number>(1)
     const [totalPages,setTotalPages] = useState<number>(1)
- 
+  
+    console.log(bills);
+    
     const users = JSON.parse(localStorage.getItem('user') as string);
     
     useEffect(() => {
             fetchData(currentPage);
+            fetchData(0);
             setUser(users)
         },[])
         const fetchData = async (page:number) => {
             if(page == 0){
                 const response:any = await getBillByUser(users._id,page);
                 await setBills(response.data)
-                await setCurrentPage(response.paginate.currentPage)
-                await setTotalPages(response.paginate.totalPages)
+                // await setCurrentPage(response.paginate.currentPage)
+                // await setTotalPages(response.paginate.totalPages)
             }else{
                 const response:any = await getBillByUser(users._id,page);
                 await setBill(response.data)
-            
                 await setCurrentPage(response.paginate.currentPage)
                 await setTotalPages(response.paginate.totalPages)
            
@@ -41,27 +46,36 @@ const Purchase = () => {
         setCurrentPage(page)
         fetchData(page)
       }
+     
     
     const handleClick = async () => {
-       await fetchData(0)
-            const data =await bills.filter((bill:any) => bill.history_order_status[0].status === "Đang xử lý thanh toán")
-             setBill(data)
+       
+            const data = await bills.filter((bill:any) => bill.history_order_status[0].status === "Đang xử lý")
+            await setBill(data)
+             await setTotalPages(1)
     }
     const handleClickSuccess = async  () => {
-        await fetchData(0)
+      
       
         const data = await bills.filter((bill:any) => bill.history_order_status[0].status === "Đã thanh toán")
-      await  await  setBill(data)
+        await setBill(data);
+        await setTotalPages(1)
     }
     const handleClickCancel = async () => {
-        await fetchData(0)
+     
         const data = await bills.filter((bill:any) => bill.history_order_status[0].status === "Đã hủy")
-         setBill(data)
+        await setBill(data)
+         await setTotalPages(1)
     }
     const handlePayNotSuccess = async () => {
-        await fetchData(0)
+  
         const data = await bills.filter((bill:any) => bill.history_order_status[0].status === "Chưa thanh toán")
-         setBill(data)
+        await setBill(data)
+         await setTotalPages(1)
+    }
+
+    const exportBill = async () => {
+
     }
    
   return (
@@ -82,15 +96,15 @@ const Purchase = () => {
                   onClick={() => handleClickSuccess()}
                     variant={"bordered"}
                   >
-                   Đã thành công
+                   Đã thanh toán thành công
                   </Button>
                   <Button
                   onClick={() => handlePayNotSuccess()}
-                    variant={"secondary"}
+                  variant={"bordered"}
                   >
                    Chưa thanh toán
                   </Button>
-                  <Button onClick={() => handleClickCancel()} variant={"danger_border"}>
+                  <Button onClick={() => handleClickCancel()}     variant={"bordered"}>
                   Đã hủy
                 </Button>
                 </div>
@@ -101,16 +115,15 @@ const Purchase = () => {
        
         <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
         {bill.map((bills:any,index:number) => {
-      
-            
         return (
  
                     <div key={index} className="flex flex-col justify-start items-start bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                     <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">Recent orders</p>
+           
 
                                     {bills.items.map((item:any,index:number) => {
                                         return (
-                                            <div key={index} className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
+                                            <div key={index} className="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
                         
                                             <div className="pb-4 md:pb-8 w-full md:w-40">
                                                 <img className="w-full hidden md:block" src="https://i.ibb.co/84qQR4p/Rectangle-10.png" alt="dress" />
@@ -137,9 +150,10 @@ const Purchase = () => {
                                                     </p>
                                                     <p className="text-base xl:text-lg leading-6 text-gray-800">{item.property.quantity}</p>
                                                     <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">{item.sub_total}</p>
-                                                  <Button >
+                                                  <Button variant={"danger_border"}>
                                                     Xóa
                                                   </Button>
+                                                
                                                  
                                                 </div>
                                             </div>
@@ -147,39 +161,17 @@ const Purchase = () => {
                                         </div>
                                         )
                                     })}
-                             
-                         
-                 
-             
-                    {/* <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row  items-start md:items-center space-y-4  md:space-x-6 xl:space-x-8 w-full ">
-                        <div className="w-full md:w-40">
-                            <img className="w-full hidden md:block" src="https://i.ibb.co/s6snNx0/Rectangle-17.png" alt="dress" />
-                            <img className="w-full md:hidden" src="https://i.ibb.co/BwYWJbJ/Rectangle-10.png" alt="dress" />
-                        </div>
-                        <div className="  flex justify-between items-start w-full flex-col md:flex-row space-y-4 md:space-y-0  ">
-                            <div className="w-full flex flex-col justify-start items-start space-y-8">
-                                <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">High Quaility Italic Dress</h3>
-                                <div className="flex justify-start items-start flex-col space-y-2">
-                                    <p className="text-sm leading-none text-gray-800">
-                                        <span className="text-gray-300">Style: </span> Italic Minimal Design
-                                    </p>
-                                    <p className="text-sm leading-none text-gray-800">
-                                        <span className="text-gray-300">Size: </span> Small
-                                    </p>
-                                    <p className="text-sm leading-none text-gray-800">
-                                        <span className="text-gray-300">Color: </span> Light Blue
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex justify-between space-x-8 items-start w-full">
-                                <p className="text-base xl:text-lg leading-6">
-                                    $20.00 <span className="text-red-300 line-through"> $30.00</span>
-                                </p>
-                                <p className="text-base xl:text-lg leading-6 text-gray-800">01</p>
-                                <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">$20.00</p>
-                            </div>
-                        </div>
-                    </div> */}
+                    <div className="flex justify-between align-center ">
+
+                                                {
+                                                    bill[0].history_order_status[0].status === "Chưa thanh toán" ? <Button className='mr-2' variant={"primary"}>Tiếp tục thanh toán</Button>: ""
+                                                  }
+                                                    {
+                                                    bill[0].history_order_status[0].status === "Chưa thanh toán" ? <Button variant={"danger_border"}>Hủy</Button>: ""
+                                                  }
+                                                 
+                    </div>
+                                             
                
                 </div>
                 
@@ -231,6 +223,9 @@ const Purchase = () => {
             </div>
         </div>
     </div>
+  
+
+  
    
 </div>
   )

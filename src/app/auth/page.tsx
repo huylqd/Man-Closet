@@ -6,7 +6,7 @@ import React from 'react'
 const Auth = () => {
   return (
     <div >
-      <section>
+      <section >
         <AuthForm />
       </section>
     </div>
