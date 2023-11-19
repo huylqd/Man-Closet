@@ -38,7 +38,7 @@ const ListProducts = () => {
 
                 setProducts(data.data)
                 setTotalPages(data.pagination.totalPages)
-                console.log('page', data);
+                // console.log('page', data);
 
             } else {
 
@@ -79,7 +79,7 @@ const ListProducts = () => {
             }
 
             );
-            console.log(resultSearch);
+            // console.log(resultSearch);
 
             setProducts(resultSearch);
             // fetchData(currentPage)
@@ -107,7 +107,7 @@ const ListProducts = () => {
 
     }
     const onhandleUpdate = async (category: any) => {
-        console.log(category);
+        // console.log(category);
 
         updatePro(category)
             .then(() => {
@@ -130,7 +130,7 @@ const ListProducts = () => {
     const handleAdd = async (prod: any) => {
         createPro(prod)
             .then(({ data }: any) => {
-                console.log(data);
+                // console.log(data);
 
                 // getAllCategory()?.then(({ data }) => setCategories(data.data));
                 const newCategories = [...products];
@@ -153,7 +153,7 @@ const ListProducts = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div className="w-full md:w-1/2">
 
-                        <form className="flex items-center">
+                        <div className="flex items-center">
                             <label htmlFor="voice-search" className="sr-only">Search</label>
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -173,7 +173,7 @@ const ListProducts = () => {
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>Search
                             </button>
-                        </form>
+                        </div>
 
                     </div>
                     <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
