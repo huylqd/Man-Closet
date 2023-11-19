@@ -6,14 +6,14 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <PrivateRouter>
-      <SidebarAdmin />
-      <main className="relative w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main ">
-        {children}
-
-        <FooterAdmin />
-      </main>
+        <div className="flex md:flex-row flex-col">
+          <SidebarAdmin />
+          <main className="home-section relative w-full bg-gray-50 min-h-screen transition-all main ">
+            {children}
+            <FooterAdmin />
+          </main>
+        </div>
       </PrivateRouter>
- 
     </div>
   );
 };

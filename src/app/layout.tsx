@@ -5,8 +5,8 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import ReduxProvider from "@/redux/ReduxProvider";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -33,7 +33,7 @@ export default function RootLayout({
             storageKey="web-theme"
           >
             {children}
-            <ToastContainer position="top-center"/>
+            <ToastContainer position="top-center" />
           </ThemeProvider>
         </ReduxProvider>
       </body>

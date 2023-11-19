@@ -290,10 +290,10 @@ const ManagementCategory = () => {
             </button>
           </div>
         </section>
-        <table className="w-full text-sm text-left table-auto text-gray-500 dark:text-gray-400">
+        <table className=" w-full table text-sm text-left table-auto text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 ">
                 STT
               </th>
               <th scope="col" className="px-6 py-3">
@@ -314,7 +314,7 @@ const ManagementCategory = () => {
                 >
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white "
                   >
                     {index + 1}
                   </th>

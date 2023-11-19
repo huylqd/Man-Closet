@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useParams } from "next/navigation";
-import { getById, getProductById } from "@/services/products/products";
+import { getById, getProductByCategoryId, getProductById } from "@/services/products/products";
 import { useAppDispatch } from "@/redux/store";
 import { addProductToCart } from "@/redux/reducer/cart.reducer";
 import { commonSuccessToast } from "@/utils/notify";
+import { Related } from "..";
 
 const ProductsDetail = () => {
   //   const router = useRouter();
@@ -15,14 +16,18 @@ const ProductsDetail = () => {
 
 
   const [detail, setDetail] = useState<any>({});
+  const [productsByCateId, setProductsBuyCateId] = useState([])
+  
   useEffect(() => {
     const fetchData = async () => {
       const res = await getProductById(productId as string);
       const result = await res.data;
       setDetail(result);
+      const respon = await getProductByCategoryId(result.categoryId as string);
+      const re = await respon.data;
+      setProductsBuyCateId(re.filter((item:any) => item._id !==  productId));
     };
-
-    fetchData();
+    fetchData();  
   }, [productId]);
 
 
@@ -48,6 +53,7 @@ const ProductsDetail = () => {
   };
 
   return (
+    <div>
     <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-center p-12">
       <div className="flex flex-col gap-6 lg:w-2/4">
         <img
@@ -135,6 +141,10 @@ const ProductsDetail = () => {
           </div>
         </div>
       </div>
+    </div>
+    <section>
+          <Related title='Related Products' data={productsByCateId} />
+        </section>
     </div>
   );
 };
