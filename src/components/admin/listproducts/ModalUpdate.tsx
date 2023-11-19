@@ -1,14 +1,15 @@
 'use client'
+import { ICategory } from '@/interfaces/category'
 import { IProduct } from '@/interfaces/product'
 import { getAllCategory } from '@/services/categories/category'
 import { createPro, getById, updatePro } from '@/services/products/products'
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
-const ModalUpdate = ({ isvisibleUpdate,update, products, onClosePro }: any) => {
+const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => {
     if (!isvisibleUpdate) return null
     // const [product, setProduct] = useState({})
-    const [cate, setCate] = useState<any>([])
+    const [cate, setCate] = useState<ICategory[]>([])
     useEffect(() => {
         getAllCategory(0)?.then(({ data }) => setCate(data))
     }, [])
@@ -20,17 +21,17 @@ const ModalUpdate = ({ isvisibleUpdate,update, products, onClosePro }: any) => {
     if (products) {
         useEffect(() => {
             reset(products)
-
         }, [products]);
-
     }
     const onHandleSubmit = async (data: any) => {
-        console.log(data);
-        
+        // console.log(data);
+
         await update(data)
-        console.log(data);
+        // console.log(data);
 
     }
+    console.log('fsdvfsd', products);
+
 
     return (
         <div className="overflow-y-auto pt-[40px]  fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
@@ -86,16 +87,28 @@ const ModalUpdate = ({ isvisibleUpdate,update, products, onClosePro }: any) => {
                                         </div>
                                         <div>
                                             <label htmlFor="length" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size</label>
-                                            <input type="text" {...register(`properties[${index}].size`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
+                                            <input type="text" {...register(`properties[${index}].color`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
                                         </div>
-                                        <div>
-                                            <label htmlFor="breadth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color</label>
-                                            <input type="text" {...register(`properties[${index}].color`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
-                                        </div>
-                                        <div>
-                                            <label htmlFor="width" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
-                                            <input type="number" {...register(`properties[${index}].quantity`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
-                                        </div>
+                                        {products.properties.map((dataa: any, index: number) => {
+                                            // console.log('ndsajfn', dataa);
+                                            
+                                          return  dataa.variants.map((item: any, index2: number) => {
+                                            console.log('item', item);
+        
+                                           return  <div>
+
+                                                    <div>
+                                                        <label htmlFor="breadth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color</label>
+                                                        <input type="text" {...register(`properties[${index}].variants[${index2}].size`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
+                                                    </div>
+                                                    <div>
+                                                        <label htmlFor="width" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                                                        <input type="number" {...register(`properties[${index}].variants[${index2}].quantity`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
+                                                    </div>
+                                                </div>
+                                            })
+
+                                        })}
                                     </div>
                                 })}
                             </form>
