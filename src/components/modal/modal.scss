@@ -4,3 +4,9 @@
    backdrop-filter: blur(4px);
    transition: background-color .3s cubic-bezier(.42, .00, .58, 1.00);
 }
+
+.modal-wrap-children{
+  & > div {
+    max-width: 100%;
+  }
+}
