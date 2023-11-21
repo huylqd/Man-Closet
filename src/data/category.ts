@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 
 
 
-<<<<<<< HEAD
 export const fetchData = async (currentPage: number) => {
   const response = await getAllCategory(currentPage);
     if (response) {
@@ -18,12 +17,11 @@ export const fetchData = async (currentPage: number) => {
  
     return response?.data
 };
-=======
 export const listCategory = () => {
     const [category, setCategory] = useState<any>();
 
   useEffect(() => {
-    getAllCategory()?.then(({data}:any) => setCategory(data.data))
+    getAllCategory(0)?.then(({data}:any) => setCategory(data.data))
   }, [])
   return category
 //   console.log(category);
@@ -40,4 +38,3 @@ export const getProductsByCategory = (id: string) => {
     
 }
  
->>>>>>> 7d5cbb1aef731f5b54f9945659e0662b73c92024

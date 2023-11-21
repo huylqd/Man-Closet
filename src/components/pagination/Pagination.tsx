@@ -36,9 +36,9 @@ const Pagination = ({totalPages, currentPage, onPageChange}:Pagination) => {
    
     
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+    <div className="flex items-center w-full justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
     
-    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+    <div className=" sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <div>
         <p className="text-sm text-gray-700">
           Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}

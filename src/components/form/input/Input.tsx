@@ -64,7 +64,7 @@ const Input: React.FC<IputProp> = ({
             ring-1
             ring-inset
             ring-gray-300
-            placehoder:text-gray-400
+        
             focus:ring-2
             focus:ring-inset
            
@@ -72,7 +72,7 @@ const Input: React.FC<IputProp> = ({
             sm:leading-6
             p-2
           `,
-            errors[id] && "focus:ring-rose-500",
+            errors[id] && "focus:ring-rose-500  outline-none	 border-rose-600 ",
             disabled && ""
           )}
         />

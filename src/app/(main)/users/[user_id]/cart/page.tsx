@@ -51,6 +51,7 @@ interface ProductInPayment {
     quantity: number;
     color: string;
     size: string;
+    imageUrl:string;
   };
   sub_total: number;
 }
@@ -88,6 +89,7 @@ const Modal = ({
           quantity: item.quantity,
           color: item.color,
           size: item.size,
+          imageUrl:item.imageUrl
         },
         sub_total: item.totalPrice,
       };
@@ -222,6 +224,7 @@ const Modal = ({
                     <p>color: {item.property.color}</p>
                     <p>quantity: {item.property.quantity}</p>
                     <p>size: {item.property.size}</p>
+                    <p>imageUrl: {item.property.imageUrl}</p>
                     <p>total: {item.sub_total}</p>
                   </div>
                 );

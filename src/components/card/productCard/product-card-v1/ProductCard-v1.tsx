@@ -66,7 +66,7 @@ const ProductCardV1 = ({ data, marginLeft = "0px" }: ProductCardV1Props) => {
           {priceFormatted}
         </h4>
         <div className="flex items-center justify-center gap-y-2 flex-col">
-          <Link href={`shop/detail/${_id}`} className="w-full">
+          <Link href={`/shop/detail/${_id}`} className="w-full">
             <Button variant={"bordered"} className="grow w-full">
 
               <span>Chi tiết</span>

@@ -111,7 +111,7 @@ const SidebarAdmin = () => {
   return (
     <>
       {/* header sidebar hien khi width:768px */}
-      <div className="header_sidebar z-10 bg-white dark:bg-zinc-900 flex md:hidden items-center justify-between px-6 py-3 shadow">
+      <div className="header_sidebar bg-white dark:bg-zinc-900 flex md:hidden items-center justify-between px-6 py-3 shadow">
         <span>
           <Logo />
         </span>
