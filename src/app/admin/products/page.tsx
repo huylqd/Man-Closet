@@ -3,7 +3,7 @@ import React from 'react'
 
 const List = () => {
   return (
-    <section className="p-6">
+    <section className="pb-6 section_container">
       <ListProducts />
     </section>
   )

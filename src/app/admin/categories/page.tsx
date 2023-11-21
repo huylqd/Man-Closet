@@ -3,7 +3,7 @@ import React from 'react'
 
 const Category = () => {
   return (
-    <div className="p-6 ">
+    <div className="pb-6 section_container">
       <ManagementCategory/>
     </div>
   )
