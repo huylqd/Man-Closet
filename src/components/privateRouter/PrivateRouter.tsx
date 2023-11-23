@@ -1,23 +1,26 @@
 'use client'
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
-
+export type UserRole = 'admin' | 'member' | 'otherRole' 
 type PrivateRouteProps = {
     children: ReactNode;
+    allowedRoles :UserRole[],
 };
-const PrivateRouter = ({ children }: PrivateRouteProps) => {
+const PrivateRouter = ({ children , allowedRoles  }: PrivateRouteProps) => {
     const router = useRouter();
+    console.log(allowedRoles);
+    
 
     const isAuthenticated = JSON.parse(localStorage.getItem("user") as string);
-    
-    console.log(isAuthenticated);
+    const userRoles = [`${isAuthenticated?.role}`]; 
+  
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            router.push('/auth'); // Điều hướng đến trang đăng nhập
-        }
+        if (!allowedRoles.some(role => userRoles.includes(role))) {
+            router.push('/auth');
+          }
     }, [isAuthenticated]);
-    return isAuthenticated ? children : null;
+    return allowedRoles.some(role => userRoles.includes(role)) ? <>{children}</> : null;
     
 
 

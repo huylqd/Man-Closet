@@ -6,8 +6,9 @@ import TitleDivide from '@/components/titleDivide';
 import { v4 as uuidv4 } from "uuid";
 import React from 'react'
 import { SwiperSlide } from 'swiper/react';
-import { IProduct, IProductResponse, property } from '@/interfaces/product';
+import { IProduct, IProductResponse } from '@/interfaces/product';
 import { useState, useEffect } from 'react'
+import Pagination from '@/components/pagination/Pagination';
 
 interface ShopListProp {
   title: string;
@@ -15,7 +16,9 @@ interface ShopListProp {
 }
 
 const ShopList = ({ title, data }: ShopListProp) => {
-
+  const handleChangePage = (page:number) => {
+   
+  }
   return (
     <div>
       <div className="">
@@ -42,6 +45,7 @@ const ShopList = ({ title, data }: ShopListProp) => {
           </BasicCarousel>
         </div>
       </div>
+      <Pagination currentPage={1} totalPages={1} totalItems={1} onPageChange={handleChangePage}/>
     </div>
   );
 }

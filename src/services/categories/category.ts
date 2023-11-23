@@ -2,10 +2,10 @@ import { ICategory } from "@/interfaces/category";
 import instance from "../instance";
 
 
-const getAllCategory = (page:number) => {
+const getAllCategory = (page:number,limit:number) => {
     try {
    
-        const res = instance.get(`api/category?_page=${page}`)
+        const res = instance.get(`api/category?_page=${page}&_limit=${limit}`)
         return res
     } catch (error) {
         console.log(error);

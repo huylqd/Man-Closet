@@ -12,17 +12,8 @@ import Breadcrumb from '@/components/breadcrumb'
 import { listProduct } from '@/data/product'
 
 import Pagination from '@/components/pagination/Pagination'
-import { fetchData } from '@/data/category'
+
 const Product = () => {
-
-  // const [Categories,setCategories] = useState()
-  // useEffect(() => {
-
-  //   const fetch = fetchData(0)
-  //   console.log(fetch);
-    
-  // },[])
-
   return (
     <div>
       <section>
@@ -44,6 +35,7 @@ const Product = () => {
           </div>
           <div className='flex-auto w-4/6 ml-2'>
             <ShopList title='Product All' data={listProduct()} />
+            
             {/* Pagination demo */}
            
           </div>

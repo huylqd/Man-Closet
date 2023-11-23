@@ -2,12 +2,10 @@
 import { BannerV2 } from '@/components/banner';
 import { Input } from '@/components/form';
 import React, { useState, useCallback, useRef } from 'react'
-import { useForm, FieldValues, SubmitHandler, FieldErrors } from "react-hook-form";
+import { useForm, FieldValues, SubmitHandler,FieldErrors } from "react-hook-form";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import AuthSocialButton from './AuthSocialButton';
 import Image from 'next/image';
-import { BannerForm } from '@/assets/media/images/png';
-import { Logo } from '@/components/Logo';
 import style from './authform.module.scss'
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -38,6 +36,7 @@ const AuthForm = () => {
     register,
     handleSubmit,
     watch,
+
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
@@ -47,13 +46,12 @@ const AuthForm = () => {
       confirmPassword: ''
     },
   });
+
   const displayError = (field: string) => {
     if (errors[field]) {
-
-
       return (
         <span className="text-red-600 text-sm">
-          {errors[field]?.message}
+          {errors[field] && errors[field]?.message}
         </span>
       );
     }
@@ -68,12 +66,12 @@ const AuthForm = () => {
       try {
         // const emailValidationResult = validateInput('require', data.name, 'Invalid email address');
         // console.log(emailValidationResult);
-
-        await signUp(data).then(() => {
-          toasterRef.current.showToast('success', 'Register successfully!');
-          setVariant("LOGIN")
-        }).catch((error) => console.log(error)
-        );
+      const register = await signUp(data)
+      if(register) {
+        toasterRef.current.showToast('success', 'Register successfully!');
+        setVariant("LOGIN")
+      }
+   
 
       } catch (error: any) {
         toasterRef.current.showToast('error', `${error.response.data.message!}`);
@@ -83,22 +81,23 @@ const AuthForm = () => {
     }
     if (variant === "LOGIN") {
       try {
-        signIn(data).then((data :any) => {
-          console.log(data);
-          const user = data.data;
+        const login:any = await signIn(data)
+        console.log(login);
+        if(login){
+          const user = login.data;
 
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("refresh", data.refreshToken);
-          localStorage.setItem("user", JSON.stringify(user));
-          if (user.role === "admin") {
-            router.push('/admin')
-          } else {
-            router.push('/')
-          }
-
-          toasterRef.current.showToast('success', 'Login successfully!');
-
-        }).catch((error) => console.log(error))
+            localStorage.setItem("accessToken", login.accessToken);
+            localStorage.setItem("refresh", login.refreshToken);
+            localStorage.setItem("user", JSON.stringify(user));
+            if (user.role === "admin") {
+              router.push('/admin')
+            } else {
+              router.push('/')
+            }
+  
+            toasterRef.current.showToast('success', 'Login successfully!');
+        }
+       
       } catch (error: any) {
         toasterRef.current.showToast('error', `${error.response.data.message!}`);
       }
@@ -112,24 +111,24 @@ const AuthForm = () => {
   return (
     <section>
 
-      <section className={cn(
-        style.bgform,
-        " dark:bg-gray-700 drop-shadow-2xl  "
-      )}   >
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  md:h-screen lg:py-0">
-          <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+
+<section className="flex flex-col md:flex-row h-screen items-center">
+
+<div className="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
+  <img src="https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/327194280_893802508740012_635825132664909687_n.jpg?stp=cp6_dst-jpg&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=x5H00WAVQRwAX9b1Dq1&_nc_ht=scontent.fhan1-1.fna&oh=00_AfAwd7htAv4HBCywdhz73UbwL5LgT7QyKc5KAP0aPZxtvA&oe=6560A9C9" alt="" className="w-full h-full object-cover"/>
+</div>
+
+<div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
+      flex items-center justify-center">
+
+  <div className="w-full h-100">
 
 
-          </a>
-          <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-white dark:border-white">
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl dark:text-black text-center text-gray-800 ">
-                {variant === 'LOGIN' ? 'Sign in to your account' : (variant === 'REGISTER' ? 'Register an account' : 'Forgot password')}
+    <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12 dark:text-gray-700">   {variant === 'LOGIN' ? 'Sign in to your account' : (variant === 'REGISTER' ? 'Register an account' : 'Forgot password')}</h1>
 
-
-              </h1>
-              <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit(onSubmit)}>
-                <div>
+    <form className="mt-6" onSubmit={handleSubmit(onSubmit)} >
+    <div className="mt-4">
+       
                   {variant === "REGISTER" && (
                     <Input
                       id="name"
@@ -138,30 +137,37 @@ const AuthForm = () => {
                       errors={errors}
                       disabled={isLoading}
                       watch={watch}
+                      placeholder='Enter Your Name'
 
 
                     />
 
                   )}
                   {displayError("name")}
-                </div>
+             
+      </div>
 
+      <div className="mt-4">
+      
+              
 
-                <div>
+              <Input
+                id="email"
+                register={register}
+                label="Email Address"
+                type="email"
+                disabled={isLoading}
+                errors={errors}
+                placeholder="Enter Email Address"
+                watch={watch}
+              />
+              {displayError("email")}
 
-                  <Input
-                    id="email"
-                    register={register}
-                    label="Email Address"
-                    type="email"
-                    disabled={isLoading}
-                    errors={errors}
-                    watch={watch}
-                  />
-                  {displayError("email")}
+      
+      </div>
 
-                </div>
-                <div>
+      <div className="mt-4">
+       
                   {variant !== "FORGOT_PASSWORD" && (
                     <Input
                       id="password"
@@ -171,13 +177,16 @@ const AuthForm = () => {
                       errors={errors}
                       disabled={isLoading}
                       watch={watch}
+                      placeholder='Enter Password'
 
                     />
                   )}
                   {displayError("password")}
 
-                </div>
-                <div>
+               
+      </div>
+      <div className="mt-4">
+       
                   {variant !== "FORGOT_PASSWORD" && variant !== "LOGIN" && (
                     <Input
                       type='password'
@@ -187,71 +196,48 @@ const AuthForm = () => {
                       errors={errors}
                       disabled={isLoading}
                       watch={watch}
+                      placeholder='Enter Password'
 
                     />
                   )}
                   {displayError("confirmPassword")}
 
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start">
-                    <div className="flex items-center h-5">
+                
+      </div>
 
-                      <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-white focus:ring-3 focus:ring-primary-300 dark:text-white dark:border-gray-100 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
-                            dark:accent-zinc-800" required />
-                    </div>
-                    <div className="ml-3 text-sm">
-                      <label htmlFor="remember" className="text-gray-500 dark:text-black">Remember me</label>
-                    </div>
-                  </div>
-                  <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-black" onClick={toggleForgotPassword}>Forgot password?</a>
-                </div>
+      <div className="text-right mt-2">
+        <a href="#" className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700 " onClick={toggleForgotPassword}>Forgot Password?</a>
+      </div>
 
-                <Button variant="primary" className='w-full dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white'>
-                  {variant === 'LOGIN' ? 'Login' : (variant === 'REGISTER' ? 'Register' : 'Send email')}
+
+             <Button variant="primary" className='w-full font-semibold rounded-lg px-4 py-6 flex mt-6 align-center dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white'>
+                  {variant === 'LOGIN' ? 'Log In' : (variant === 'REGISTER' ? 'Register' : 'Send email')}
 
                 </Button>
+    </form>
 
-                <div className="mt-6">
-                  <div className="relative">
-                    <div
-                      className="
-                    absolute
-                    inset-0
-                    flex
-                    items-center
-                    "
-                    >
-                      <div className="w-full border-t border-gray-300" />
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="bg-white px-2 text-gray-500">
-                        Or continute with
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mt-6 flex gap-2">
-                    <AuthSocialButton
-                      icon={BsGithub}
-                      onClick={() => socialAction("github")}
-                    />
-                    <AuthSocialButton
-                      icon={BsGoogle}
-                      onClick={() => socialAction("google")}
-                    />
-                  </div>
-                </div>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500" onClick={toggleVariant}> {variant === "LOGIN" ? "Create an account" : "Login"}</a>
-                </p>
+    <hr className="my-6 border-gray-300 w-full"/>
 
-              </form>
-            </div>
+    <button type="button" onClick={() => socialAction("google")} className="w-full block bg-white  hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300">
+          <div className="flex items-center justify-center">
+         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-6"  width="100" height="100" viewBox="0 0 48 48">
+<path fill="#fbc02d" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12	s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20	s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#e53935" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039	l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4caf50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36	c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1565c0" d="M43.611,20.083L43.595,20L42,20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571	c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+</svg>
+          <span className="ml-4">
+          Log in
+          with
+          Google</span>
           </div>
-        </div>
-      </section>
-      <Toaster ref={toasterRef} />
+        </button>
 
+    <p className="mt-8 dark:text-gray-700"> {variant === "LOGIN" ? "Don’t have an account yet?" : "Do you already have an account?"}   <a href="#" className="font-medium text-primary-600 hover:underline hover:text-blue-700 dark:text-primary-500" onClick={toggleVariant}> {variant === "LOGIN" ? "Create an account" : "Login"}</a></p>
+
+
+  </div>
+</div>
+
+</section>
+<Toaster ref={toasterRef} /> 
     </section>
 
   )

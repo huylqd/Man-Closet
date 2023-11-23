@@ -7,6 +7,7 @@ import React from "react";
 import { productCarouselData } from "./demo.data";
 import { BannerCarousel } from "@/components/carousel";
 import { listProduct } from "@/data/product";
+import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
 
 const Home = () => {
   return (
@@ -29,6 +30,7 @@ const Home = () => {
       <section className="section_container pt-10 md:py-16">
         <GridProduct/>
       </section>
+   
     </div>
   );
 };

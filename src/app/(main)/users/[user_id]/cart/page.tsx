@@ -29,7 +29,7 @@ interface ProductInPayment {
   };
   sub_total: number;
 }
-
+   const user = JSON.parse(localStorage.getItem('user') as string);
 const testUserId = "65489ed7149281c60f0cefe3";
 
 const Modal = ({
@@ -69,7 +69,7 @@ const Modal = ({
   
   const payment = async () => {
     if(localStorage.getItem('user')){
-      const user = JSON.parse(localStorage.getItem('user') as string);
+   
       const body = {
         user_id: `${user._id}`,
         shipping_address: address.shipping_address,
@@ -161,6 +161,10 @@ const Modal = ({
     </>
   );
 };
+
+
+// =====================================================
+
 
 const CartPage = () => {
   const { user_id } = useParams();

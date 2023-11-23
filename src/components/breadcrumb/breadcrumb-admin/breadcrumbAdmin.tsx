@@ -1,13 +1,19 @@
+'use client'
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
 
 interface breadcrumbProp{
     title:string
 }
-const BreadcrumbAdmin: React.FC<breadcrumbProp> = ({title}) => {
+const BreadcrumbAdmin = () => {
+    const pathName = usePathname();
+    console.log(pathName);
+    const currentBreadcrumb = pathName.split("/").slice(-2)[1];
+    
   return (
     <div>
-          <div className="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+          <div className=" section_container py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-1">
             <button type="button" className="text-lg text-gray-600 sidebar-toggle">
                 <i className="ri-menu-line"></i>
             </button>
@@ -16,7 +22,7 @@ const BreadcrumbAdmin: React.FC<breadcrumbProp> = ({title}) => {
                     <a href="#" className="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
                 </li>
                 <li className="text-gray-600 mr-2 font-medium">/</li>
-                <li className="text-gray-600 mr-2 font-medium">{title}</li>
+                <li className="text-gray-600 mr-2 font-medium">{currentBreadcrumb}</li>
             </ul>
             <ul className="ml-auto flex items-center">
                 <li className="mr-1 dropdown">

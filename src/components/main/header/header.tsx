@@ -1,4 +1,7 @@
+"use client";
+
 import {
+  AlignLeft,
   Heart,
   Mail,
   Menu,
@@ -7,20 +10,38 @@ import {
   ShoppingCart,
   User,
 } from "lucide-react";
-import React from "react";
-import { Navigation } from "@/components/main/navigation";
+import React, { useState } from "react";
+import { MobileNavigation, Navigation } from "@/components/main/navigation";
 import { Logo } from "@/components/Logo";
 import Link from "next/link";
 import ActionTooltip from "@/components/actionTooltip/actionTooltip";
 import { ModeToggle } from "@/components/toggle";
+import Modal from "@/components/modal/Modal";
+import { Button } from "@/components/ui/button";
+import SearchModal from "./SearchModal";
+import "./header.scss";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
+  const [isSearch, setIsSearch] = useState(false);
+  const closeSearchModal = () => {
+    setIsSearch(false);
+  };
+
+  // menu mobile
+  const [isOpenMenuMb, setIsOpenMenuMb] = useState(false)
+  const handleOpenMenuMobile = (value: boolean) => {
+    setIsOpenMenuMb(value)
+  }
+  
+  console.log(isOpenMenuMb)
+
   return (
     <>
       <header className="divide-y divide-zinc-800 dark:divide-slate-50/10">
         <div className="bg-zinc-800 dark:bg-zinc-900 text-white py-2 md:block">
           <div className="section_container flex justify-between">
-            <div className="flex justify-between md:justify-normal w-full md:w-[auto] gap-x-10 p-x-2 items-center">
+            <div className="flex justify-center flex-col m:flex-row m:justify-between md:justify-normal w-full md:w-[auto] gap-x-10 p-x-2 items-center">
               <div className="flex gap-x-2 items-center group cursor-pointer">
                 <Mail className="w-4 h-4 group-hover:text-white/60 transition" />
                 <a
@@ -62,7 +83,11 @@ const Header = () => {
           <div className="section_container flex gap-y-4 md:gap-y-0 flex-row md:items-center justify-between">
             <div className="flex justify-between items-center">
               <div className="flex items-center md:hidden mr-4">
-                <Menu className="w-5 h-5 cursor-pointer" />
+                <button
+                  onClick={() => handleOpenMenuMobile(true)}
+                >
+                  <AlignLeft className="w-5 h-5 cursor-pointer" />
+                </button>
               </div>
               <div>
                 <Link href={"/"}>
@@ -75,7 +100,10 @@ const Header = () => {
             </div>
             <div className="flex items-center gap-x-4">
               <ActionTooltip label="Tìm kiếm" side="top" align="center">
-                <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
+                <div
+                  onClick={() => setIsSearch(true)}
+                  className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"
+                >
                   <Search className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
                 </div>
               </ActionTooltip>
@@ -103,7 +131,24 @@ const Header = () => {
         </div>
       </header>
 
-      <div className="flex md:hidden"></div>
+      {/* {isSearch && (
+        <Modal isOpen={isSearch} handleClose={closeSearchModal}>
+          <SearchModal />
+        </Modal>
+      )} */}
+
+      <div
+        className={cn(
+          "mb_menu fixed z-50 top-0 left-0 bg-white h-screen w-screen p-3 md:hidden block",
+          isOpenMenuMb? "open" : "close"
+        )}
+      >
+        <MobileNavigation onClose={handleOpenMenuMobile}/>
+      </div>
+
+      <Modal isOpen={isSearch} handleClose={closeSearchModal}>
+        <SearchModal onClose={closeSearchModal} />
+      </Modal>
     </>
   );
 };
