@@ -214,7 +214,7 @@ const ListProducts = () => {
                     </div>
                 </div>
                 <table className="w-full text-sm text-left table-auto text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead className="text-xs  text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="p-4">STT</th>
                             <th scope="col" className="p-4">Product</th>
@@ -225,7 +225,7 @@ const ListProducts = () => {
                     <tbody>
                         {products.map((data: IProduct, index: number) => {
                             return (
-                                <tr key={uuidv4()} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <tr key={uuidv4()} className="border-b bg-white dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td className="p-4 w-4">
 
                                         <div className="flex items-center">

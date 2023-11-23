@@ -46,7 +46,10 @@ const ProductsDetail = () => {
       imageUrl: imgRef.current?.src,
       quantity: 1,
     };
-    const user_id = "65489ed7149281c60f0cefe3";
+    const user = JSON.parse(localStorage.getItem("user") as string)
+    const user_id = user._id;
+    console.log(user_id);
+    
 
     dispatchThunk(addProductToCart({ user_id, product }));
     commonSuccessToast("Thêm sản phẩm thành cồng")

@@ -16,7 +16,7 @@ const Category = ({ title, data }: CategoryProp) => {
                 {data?.map((category, index) => {
                     return (<div key={uuidv4()} className='flex flex-row align-center mb-8  '>
 
-                        <input type="checkbox" value="" className="mr-4 bg-gray-500  dark:text-white dark:border-white border-2 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
+                        <input type="checkbox" value={category?._id} className="mr-4 bg-gray-500  dark:text-white dark:border-white border-2 dark:focus:ring-primary-600 dark:ring-offset-gray-100 accent-zinc-800  
                             dark:accent-zinc-100" />
                         <p>{category.name}</p>
                     </div>)

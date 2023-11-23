@@ -9,11 +9,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface ModelProp {
-  isvisible: boolean;
-  category: ICategory;
-  update: (data: ICategory) => void;
-  add: (data: ICategory) => void;
-  onClose: () => void;
+  isvisible: boolean,
+  category: ICategory,
+  update: (data: ICategory) => void,
+  add: (data: ICategory) => void,
+  onClose: () => void,
 }
 const ModelCategory = ({
   isvisible,

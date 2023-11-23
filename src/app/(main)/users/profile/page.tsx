@@ -3,7 +3,7 @@ import React from 'react'
 
 const Profile = () => {
   return (
-    <PrivateRouter>
+    <PrivateRouter allowedRoles={['member']}>
       <div>page</div>
     </PrivateRouter>
 

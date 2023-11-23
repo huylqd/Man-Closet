@@ -5,6 +5,7 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 interface IputProp {
   label: string;
   id: string;
+  placeholder?:string;
   type?: string;
   required?: boolean;
   register: UseFormRegister<FieldValues>;
@@ -13,6 +14,7 @@ interface IputProp {
   watch: any
 }
 const Input: React.FC<IputProp> = ({
+  placeholder,
   label,
   id,
   type,
@@ -33,6 +35,7 @@ const Input: React.FC<IputProp> = ({
       <div className="mt-2">
         <input
           id={id}
+          placeholder={placeholder}
           type={type}
           autoComplete={id}
 
@@ -52,13 +55,14 @@ const Input: React.FC<IputProp> = ({
           className={clsx(
             `
             dark:bg-white
-            
+            px-4
+             py-3
             form-input
             block
             w-full
             rounded-md
             border-0
-            py-1.5
+            
             text-gray-900
             shadow-sm
             ring-1
