@@ -18,7 +18,7 @@
         stroke: #f3f3f3;
       }
       circle:nth-child(2){
-        stroke-dashoffset: calc(220 - (220 * 87) / 100);
+        stroke-dashoffset: calc(220 - (220 * var(--completion_schedule)) / 100);
         stroke: var(--color);
       }
     }
