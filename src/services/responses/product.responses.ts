@@ -8,3 +8,7 @@ export interface ProductInCartResponse extends AxiosResponse {
 export interface GetProductResponse extends AxiosResponse {
   data: IProduct
 }
+
+export interface GetAllProductResponse extends AxiosResponse{
+  data: IProduct[]
+}

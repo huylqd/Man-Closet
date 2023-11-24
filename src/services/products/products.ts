@@ -1,6 +1,6 @@
 import { IProduct } from "@/interfaces/product";
 import instance from "../instance";
-import { GetProductResponse } from "../responses/product.responses";
+import { GetAllProductResponse, GetProductResponse } from "../responses/product.responses";
 
 export const getById = (id: string) => {
   const res = instance.get<any, GetProductResponse>(`api/products/${id}`);
@@ -13,6 +13,11 @@ export const getProductById = (product_id: string) => {
   );
   return response;
 };
+
+export const getAllProduct = () => {
+  const response = instance.get<any, GetAllProductResponse>("api/products")
+  return response
+}
 
 export const getAll = () => {
   const res = instance.get(`api/products`);
