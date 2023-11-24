@@ -12,6 +12,7 @@ import Toaster from "@/components/Toaster/Toaster";
 import Pagination from "@/components/pagination/Pagination";
 import SearchCategory from "./SearchCategory";
 import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
+import Modal from "@/components/modal/Modal";
 
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
@@ -69,18 +70,17 @@ const ManagementCategory = () => {
      if(isOpen){
       deleteCategory(id)
       .then(({ data }: any) => {
-        // alert("Xóa thành công!");
         toasterRef.current.showToast("success", "Delete successfully");
         setCategories(
           categoriesAll.filter((item) => item._id !== data._id)
         );
+        setTotalItems(categories.length)
         fetchData(currentPage,limit)
         setIsOpen(false)
  
       })
       .catch((err) => {
         toasterRef.current.showToast("error", "Delete Fail!");
-        
       });
   
      }
@@ -302,7 +302,10 @@ const ManagementCategory = () => {
         onClose={() => setModal(false)}
       />
       {isOpen && (
-  <ConfirmModal isOpen={isOpen} onClose={() => setIsOpen(false)} onDelete={handleDelete} id={category._id}/>
+        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+        <ConfirmModal  onClose={() => setIsOpen(false)} onDelete={handleDelete} id={category._id}/>
+        </Modal>
+ 
       )}
     
     </div>

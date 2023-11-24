@@ -9,7 +9,6 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <main className="relative">
           {children}
         </main>
-        
       <Footer/>
     </div>
   );
