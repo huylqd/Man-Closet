@@ -6,7 +6,7 @@ import TitleDivide from '@/components/titleDivide';
 import { v4 as uuidv4 } from "uuid";
 import React from 'react'
 import { SwiperSlide } from 'swiper/react';
-import { IProduct, IProductResponse, property } from '@/interfaces/product';
+import { IProduct, IProductResponse,  } from '@/interfaces/product';
 import { useState, useEffect } from 'react'
 
 interface ShopListProp {

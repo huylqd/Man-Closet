@@ -22,9 +22,7 @@ const Detail = () => {
           <ProductsDetail />
           
         </section>
-        <section>
-          {/* <Descriptions /> */}
-        </section>
+        
         {/* < Comment /> */}
         
       </section>

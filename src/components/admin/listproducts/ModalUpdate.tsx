@@ -30,7 +30,6 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
         // console.log(data);
 
     }
-    console.log('fsdvfsd', products);
 
 
     return (
@@ -89,26 +88,23 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
                                             <label htmlFor="length" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size</label>
                                             <input type="text" {...register(`properties[${index}].color`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
                                         </div>
-                                        {products.properties.map((dataa: any, index: number) => {
-                                            // console.log('ndsajfn', dataa);
-                                            
-                                          return  dataa.variants.map((item: any, index2: number) => {
-                                            console.log('item', item);
-        
+                                      
+                                                                                  
+                                          {  dataa.variants.map((item: any, indexOfVariants: number) => {   
+                                            console.log('fsjfvbsd',item);
+                                                
                                            return  <div>
-
                                                     <div>
                                                         <label htmlFor="breadth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color</label>
-                                                        <input type="text" {...register(`properties[${index}].variants[${index2}].size`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
+                                                        <input type="text" {...register(`properties[${index}].variants[${indexOfVariants}].size`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
                                                     </div>
                                                     <div>
                                                         <label htmlFor="width" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
-                                                        <input type="number" {...register(`properties[${index}].variants[${index2}].quantity`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
+                                                        <input type="number" {...register(`properties[${index}].variants[${indexOfVariants}].quantity`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
                                                     </div>
                                                 </div>
-                                            })
-
-                                        })}
+                                            }
+                                        )}
                                     </div>
                                 })}
                             </form>

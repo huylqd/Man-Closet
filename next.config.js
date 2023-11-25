@@ -14,6 +14,16 @@ module.exports = {
       },
       {
         protocol: "https",
+        hostname: "down-vn.img.susercontent.com",
+        port: "",
+      },  
+      {
+        protocol: "https",
+        hostname: "cf.shopee.vn",
+        port: "",
+      },  
+      {
+        protocol: "https",
         hostname: "scontent.fhan3-3.fna.fbcdn.net",
         port: "",
       },
