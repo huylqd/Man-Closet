@@ -2,16 +2,13 @@
 import { BannerV2 } from '@/components/banner'
 import { ShopList } from '@/components/main/pageComponents/shoplist'
 import React, { useState, useEffect } from 'react'
-import { productCarouselData } from '../demo.data'
 import { categoryCarouselData } from '../demo.data'
 import TitleDivide from '@/components/titleDivide'
 import Category from '@/components/main/pageComponents/shoplist/category/Category'
-import { getAll } from '@/services/products/products'
-import { IProduct, IProductResponse } from '@/interfaces/product'
 import Breadcrumb from '@/components/breadcrumb'
 import { listProduct } from '@/data/product'
 
-import Pagination from '@/components/pagination/Pagination'
+
 
 const Product = () => {
   return (
@@ -25,7 +22,6 @@ const Product = () => {
           <div className="flex-auto w-1/6  mr-2">
             <div>
               <Category title="Product Brand" data={categoryCarouselData} />
-
               <Category title="Categories" data={categoryCarouselData} />
               <Category title="Riting Item" data={categoryCarouselData} />
               <Category title="Price Filter" data={categoryCarouselData} />

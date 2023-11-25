@@ -33,8 +33,18 @@ const Header = () => {
   const handleOpenMenuMobile = (value: boolean) => {
     setIsOpenMenuMb(value)
   }
+
+    const user = JSON.parse(localStorage.getItem('user') as string)
+   let user_id = '';
+   if(user){
+    user_id = user._id
+   }
   
-  console.log(isOpenMenuMb)
+ 
+  
+  
+  
+  // console.log(isOpenMenuMb)
 
   return (
     <>
@@ -108,18 +118,25 @@ const Header = () => {
                 </div>
               </ActionTooltip>
               <div className="hidden md:block">
-                <ActionTooltip label="Tài khoản" side="top" align="center">
+                {user ? (   <ActionTooltip label="Tài khoản" side="top" align="center">
+                  <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
+                    <Link href={"/users"}>
+                      <User className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
+                    </Link>
+                  </div>
+                </ActionTooltip>) : (<ActionTooltip label="Tài khoản" side="top" align="center">
                   <div className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1">
                     <Link href={"/auth"}>
                       <User className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
                     </Link>
                   </div>
-                </ActionTooltip>
+                </ActionTooltip>)}
+             
               </div>
               <div className="hidden md:block">
                 <ActionTooltip label="Giỏ hàng" side="top" align="center">
                   <Link
-                    href={"/users/65489ed7149281c60f0cefe3/cart"}
+                    href={`/users/${user_id}/cart`}
                     className="group hover:bg-zinc-900 dark:hover:bg-white rounded-full w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"
                   >
                     <ShoppingCart className="w-5 h-5 group-hover:text-white dark:group-hover:text-zinc-800 transition" />
