@@ -38,6 +38,16 @@ module.exports = {
         hostname: "nhanmachatc.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "down-vn.img.susercontent.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "cf.shopee.vn",
+        port: "",
+      },
     ],
   },
 };

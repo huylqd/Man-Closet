@@ -1,33 +1,55 @@
-'use client'
+"use client";
 import { ImgProductBanner } from "@/components/banner";
-import { GridProduct, OfferList, ProductCarousel, ProductList } from "@/components/main/pageComponents/home";
+import {
+  GridCategory,
+  GridProduct,
+  OfferList,
+  ProductCarousel,
+  ProductList,
+  Welcome,
+} from "@/components/main/pageComponents/home";
 import React from "react";
 
 // demo data
-import { productCarouselData } from "./demo.data";
 import { BannerCarousel } from "@/components/carousel";
 import { listProduct } from "@/data/product";
+import Image from "next/image";
+import { homeBanner1 } from "@/assets/media/images/bannerImg";
 
 const Home = () => {
   return (
     <div>
-      <section>
-        <BannerCarousel/>
+      <section className="pb-4 md:pb-8 section_container">
+        <BannerCarousel />
       </section>
-      <section className="pt-10 md:py-16 section_container">
-        <ProductCarousel title="Sản Phẩm Đặc Sắc" data={listProduct()}/>
+
+      <section className="py-4 md:py-8 section_container">
+        <Welcome />
       </section>
-      <section className="pt-10 md:py-16 section_container">
-        <ProductList title="Sản Phẩm Mới Nhất" data={listProduct()}/>
+
+      <section className="py-4 md:py-8 section_container">
+        <GridCategory />
       </section>
-      <section className="pt-10 md:py-16 section_container">
-        <OfferList/>
+
+      <section className="py-4 md:py-8 section_container">
+        <ProductCarousel />
       </section>
-      <section className="pt-10 md:py-16">
-        <ImgProductBanner/>
+
+      <section className="py-4 md:py-8 section_container">
+        <div className="relative w-full min-h-[200px] max-h-[400px] rounded overflow-hidden">
+          <Image src={homeBanner1} alt="banner" width={500} height={400} style={{objectFit: "contain", width: "100%", height:"100%"}}/>
+        </div>
       </section>
-      <section className="section_container pt-10 md:py-16">
-        <GridProduct/>
+
+      <section className="py-4 md:py-8 section_container">
+        <ProductList/>
+      </section>
+      <section className="py-4 md:py-8 section_container">
+        <OfferList />
+      </section>
+
+      <section className="py-4 md:py-8 section_container">
+        <GridProduct />
       </section>
     </div>
   );

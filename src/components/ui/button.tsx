@@ -24,6 +24,7 @@ const buttonVariants = cva(
           "border-[1px] bg-transparent border-zinc-800 hover:bg-zinc-800 hover:text-white dark:border-white dark:hover:bg-white dark:hover:text-zinc-800",
         danger: "bg-rose-500 text-white hover:bg-rose-700",
         danger_border: "border-[1px] border-rose-500 text-rose-500 bg-transparent hover:bg-rose-500 hover:text-white",
+        shop_now: "bg-white hover:bg-slate-200 transition-all text-zinc-800 rounded overflow-hidden shadow-sm"
       },
       size: {
         default: "h-10 px-4 py-2",

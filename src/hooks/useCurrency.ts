@@ -1,5 +1,5 @@
 const useCurrency = (cost: number) => {
-  const resultCost = cost.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+  const resultCost = Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cost);
   return resultCost
 }
 
