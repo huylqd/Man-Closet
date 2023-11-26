@@ -1,8 +1,13 @@
+export interface Variant {
+    quantity: number;
+    size: string;
+    _id:string
+}
+
 export interface Property {
     imageUrl: string;
     color: string;
-    quantity: number;
-    size: string;
+    variants: Variant[]
 }
 export interface IProduct {
     _id: string,
@@ -16,8 +21,8 @@ export interface IProduct {
     updatedAt?: Date;
     deletedAt?: Date | null;
     deleted?: boolean;
-
 }
+
 export interface IProductResponse {
     data: IProduct[];
     pagination: {
