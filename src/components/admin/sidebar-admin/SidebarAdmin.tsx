@@ -7,6 +7,7 @@ import {
   Settings,
   Shirt,
   UserCircle,
+  LogOut
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,7 +48,7 @@ const data = [
     href: "settings",
     icon: <Settings className="w-6 h-6" />,
     name: "Cài đặt",
-  },
+  }
 ];
 
 const SidebarAdmin = () => {
@@ -156,6 +157,7 @@ const SidebarAdmin = () => {
                 <span className="tooltip hidden md:block bg-slate-50 dark:bg-zinc-900">
                   {item.name}
                 </span>
+                
               </li>
             );
           })}

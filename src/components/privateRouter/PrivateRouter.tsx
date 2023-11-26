@@ -16,6 +16,7 @@ const PrivateRouter = ({ children , allowedRoles  }: PrivateRouteProps) => {
         if (!allowedRoles.some(role => userRoles.includes(role))) {
             router.push('/auth');
           }
+         
     }, [isAuthenticated]);
     return allowedRoles.some(role => userRoles.includes(role)) ? <>{children}</> : null;
     

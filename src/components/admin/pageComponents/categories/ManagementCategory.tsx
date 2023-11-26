@@ -31,7 +31,7 @@ const ManagementCategory = () => {
   const toasterRef = useRef<any>(null);
  useEffect(() => {
     fetchData(currentPage,limit)
-    fetchDataAll(0,1000000000)
+    fetchDataAll(0,Number.MAX_SAFE_INTEGER)
   }, []);
   const  fetchDataAll = async (currentPage:number,limit:number) => {
     const response = await getAllCategory(currentPage,limit);

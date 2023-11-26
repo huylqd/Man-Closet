@@ -1,6 +1,6 @@
 import { IProduct, IProductInCart, Property } from "@/interfaces/product";
 import { getAllProductInCart } from "@/services/cart.services";
-import { getById } from "@/services/products/products";
+import { getAllProduct, getById } from "@/services/products/products";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface ProductState {
@@ -22,21 +22,32 @@ const initialState: ProductState = {
 };
 
 export const getProduct = createAsyncThunk(
-  "cart/getProducts",
+  "product/getProducts",
   async (product_id: string, thunkAPI) => {
     const response = await getById(product_id);
     return response.data;
   }
 );
 
+export const getAllProductState = createAsyncThunk(
+  "product/getAllProduct",
+  async(_, thunkAPI) => {
+    const response = await getAllProduct()
+    return response.data
+  }
+)
+
 const productSlice = createSlice({
-  name: "cart",
+  name: "product",
   initialState,
   reducers: {},
   extraReducers(builder) {
     builder.addCase(getProduct.fulfilled, (state, action) => {
       state.product = action.payload;
     });
+    builder.addCase(getAllProductState.fulfilled, (state, action) => {
+      state.products = action.payload
+    })
   },
 });
 

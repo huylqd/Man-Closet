@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Descriptions = () => {
-  const { productId } = useParams();
+  const { productId } = useParams<any>();
   // console.log(productId);
 
 

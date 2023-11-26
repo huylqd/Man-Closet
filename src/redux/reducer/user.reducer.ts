@@ -32,7 +32,7 @@ const initialState: UserState = {
 export const getAllUserState = createAsyncThunk(
   "user/getAllUser",
   async(_, thunkAPI) => {
-    const response = await getAllUser()
+    const response = await getAllUser(0,5)
     return response.data
   }
 
