@@ -1,65 +1,79 @@
-'use client'
-import TitleDivide from "@/components/titleDivide";
-import React from "react";
-import { bannerData, trendingProducts } from "./demo.data";
-import { ProductCardV1 } from "@/components/card";
+"use client";
+import React, { useEffect, useState } from "react";
+import { bannerData } from "./demo.data";
+import { ProductCardV2 } from "@/components/card";
 import { v4 as uuidv4 } from "uuid";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GridView } from "@/components/dataViews";
-import { listProduct } from "@/data/product";
+import TitleGap from "@/components/titleGap";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { getAllProductState } from "@/redux/reducer/product.reducer";
+import { IProduct } from "@/interfaces/product";
 
 const Banner = ({
   label,
   href,
-  imageUrl,
-  btnContent,
+  banner,
 }: {
   label: string;
-  btnContent: string;
   href: string;
-  imageUrl: string | StaticImageData;
+  banner: string | StaticImageData;
 }) => {
   return (
-    <div className="bg-white dark:bg-zinc-900 p-6 rounded shadow h-full w-full">
-      <div className="flex flex-col gap-y-2 md:gap-y-4">
-        <h3 className="text-xl md:text-2xl font-medium">{label}</h3>
+    <div className="rounded h-full w-full relative overflow-hidden">
+      <Image
+        src={banner}
+        alt="banner"
+        width={500}
+        height={500}
+        style={{ objectFit: "cover", width: "100%", height: "100%" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-700/50 z-[8]"></div>
+      <div className="absolute inset-0 z-10 flex flex-col justify-center items-center gap-y-2">
+        <h3 className="text-lg md:text-xl text-white font-medium">{label}</h3>
         <Link href={href}>
-          <Button variant={"primary"}>{btnContent}</Button>
+          <Button variant={"shop_now"}>Xem ngay</Button>
         </Link>
-      </div>
-      <div className="flex items-center justify-end">
-        <figure className="relative w-[100px] h-[100px]">
-          <Image
-            src={imageUrl}
-            alt="banner item"
-            layout="fill"
-            style={{ objectFit: "contain" }}
-          />
-        </figure>
       </div>
     </div>
   );
 };
 
 const GridProduct = () => {
+  const productsState = useAppSelector((state) => state.product.products);
+  const [product, setProduct] = useState<IProduct[]>([]);
+
+  const dispatchThunk = useAppDispatch();
+
+  useEffect(() => {
+    dispatchThunk(getAllProductState());
+  }, [dispatchThunk]);
+
+  useEffect(() => {
+    setProduct(productsState);
+  }, [productsState]);
   return (
-    <div className="py-16">
-      <div>
-        <TitleDivide title="Sản Phẩm Trending" align="center" />
-      </div>
-      <div>
+    <div>
+      <TitleGap title="Sản phẩm trending" />
+      <div className="py-2">
         <GridView className="py-3 gap-y-6" marginLeft="30px" wrap previews={4}>
-          {listProduct()?.map((item: any) => (
-            <ProductCardV1 key={uuidv4()} data={item} marginLeft="30px" />
-          ))}
+          {product.map((item: any) => {
+            const data = {
+              _id: item._id,
+              name: item.productName,
+              price: item.price,
+              imageUrl: item.properties[0].imageUrl,
+            };
+            return (
+              <ProductCardV2 key={uuidv4()} data={data} marginLeft="30px" />
+            );
+          })}
         </GridView>
         <div className="flex md:flex-row flex-col gap-4 md:gap-6 md:py-10 py-6">
           {bannerData.map((item) => (
-            <div className="flex-1" key={uuidv4()}>
-              <Banner {...item} />
-            </div>
+            <Banner key={uuidv4()} {...item} />
           ))}
         </div>
       </div>

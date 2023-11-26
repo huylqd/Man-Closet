@@ -4,116 +4,124 @@ import { Input } from "@/components/ui/input";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import style from "./footer.module.scss";
+import { cn } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
+
+const pageData = [
+  {
+    name: "Trang chủ",
+    href: "/",
+  },
+  {
+    name: "Sản phẩm",
+    href: "/shop",
+  },
+  {
+    name: "Liên hệ",
+    href: "/contact",
+  },
+];
+
+const socialData = [
+  {
+    icon: <Facebook className="w-5 h-5" />,
+    href: "/",
+  },
+  {
+    icon: <Twitter className="w-5 h-5" />,
+    href: "/",
+  },
+  {
+    icon: <Instagram className="w-5 h-5" />,
+    href: "/",
+  },
+];
 
 const Footer = () => {
   return (
-    <footer className="bg-white dark:bg-zinc-900 border-t-2 ">
+    <footer className={cn(style.footer, "bg-white pt-8")}>
       <div className="section_container">
-        <div className="py-16 border-b flex flex-col-reverse md:flex-row gap-6">
-          <div className="flex grow-[2] flex-col gap-y-4">
-            <div>
-              <Logo />
-            </div>
-            <div>
-              <div className="flex w-full max-w-sm items-center space-x-2">
-                <Input type="email" placeholder="Email" />
-                <Button type="submit">Subscribe</Button>
-              </div>
-            </div>
-            <div>
-              <h4>Contact Info</h4>
-              <h4>181 Trinh Van Bo, Nam Tu Lien, HN</h4>
-            </div>
-          </div>
-          <div className="flex grow">
-            <div className="grow">
-              <h3 className="text-md md:text-lg font-medium">Pages</h3>
-              <ul className="">
-                <li>
-                  <Link
-                    href={"/"}
-                    className="text-zinc-600 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70"
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={"/"}
-                    className="text-zinc-600 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70"
-                  >
-                    Shop
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={"/"}
-                    className="text-zinc-600 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70"
-                  >
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="grow">
-              <h3 className="text-md md:text-lg font-medium">Khách Hàng</h3>
-              <ul className="group">
-                <li className="text-zinc-600/90 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70">
-                  <Link
-                    href={"/"}
-                    className="text-zinc-600 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70"
-                  >
-                    Lịch sử mua
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={"/"}
-                    className="text-zinc-600 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70"
-                  >
-                    Giỏ hàng
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={"/"}
-                    className="text-zinc-600 text-sm md:text-base hover:text-zinc-500 dark:text-white dark:hover:text-white/70"
-                  >
-                    Yêu thích
-                  </Link>
-                </li>
-              </ul>
-            </div>
+        <div className="relative flex justify-center items-center">
+          <div className="absolute w-full rounded h-[2px] bg-zinc-800"></div>
+          <div className="bg-white absolute z-10 lg:px-32 md:px-26 sm:px-20 px-10">
+            <Logo />
           </div>
         </div>
-        <div className="py-4 gap-2 flex items-center md:justify-between justify-center md:flex-row flex-col-reverse">
-          <div>
-            <h4 className="text-base md:text-md ">
-              ©Webecy - All Rights Reserved
-            </h4>
+
+        <div className="flex md:items-start pt-10 md:pt-16 flex-col md:flex-row items-center">
+          <div className="flex-[1] py-4 md:py-0 flex justify-center order-2 md:order-none">
+            <ul>
+              {pageData.map((item) => (
+                <li key={uuidv4()} className="text-center my-2">
+                  <Link
+                    href={item.href}
+                    className="px-4 py-1 font-semibold text-gray-800 text-md"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="flex items-center gap-x-2">
-            <Link href={"/"} className="group">
-              <button className="border-0 bg-zinc-800 dark:bg-white group-hover:bg-zinc-800/80 dark:group-hover:bg-white/70 rounded-full p-1">
-                <Facebook
-                  fill="currentColor"
-                  className="w-5 h-5 text-white dark:text-zinc-800 group-hover:text-white/70 dark:group-hover:text-zinc-800/80 p-[3px]"
-                />
-              </button>
-            </Link>
-            <Link href={"/"} className="group">
-              <button className="border-0 bg-zinc-800 dark:bg-white group-hover:bg-zinc-800/80 dark:group-hover:bg-white/70 rounded-full p-1">
-                <Instagram className="w-5 h-5 text-white dark:text-zinc-800 group-hover:text-white/70 dark:group-hover:text-zinc-800/80 p-[3px]" />
-              </button>
-            </Link>
-            <Link href={"/"} className="group">
-              <button className="border-0 bg-zinc-800 dark:bg-white group-hover:bg-zinc-800/80 dark:group-hover:bg-white/70 rounded-full p-1">
-                <Twitter
-                  fill="currentColor"
-                  className="w-5 h-5 text-white dark:text-zinc-800 group-hover:text-white/70 dark:group-hover:text-zinc-800/80 p-[3px]"
-                />
-              </button>
-            </Link>
+
+          <div className="flex-[1] py-4 md:py-0 order-3 md:order-none">
+            <div>
+              <ul className="flex items-center justify-center">
+                {socialData.map((item) => (
+                  <li key={uuidv4()} className="px-[15%]">
+                    <Link href={item.href} className="px-2">
+                      {item.icon}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="w-full h-[50px] md:h-[80px] relative my-4 flex items-center justify-center">
+              <div className="absolute w-[2px] rounded h-full bg-zinc-800"></div>
+            </div>
+            <div className="py-2">
+              <h3 className="uppercase text-center font-bold text-md md:text-lg text-gray-800 pb-4">
+                Liên hệ nhanh
+              </h3>
+              <div>
+                <button className="border-2 border-zinc-800 w-full block ">
+                  <a
+                    href="mailto:mancloset@gmail.com"
+                    className="block px-4 py-2 md:py-4 uppercase text-gray-800 font-semibold text-sm md:text-md border-b-2 border-zinc-800"
+                  >
+                    mancloset@gmail.com
+                  </a>
+                  <a
+                    href="tel:+0976244588"
+                    className="block px-4 py-2 md:py-4 uppercase text-gray-800 font-semibold text-sm md:text-md"
+                  >
+                    (+84) 976244588
+                  </a>
+                </button>
+              </div>
+
+              <div className="pt-10 pb-4">
+                <p className="flex items-center justify-center uppercase text-base md:text-md font-semibold">
+                  <span>©</span> <span>Since 2023 | MANCLOSET</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-[1] py-4 md:py-0 order-1 md:order-none">
+            <ul>
+              {pageData.map((item) => (
+                <li key={uuidv4()} className="text-center  my-2">
+                  <Link
+                    href={item.href}
+                    className="px-4 py-1 font-semibold text-gray-800 text-md"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

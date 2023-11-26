@@ -1,5 +1,5 @@
 .my-product-carousel{
-  padding-bottom: 40px;
+  padding-bottom: 10px;
   padding-top: 10px;
   .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
     .swiper-pagination-bullet.swiper-pagination-bullet-active{
@@ -20,7 +20,6 @@
 
 @media (min-width: 768px){
   .my-product-carousel{
-    padding-bottom: 60px;
     .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
       .swiper-pagination-bullet.swiper-pagination-bullet-active{
         width: 24px;

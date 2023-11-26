@@ -30,7 +30,7 @@ interface ProductInPayment {
   sub_total: number;
 }
    const user = JSON.parse(localStorage.getItem('user') as string);
-const testUserId = "65489ed7149281c60f0cefe3";
+
 
 const Modal = ({
   isOpen,
@@ -167,7 +167,7 @@ const Modal = ({
 
 
 const CartPage = () => {
-  const { user_id } = useParams();
+  const { user_id } = useParams<any>();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const productList = useAppSelector((state) => state.cart.products);
@@ -178,7 +178,7 @@ const CartPage = () => {
   const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
-    dispatchThunk(getProductsInCart(testUserId));
+    dispatchThunk(getProductsInCart(user_id));
   }, [dispatchThunk]);
 
   useEffect(() => {

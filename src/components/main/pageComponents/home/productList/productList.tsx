@@ -1,61 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 // ui
-import { ProductCardV1 } from "@/components/card";
+import { ProductCardV1, ProductCardV2 } from "@/components/card";
 import { SwiperSlide } from "swiper/react";
 import { BasicCarousel } from "@/components/carousel";
 import { GridView } from "@/components/dataViews";
-import TitleDivide from "@/components/titleDivide";
 
 // css
 import "swiper/css";
 import "swiper/css/pagination";
 import { IProduct } from "@/interfaces/product";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { getAllProductState } from "@/redux/reducer/product.reducer";
+import TitleGap from "@/components/titleGap";
 
-// type
-interface ProductListProps {
-  title: string;
-  data:IProduct[];
-}
+const ProductList = () => {
+  const productsState = useAppSelector((state) => state.product.products);
+  const [product, setProduct] = useState<IProduct[]>([]);
 
-const ProductList = ({ title, data }: ProductListProps) => {
-  const [typeSelect, setTypeSelect] = useState(0);
+  const dispatchThunk = useAppDispatch();
+
+  useEffect(() => {
+    dispatchThunk(getAllProductState());
+  }, [dispatchThunk]);
+
+  useEffect(() => {
+    setProduct(productsState);
+  }, [productsState]);
+
   return (
     <div>
-      <div className="">
-        <TitleDivide title={title} align="center" />
-        <ul className="flex items-center justify-center gap-6 pb-4 ">
-          <li className="text-lg font-normal hover:text-red-700 cursor-pointer">
-            Bán Chạy
-          </li>
-          <li className="text-lg font-normal hover:text-red-700 cursor-pointer">
-            Đặc Sắc
-          </li>
-          <li className="text-lg font-normal hover:text-red-700 cursor-pointer">
-            Offer Chất
-          </li>
-        </ul>
-      </div>
-      <div className="py-4">
-        <GridView marginLeft="40px" previews={4} wrap className="gap-y-6 hidden sm:flex">
-          {data?.map((item) => (
-            <ProductCardV1
-              key={uuidv4()}
-              data={item}
-              marginLeft="40px"
-            />
-          ))}
+      <TitleGap title="Sản phẩm phổ biến" />
+      <div className="py-2">
+        <GridView
+          marginLeft="40px"
+          previews={4}
+          wrap
+          className="gap-y-4 hidden sm:flex"
+        >
+          {product.map((item) => {
+            const data = {
+              _id: item._id,
+              name: item.productName,
+              price: item.price,
+              imageUrl: item.properties[0].imageUrl,
+            };
+            return (
+              <ProductCardV2 key={uuidv4()} data={data} marginLeft="40px" />
+            );
+          })}
         </GridView>
+        
         <div className="block sm:hidden">
           <BasicCarousel previews={1}>
-            {data?.map((item) => (
-              <SwiperSlide key={uuidv4()}>
-                <ProductCardV1 data={item} />
-              </SwiperSlide>
-            ))}
+            {product.map((item) => {
+              const data = {
+                _id: item._id,
+                name: item.productName,
+                price: item.price,
+                imageUrl: item.properties[0].imageUrl,
+              };
+              return (
+                <SwiperSlide key={uuidv4()}>
+                  <ProductCardV2 key={uuidv4()} data={data} />
+                </SwiperSlide>
+              );
+            })}
           </BasicCarousel>
         </div>
       </div>

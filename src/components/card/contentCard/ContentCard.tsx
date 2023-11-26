@@ -25,22 +25,22 @@ const ContentCard = ({ data, marginLeft = 0 }: ContentCardProps) => {
       style={marginLeftStyle}
       className={cn(
         style.content_card,
-        "bg-white dark:bg-zinc-900 p-8 shadow-sm rounded overflow-hidden flex flex-col gap-4"
+        "flex flex-col gap-4"
       )}
     >
-      <div className="relative w-full h-[60px] md:h-[80px]">
+      <div className="relative w-full h-[40px] md:h-[60px]">
         <Image
           src={imageUrl}
-          layout="fill"
+          fill
           style={{ objectFit: "contain" }}
           alt="image"
         />
       </div>
       <div className="flex flex-col gap-2">
-        <h3 className="text-center text-md md:text-lg lg:text-xl font-medium">
+        <h3 className="text-center text-base md:text-md text-gray-800 font-bold">
           {title}
         </h3>
-        <p className="ff-secondary text-sm md:text-base">{sub}</p>
+        <p className="ff-secondary text-sm md:text-base text-gray-600">{sub}</p>
       </div>
     </div>
   );

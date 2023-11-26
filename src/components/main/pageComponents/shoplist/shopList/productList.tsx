@@ -17,7 +17,6 @@ interface ShopListProp {
 
 const ShopList = ({ title, data }: ShopListProp) => {
   const handleChangePage = (page:number) => {
-   
   }
   return (
     <div>
@@ -45,7 +44,7 @@ const ShopList = ({ title, data }: ShopListProp) => {
           </BasicCarousel>
         </div>
       </div>
-      <Pagination currentPage={1} totalPages={1} totalItems={1} onPageChange={handleChangePage}/>
+      <Pagination currentPage={1} totalPages={1} limit={1} totalItems={1} onPageChange={handleChangePage}/>
     </div>
   );
 }

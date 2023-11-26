@@ -13,7 +13,7 @@ const TitleDivide = ({ title, align }: TitleDivideProps) => {
         <div className="w-full h-[1px] bg-zinc-500"></div>
       </div>
       <div className={cn("flex items-center w-full", `justify-${align}`)}>
-        <h2 className="text-2xl md:text-4xl font-semibold tracking-wide px-2 md:px-3 bg-slate-50 dark:bg-zinc-800">{title}</h2>
+        <h2 className="text-xl md:text-3xl font-semibold tracking-wide px-2 md:px-3 bg-white">{title}</h2>
       </div>
     </div>
   );

@@ -8,9 +8,6 @@ type PrivateRouteProps = {
 };
 const PrivateRouter = ({ children , allowedRoles  }: PrivateRouteProps) => {
     const router = useRouter();
-    console.log(allowedRoles);
-    
-
     const isAuthenticated = JSON.parse(localStorage.getItem("user") as string);
     const userRoles = [`${isAuthenticated?.role}`]; 
   
@@ -19,6 +16,7 @@ const PrivateRouter = ({ children , allowedRoles  }: PrivateRouteProps) => {
         if (!allowedRoles.some(role => userRoles.includes(role))) {
             router.push('/auth');
           }
+         
     }, [isAuthenticated]);
     return allowedRoles.some(role => userRoles.includes(role)) ? <>{children}</> : null;
     
