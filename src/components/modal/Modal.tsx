@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect } from "react";
 import ReactPortal from "./ReactPortal";
 import "./modal.scss";
@@ -46,7 +47,6 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
           <div className="modal-wrap-children w-fit max-w-[90%]">
             {children}
           </div>
-          {/* {children} */}
         </div>
       </>
     </ReactPortal>

@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 
 interface BannerV1Props {
-  src: string;
+  src: string | StaticImageData;
   href?: string;
   subTitle: string;
   title: string;
@@ -44,7 +44,7 @@ const BannerV1 = ({
         {href && (
           <Button
             className="w-fit px-10 drop-shadow ff-secondary"
-            variant={"primary"}
+            variant={"shop_now"}
           >
             Mua Ngay
           </Button>

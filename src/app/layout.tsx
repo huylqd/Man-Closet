@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(font.className, "bg-slate-50 dark:bg-zinc-800 relative")}
+        className={cn(font.className, "bg-white relative")}
       >
         <ReduxProvider>
           <ThemeProvider

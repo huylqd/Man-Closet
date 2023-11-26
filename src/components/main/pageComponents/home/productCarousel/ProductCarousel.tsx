@@ -1,42 +1,50 @@
-"use client"
+"use client";
 
-
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 // ui
-import TitleDivide from "@/components/titleDivide";
 import { SwiperSlide } from "swiper/react";
-import { ProductCardV1 } from "@/components/card";
+import { ProductCardV2 } from "@/components/card";
 import { BasicCarousel } from "@/components/carousel";
 import { IProduct } from "@/interfaces/product";
+import TitleGap from "@/components/titleGap";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useEffect, useState } from "react";
+import { getAllProductState } from "@/redux/reducer/product.reducer";
 
-// css
+const ProductCarousel = () => {
+  const productsState = useAppSelector((state) => state.product.products);
+  const [product, setProduct] = useState<IProduct[]>([]);
 
-// type
-interface Data {
-  href: string;
-  imageUrl: string;
-  name: string;
-  price: number;
-}
+  const dispatchThunk = useAppDispatch();
 
-interface ProductCarouselProps {
-  title: string;
-  data: IProduct[];
-}
+  useEffect(() => {
+    dispatchThunk(getAllProductState());
+  }, [dispatchThunk]);
 
-const ProductCarousel = ({ title, data }: ProductCarouselProps) => {
+  useEffect(() => {
+    setProduct(productsState);
+  }, [productsState]);
+
   return (
     <div>
-      <div className="py-2 pt-4">
-        <TitleDivide title={title} align="center"/>
-      </div>
       <div>
+        <TitleGap title={"Sản phẩm nổi bật"} />
+      </div>
+      <div className="pt-2">
         <BasicCarousel previews={4}>
-          {data?.map(item => (
-            <SwiperSlide key={uuidv4()}>
-              <ProductCardV1 data={item}/>
-            </SwiperSlide>
-          ))}
+          {product.map((item) => {
+            const data = {
+              _id: item._id,
+              name: item.productName,
+              price: item.price,
+              imageUrl: item.properties[0].imageUrl,
+            }
+            return (
+              <SwiperSlide key={uuidv4()}>
+                <ProductCardV2 data={data} />
+              </SwiperSlide>
+            );
+          })}
         </BasicCarousel>
       </div>
     </div>
