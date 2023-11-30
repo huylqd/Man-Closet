@@ -11,7 +11,7 @@ interface IputProp {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
-  watch: any
+  watch?: any
 }
 const Input: React.FC<IputProp> = ({
   placeholder,
@@ -38,10 +38,8 @@ const Input: React.FC<IputProp> = ({
           placeholder={placeholder}
           type={type}
           autoComplete={id}
-
           {...register(id, {
             required: `${id} is required`,
-
             // password
             minLength: id === 'password' || id === "confirmPassword" ? { value: 6, message: `${id} must be at least 6 characters long` } : undefined,
             // confirmPass

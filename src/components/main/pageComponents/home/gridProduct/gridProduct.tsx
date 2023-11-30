@@ -59,7 +59,7 @@ const GridProduct = () => {
       <TitleGap title="Sản phẩm trending" />
       <div className="py-2">
         <GridView className="py-3 gap-y-6" marginLeft="30px" wrap previews={4}>
-          {product.map((item: any) => {
+          {product?.map((item: any) => {
             const data = {
               _id: item._id,
               name: item.productName,

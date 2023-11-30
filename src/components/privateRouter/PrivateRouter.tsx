@@ -1,4 +1,5 @@
 'use client'
+import { commonErrorToast } from '@/utils/notify';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 export type UserRole = 'admin' | 'member' | 'otherRole' 
@@ -13,8 +14,14 @@ const PrivateRouter = ({ children , allowedRoles  }: PrivateRouteProps) => {
   
 
     useEffect(() => {
+        if (!isAuthenticated) {
+            router.push('/auth');
+            commonErrorToast("Bạn cần đăng nhập để truy cập trang này");
+            return;
+          }
         if (!allowedRoles.some(role => userRoles.includes(role))) {
             router.push('/auth');
+            commonErrorToast("Bạn không có quyền được sử dụng chức năng này")
           }
          
     }, [isAuthenticated]);

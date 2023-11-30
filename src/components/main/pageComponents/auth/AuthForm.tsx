@@ -51,7 +51,7 @@ const AuthForm = () => {
     if (errors[field]) {
       return (
         <span className="text-red-600 text-sm">
-          {errors[field] && errors[field]?.message}
+          {(errors[field] as any) && errors[field]?.message}
         </span>
       );
     }
@@ -85,7 +85,6 @@ const AuthForm = () => {
         console.log(login);
         if(login){
           const user = login.data;
-
             localStorage.setItem("accessToken", login.accessToken);
             localStorage.setItem("refresh", login.refreshToken);
             localStorage.setItem("user", JSON.stringify(user));
@@ -115,7 +114,7 @@ const AuthForm = () => {
 <section className="flex flex-col md:flex-row h-screen items-center">
 
 <div className="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
-  <img src="https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/327194280_893802508740012_635825132664909687_n.jpg?stp=cp6_dst-jpg&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=x5H00WAVQRwAX9b1Dq1&_nc_ht=scontent.fhan1-1.fna&oh=00_AfAwd7htAv4HBCywdhz73UbwL5LgT7QyKc5KAP0aPZxtvA&oe=6560A9C9" alt="" className="w-full h-full object-cover"/>
+  <img src="https://bcp.cdnchinhphu.vn/334894974524682240/2022/4/29/sontungmtp-1651230206152921306282.jpeg" alt="" className="w-full h-full object-cover"/>
 </div>
 
 <div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12

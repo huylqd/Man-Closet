@@ -17,6 +17,7 @@ export interface IUser {
     confirmPassword: string;
     address?: Address[];
     phone?: number | undefined;
+    isBlocked:boolean;
     role: string;
   }
 

@@ -23,7 +23,7 @@ const ManagementCategory = () => {
   const [modal, setModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage,setCurrentPage] = useState<number>(1);
-  const [limit,setLimit] = useState<number>(5);
+  const [limit,setLimit] = useState<number>(2);
   const [totalItems,setTotalItems] = useState<number>(1);
   const [totalPages,setTotalPages] = useState<number>(1);
   const [category, setCategory] = useState<any>();
@@ -130,6 +130,27 @@ const ManagementCategory = () => {
   
   
   const search = async () => {
+    // if(key.length === 0 ){
+    //   await  fetchData(currentPage,limit,key)
+    // }else{
+    //   const response = await getAllCategory(currentPage,limit,key);
+    //   if (response) {
+        
+    //     const  data:any  = response;
+    //     if(data.data.length !== 0){
+    //       setCategories(data.data)
+    //       setTotalPages(data.paginate.totalPages)
+    //       setTotalItems(data.paginate.totalItems)
+          
+    //     }else{
+    //       toasterRef.current.showToast("error", "Get data faild!");
+    //     }
+    
+    //   } 
+      
+      
+    //   // setCategories(searchData);
+    // }
     if(!key ){
    await  fetchData(currentPage,limit)
 
@@ -146,11 +167,12 @@ const ManagementCategory = () => {
         return keyWords.some((word) => categoryWords.some((categoryWord) => categoryWord.includes(word)));
         // regex.test(c.name)
       });
-    console.log(resultSearch);
+
     setTotalPages(1)
     setCategories(resultSearch);
     
     } 
+  
   }
   
   const handleChange = (e:any) => {
@@ -294,13 +316,16 @@ const ManagementCategory = () => {
         <Pagination currentPage={currentPage} limit={limit} totalItems={totalItems} totalPages={totalPages} onPageChange={handleChangePage}/>
       </div>
       <Toaster ref={toasterRef} />
+      <Modal isOpen={modal}  handleClose={() => setModal(false)}>
       <ModelCategory
-        isvisible={modal}
+        
         add={handleAdd}
         update={handleUpdate}
         category={category}
-        onClose={() => setModal(false)}
+       onClose={() => setModal(false)}
       />
+      </Modal>
+   
       {isOpen && (
         <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
         <ConfirmModal  onClose={() => setIsOpen(false)} onDelete={handleDelete} id={category._id}/>
