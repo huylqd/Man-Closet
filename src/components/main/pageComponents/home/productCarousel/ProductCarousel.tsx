@@ -32,7 +32,7 @@ const ProductCarousel = () => {
       </div>
       <div className="pt-2">
         <BasicCarousel previews={4}>
-          {product.map((item) => {
+          {product?.map((item) => {
             const data = {
               _id: item._id,
               name: item.productName,

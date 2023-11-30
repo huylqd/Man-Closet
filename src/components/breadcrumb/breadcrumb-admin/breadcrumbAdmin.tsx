@@ -3,9 +3,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react'
 
 
-interface breadcrumbProp{
-    title:string
-}
+
 const BreadcrumbAdmin = () => {
     const pathName = usePathname();
     console.log(pathName);
@@ -13,7 +11,7 @@ const BreadcrumbAdmin = () => {
     
   return (
     <div>
-          <div className=" section_container py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-1">
+          <div className=" section_container py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-[-2]">
             <button type="button" className="text-lg text-gray-600 sidebar-toggle">
                 <i className="ri-menu-line"></i>
             </button>

@@ -27,6 +27,10 @@ export const getAllProduct = () => {
   const response = instance.get<any, GetAllProductResponse>("api/products")
   return response
 }
+export const filterProductByPrice = (sort:string) => {
+  const res = instance.get<any, GetAllProductResponse>(`api/products?_sort=${sort}`);
+  return res
+}
 
 
 export const createPro = (products: any) => {

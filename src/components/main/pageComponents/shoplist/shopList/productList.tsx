@@ -1,5 +1,5 @@
 'use client'
-import { ProductCardV1 } from '@/components/card';
+import { ProductCardV1, ProductCardV2 } from '@/components/card';
 import { BasicCarousel } from '@/components/carousel';
 import { GridView } from '@/components/dataViews';
 import TitleDivide from '@/components/titleDivide';
@@ -9,42 +9,88 @@ import { SwiperSlide } from 'swiper/react';
 import { IProduct, IProductResponse } from '@/interfaces/product';
 import { useState, useEffect } from 'react'
 import Pagination from '@/components/pagination/Pagination';
+import TitleGap from '@/components/titleGap';
+import { getAll } from '@/services/products/products';
 
 interface ShopListProp {
   title: string;
-  data: IProduct[]
+
 }
 
-const ShopList = ({ title, data }: ShopListProp) => {
-  const handleChangePage = (page:number) => {
+const ShopList = ({ title }: ShopListProp) => {
+  
+  const [product,setProduct] = useState<IProduct[]>([])
+  const [productAll,setProductAll] = useState<IProduct[]>([])
+  const [currentPage,setCurrentPage] = useState(1)
+  const [totalPages,setTotalPages] = useState(1)
+  const [totalItems,setTotalItems] = useState(1)
+  
+  useEffect(() =>{
+    fetchData(currentPage)
+    fetchDataAll(0)
+  },[])
+  const fetchData =async (page:number) => {
+    const response:any = await getAll(page)
+    setProduct(response.data)
+    setCurrentPage(response.pagination.currentPage)
+    setTotalItems(response.pagination.totalItems)
+    setTotalPages(response.pagination.totalPages)
   }
+  const fetchDataAll =async (page:number) => {
+    const response:any = await getAll(page)
+    setProductAll(response.data)
+  }
+
+
+  const handleChangePage = (page:number) => {
+    setCurrentPage(page)
+    fetchData(page)
+  }
+
   return (
     <div>
-      <div className="">
-        <TitleDivide title={title} align="center" />
-
-      </div>
-      <div className="py-4">
-        <GridView marginLeft="40px" previews={3} wrap className="gap-y-6 hidden sm:flex">
-          {data?.map((item) => (
-            <ProductCardV1
-              key={uuidv4()}
-              data={item}
-              marginLeft="40px"
-            />
-          ))}
+      <div>
+      <TitleGap title="Tất cả sản phẩm" />
+      <div className="py-2">
+        <GridView
+          marginLeft="40px"
+          previews={4}
+          wrap
+          className="gap-y-4 hidden sm:flex"
+        >
+          {product.map((item:IProduct) => {
+            const data = {
+              _id: item._id,
+              name: item.productName,
+              price: item.price,
+              imageUrl: item.properties[0].imageUrl,
+            };
+            return (
+              <ProductCardV2 key={uuidv4()} data={data} marginLeft="40px" />
+            );
+          })}
         </GridView>
+        
         <div className="block sm:hidden">
           <BasicCarousel previews={1}>
-            {data?.map((item) => (
-              <SwiperSlide key={uuidv4()}>
-                <ProductCardV1 data={item} />
-              </SwiperSlide>
-            ))}
+            {product.map((item:IProduct) => {
+              const data = {
+                _id: item._id,
+                name: item.productName,
+                price: item.price,
+                imageUrl: item.properties[0].imageUrl,
+              };
+              return (
+                <SwiperSlide key={uuidv4()}>
+                  <ProductCardV2 key={uuidv4()} data={data} />
+                </SwiperSlide>
+              );
+            })}
           </BasicCarousel>
         </div>
       </div>
-      <Pagination currentPage={1} totalPages={1} limit={1} totalItems={1} onPageChange={handleChangePage}/>
+    </div>
+      <Pagination currentPage={currentPage} totalPages={totalPages} limit={1} totalItems={totalItems} onPageChange={handleChangePage}/>
     </div>
   );
 }

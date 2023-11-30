@@ -54,9 +54,6 @@ const data = [
 const SidebarAdmin = () => {
   const pathName = usePathname();
   const [activeLink, setActiveLink] = useState("");
-
-  console.log(pathName.split("/"))
-
   useEffect(()=> {
     setActiveLink(pathName.split("/")[pathName.split("/").length - 1])
   },[pathName])

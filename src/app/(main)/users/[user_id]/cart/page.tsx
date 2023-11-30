@@ -2,6 +2,7 @@
 
 import CartProductCard from "@/components/card/productCard/cart-product-card/CartProductCard";
 import { ListView } from "@/components/dataViews";
+import { PrivateRouter } from "@/components/privateRouter";
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/hooks";
 import { IProductInCart } from "@/interfaces/product";
@@ -285,7 +286,8 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="cart-page">
+    <PrivateRouter allowedRoles={['member']}>
+    <div className="cart-page">
         <section className="cart-page--wrap flex flex-col-reverse md:flex-row section_container py-10 gap-10">
           <div className="product-list flex-[3]">
             <div className="product-list__header flex items-center justify-between pb-4">
@@ -355,6 +357,8 @@ const CartPage = () => {
         productsSelected={productsSelected}
         totalPrice={totalBillPriceSendToModal}
       />
+    </PrivateRouter>
+   
     </>
   );
 };

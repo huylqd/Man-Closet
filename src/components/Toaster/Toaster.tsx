@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Toaster = forwardRef((props, ref) => {
     const showToast = (type: string, message: string) => {
         const option: any = {
-            theme: 'colored',
+            
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
