@@ -1,22 +1,28 @@
+export interface Variant {
+    quantity: number;
+    size: string;
+    _id:string
+}
+
 export interface Property {
-  imageUrl: string;
-  color: string;
-  quantity: number;
-  size: string;
+    imageUrl: string;
+    color: string;
+    variants: Variant[]
 }
 export interface IProduct {
-  _id: string;
-  productName: string;
-  price: number;
-  description?: string;
-  properties: Property[];
-  categoryId: string;
-  couponId?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-  deleted?: boolean;
+    _id: string,
+    productName: string;
+    price: number;
+    description?: string;
+    properties: Property[];
+    categoryId: string;
+    couponId?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date | null;
+    deleted?: boolean;
 }
+
 export interface IProductResponse {
   data: IProduct[];
   pagination: {
