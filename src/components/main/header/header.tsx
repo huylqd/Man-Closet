@@ -48,7 +48,7 @@ const Header = () => {
               </div>
               <div className="hidden md:block">
                 <Link
-                  href={"/users/65489ed7149281c60f0cefe3/cart"}
+                  href={"/user/cart"}
                   className="relative group w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"
                 >
                   {cartLength > 0 && (

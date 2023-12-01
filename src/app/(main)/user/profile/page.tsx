@@ -1,12 +1,14 @@
+import { InfoProfile } from '@/components/main/pageComponents/user'
 import { PrivateRouter } from '@/components/privateRouter'
 import React from 'react'
 
 const Profile = () => {
   return (
-    <PrivateRouter>
-      <div>page</div>
-    </PrivateRouter>
-
+    <>
+      <section>
+        <InfoProfile/>
+      </section>
+    </>
   )
 }
 
