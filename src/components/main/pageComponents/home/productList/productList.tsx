@@ -41,7 +41,7 @@ const ProductList = () => {
           wrap
           className="gap-y-4 hidden sm:flex"
         >
-          {product.map((item) => {
+          {product?.map((item) => {
             const data = {
               _id: item._id,
               name: item.productName,
@@ -56,7 +56,7 @@ const ProductList = () => {
         
         <div className="block sm:hidden">
           <BasicCarousel previews={1}>
-            {product.map((item) => {
+            {product?.map((item) => {
               const data = {
                 _id: item._id,
                 name: item.productName,

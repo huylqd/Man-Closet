@@ -1,31 +1,36 @@
 "use client";
 
+import { Input } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { ICategory } from "@/interfaces/category";
 import { addCategory, updateCategory } from "@/services/categories/category";
 
 import { useParams } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 interface ModelProp {
-  isvisible: boolean;
-  category: ICategory;
-  update: (data: ICategory) => void;
-  add: (data: ICategory) => void;
-  onClose: () => void;
+
+  category: ICategory,
+  update: (data: ICategory) => void,
+  add: (data: ICategory) => void,
+  onClose: () => void,
 }
 const ModelCategory = ({
-  isvisible,
+
   category,
   update,
   add,
   onClose,
 }: ModelProp) => {
-  if (!isvisible) return null;
+
   console.log(category);
 
-  const { register, handleSubmit, formState, reset } = useForm();
+  const { register, handleSubmit, formState : { errors }, reset } = useForm<FieldValues>({
+    defaultValues :{
+      name:""
+    }
+  });
   //   const router = useRouter();
 
   if (category) {
@@ -62,7 +67,8 @@ const ModelCategory = ({
           {/* <!-- Modal header --> */}
           <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Add Category
+              {category ? "Update Category" : "Add Category"}
+            
             </h3>
             <button
               type="button"
@@ -91,19 +97,14 @@ const ModelCategory = ({
           <form action="#" onSubmit={handleSubmit(onHandleSubmit)}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  {...register("name")}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Category Name"
-                  required
-                />
+                <Input label="Category Name" id="name" placeholder="Category Name" register={register} errors={errors}/>
+                <div>
+                <span className="text-red-600 text-sm">
+                 {(errors.name as any) && (errors.name as any).message}
+
+        </span>
+                </div>
+                
               </div>
             </div>
             <button

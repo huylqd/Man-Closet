@@ -5,7 +5,7 @@ const FooterAdmin = () => {
     <div>
       <footer
         className="bg-white
-        md:flex md:items-center items-center md:justify-between shadow rounded-lg p-6 mb-6 gap-6  mx-6"
+        md:flex md:items-center items-center md:justify-between shadow rounded-lg p-6 mb-6 gap-6 section_container"
       >
         <ul className="flex items-center flex-wrap mb-6 md:mb-0">
           <li>

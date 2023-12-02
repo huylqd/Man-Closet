@@ -5,14 +5,16 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 interface IputProp {
   label: string;
   id: string;
+  placeholder?:string;
   type?: string;
   required?: boolean;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
-  watch: any
+  watch?: any
 }
 const Input: React.FC<IputProp> = ({
+  placeholder,
   label,
   id,
   type,
@@ -33,12 +35,11 @@ const Input: React.FC<IputProp> = ({
       <div className="mt-2">
         <input
           id={id}
+          placeholder={placeholder}
           type={type}
           autoComplete={id}
-
           {...register(id, {
             required: `${id} is required`,
-
             // password
             minLength: id === 'password' || id === "confirmPassword" ? { value: 6, message: `${id} must be at least 6 characters long` } : undefined,
             // confirmPass
@@ -52,19 +53,20 @@ const Input: React.FC<IputProp> = ({
           className={clsx(
             `
             dark:bg-white
-            
+            px-4
+             py-3
             form-input
             block
             w-full
             rounded-md
             border-0
-            py-1.5
+            
             text-gray-900
             shadow-sm
             ring-1
             ring-inset
             ring-gray-300
-            placehoder:text-gray-400
+        
             focus:ring-2
             focus:ring-inset
            
@@ -72,7 +74,7 @@ const Input: React.FC<IputProp> = ({
             sm:leading-6
             p-2
           `,
-            errors[id] && "focus:ring-rose-500",
+            errors[id] && "focus:ring-rose-500  outline-none	 border-rose-600 ",
             disabled && ""
           )}
         />

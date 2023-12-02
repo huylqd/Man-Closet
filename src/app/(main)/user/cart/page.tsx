@@ -2,6 +2,7 @@
 
 import CartProductCard from "@/components/card/productCard/cart-product-card/CartProductCard";
 import { ListView } from "@/components/dataViews";
+import { PrivateRouter } from "@/components/privateRouter";
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/hooks";
 import { IProductInCart } from "@/interfaces/product";
@@ -25,11 +26,12 @@ interface ProductInPayment {
     quantity: number;
     color: string;
     size: string;
+    imageUrl:string;
   };
   sub_total: number;
 }
+   const user = JSON.parse(localStorage.getItem('user') as string);
 
-const testUserId = "65489ed7149281c60f0cefe3";
 
 const Modal = ({
   isOpen,
@@ -58,6 +60,7 @@ const Modal = ({
           quantity: item.quantity,
           color: item.color,
           size: item.size,
+          imageUrl:item.imageUrl
         },
         sub_total: item.totalPrice,
       };
@@ -67,7 +70,7 @@ const Modal = ({
   
   const payment = async () => {
     if(localStorage.getItem('user')){
-      const user = JSON.parse(localStorage.getItem('user') as string);
+   
       const body = {
         user_id: `${user._id}`,
         shipping_address: address.shipping_address,
@@ -138,6 +141,7 @@ const Modal = ({
                     <p>color: {item.property.color}</p>
                     <p>quantity: {item.property.quantity}</p>
                     <p>size: {item.property.size}</p>
+                    <p>imageUrl: {item.property.imageUrl}</p>
                     <p>total: {item.sub_total}</p>
                   </div>
                 );
@@ -159,8 +163,12 @@ const Modal = ({
   );
 };
 
+
+// =====================================================
+
+
 const CartPage = () => {
-  const { user_id } = useParams();
+  const { user_id } = useParams<any>();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const productList = useAppSelector((state) => state.cart.products);
@@ -171,7 +179,7 @@ const CartPage = () => {
   const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
-    dispatchThunk(getProductsInCart(testUserId));
+    dispatchThunk(getProductsInCart(user_id));
   }, [dispatchThunk]);
 
   useEffect(() => {
@@ -278,7 +286,8 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="cart-page">
+    <PrivateRouter allowedRoles={['member']}>
+    <div className="cart-page">
         <section className="cart-page--wrap flex flex-col-reverse md:flex-row section_container py-10 gap-10">
           <div className="product-list flex-[3]">
             <div className="product-list__header flex items-center justify-between pb-4">
@@ -348,6 +357,8 @@ const CartPage = () => {
         productsSelected={productsSelected}
         totalPrice={totalBillPriceSendToModal}
       />
+    </PrivateRouter>
+   
     </>
   );
 };

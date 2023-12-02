@@ -14,15 +14,25 @@ export const getProductById = (product_id: string) => {
   return response;
 };
 
+export const getProductByCategoryId = (id: string) => {
+  const response = instance.get(`api/products/cate/${id}`);
+  return response
+}
+
+export const getAll = (page: number) => {
+  const res = instance.get(`api/products?_page=${page}`);
+  return res
+}
 export const getAllProduct = () => {
   const response = instance.get<any, GetAllProductResponse>("api/products")
   return response
 }
+export const filterProductByPrice = (sort:string) => {
+  const res = instance.get<any, GetAllProductResponse>(`api/products?_sort=${sort}`);
+  return res
+}
 
-export const getAll = () => {
-  const res = instance.get(`api/products`);
-  return res;
-};
+
 export const createPro = (products: any) => {
   const res = instance.post(`api/products`, products);
   return res;

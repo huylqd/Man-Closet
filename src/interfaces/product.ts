@@ -24,22 +24,28 @@ export interface IProduct {
 }
 
 export interface IProductResponse {
-    data: IProduct[];
-    pagination: {
-        currentPage: number;
-        totalPages: number;
-        totalItems: number;
-    };
+  data: IProduct[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+  };
 }
 
 export interface IProductInCart {
-    _id: string,
-    name: string,
-    price: number,
-    quantity: number,
-    color: string,
-    size: string,
-    imageUrl: string,
-    addedAt?: Date,
-    updatedAt?: Date
+  _id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  color: string;
+  size: string;
+  imageUrl: string;
+  addedAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ProductSold {
+  totalQuantitySold: number;
+  totalAmountSold: number;
+  product_id: string;
 }

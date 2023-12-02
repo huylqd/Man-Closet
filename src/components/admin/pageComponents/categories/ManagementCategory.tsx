@@ -10,6 +10,9 @@ import React, { useEffect, useRef, useState } from "react";
 import ModelCategory from "./ModelCategory";
 import Toaster from "@/components/Toaster/Toaster";
 import Pagination from "@/components/pagination/Pagination";
+import SearchCategory from "./SearchCategory";
+import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
+import Modal from "@/components/modal/Modal";
 
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
@@ -18,59 +21,70 @@ const ManagementCategory = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [categoriesAll, setCategoriesAll] = useState<ICategory[]>([]);
   const [modal, setModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [currentPage,setCurrentPage] = useState<number>(1);
+  const [limit,setLimit] = useState<number>(2);
+  const [totalItems,setTotalItems] = useState<number>(1);
   const [totalPages,setTotalPages] = useState<number>(1);
   const [category, setCategory] = useState<any>();
   const [key, setKey] = useState<string>('');
   const toasterRef = useRef<any>(null);
  useEffect(() => {
-    fetchData(currentPage)
+    fetchData(currentPage,limit)
+    fetchDataAll(0,Number.MAX_SAFE_INTEGER)
   }, []);
-  
-  
-  const fetchData = async (currentPage: number) => {
+  const  fetchDataAll = async (currentPage:number,limit:number) => {
+    const response = await getAllCategory(currentPage,limit);
+    if (response) {
+      const data:any  = response;
+      setCategoriesAll(data.data)
+
+    } else {
+
+    }
+  }
+  const fetchData = async (currentPage: number,limit:number) => {
     if(currentPage !== 0){
-      const response = await getAllCategory(currentPage);
+      const response = await getAllCategory(currentPage,limit);
       if (response) {
         const  data:any  = response;
       
         
         setCategories(data.data)
         setTotalPages(data.paginate.totalPages)
-      } else {
-
-      }
-    }else{
-      const response = await getAllCategory(currentPage);
-      if (response) {
-        const  data:any  = response;
-        setCategoriesAll(data.data)
-        setTotalPages(data.paginate.totalPages)
+        setTotalItems(data.paginate.totalItems)
+        
       } else {
 
       }
     }
+   
+    
   
 
   };
 
 
   const handleDelete = (id: string | undefined) => {
-    const confirm = window.confirm("Bạn có chắc muốn xóa không ?");
-    if (confirm) {
+     setIsOpen(true);
+     if(isOpen){
       deleteCategory(id)
-        .then(({ data }: any) => {
-          // alert("Xóa thành công!");
-          toasterRef.current.showToast("success", "Delete successfully");
-          setCategories(
-            categories.filter((item) => item._id !== data._id)
-          );
-   
-        })
-        .catch((err) => {
-          toasterRef.current.showToast("error", "Delete Fail!");
-        });
-    }
+      .then(({ data }: any) => {
+        toasterRef.current.showToast("success", "Delete successfully");
+        setCategories(
+          categoriesAll.filter((item) => item._id !== data._id)
+        );
+        setTotalItems(categories.length)
+        fetchData(currentPage,limit)
+        setIsOpen(false)
+ 
+      })
+      .catch((err) => {
+        toasterRef.current.showToast("error", "Delete Fail!");
+      });
+  
+     }
+    
   };
   const handleUpdate = async (category: ICategory) => {
     
@@ -94,8 +108,6 @@ const ManagementCategory = () => {
   const handleAdd = async (category: ICategory) => {  
   await  addCategory(category)
       .then(({ data }: any) => {
-        console.log(data);
-
         // getAllCategory()?.then(({ data }) => setCategories(data.data));
         const newCategories = [...categories];
         // Thêm sản phẩm mới vào danh sách
@@ -104,7 +116,7 @@ const ManagementCategory = () => {
         setCategories(newCategories);
         toasterRef.current.showToast("success", "Add successfully!");
         setModal(false);
-        fetchData(currentPage)
+        fetchData(currentPage,limit)
       })
       .catch(() => {
         toasterRef.current.showToast("error", "Add Fail!");
@@ -112,17 +124,38 @@ const ManagementCategory = () => {
   };
   const handleChangePage = (page:number) => {
     setCurrentPage(page)
-    fetchData(page)
+    fetchData(page,limit)
   }
 
   
   
   const search = async () => {
+    // if(key.length === 0 ){
+    //   await  fetchData(currentPage,limit,key)
+    // }else{
+    //   const response = await getAllCategory(currentPage,limit,key);
+    //   if (response) {
+        
+    //     const  data:any  = response;
+    //     if(data.data.length !== 0){
+    //       setCategories(data.data)
+    //       setTotalPages(data.paginate.totalPages)
+    //       setTotalItems(data.paginate.totalItems)
+          
+    //     }else{
+    //       toasterRef.current.showToast("error", "Get data faild!");
+    //     }
+    
+    //   } 
+      
+      
+    //   // setCategories(searchData);
+    // }
     if(!key ){
-   await  fetchData(currentPage)
+   await  fetchData(currentPage,limit)
 
     }else{
-      await  fetchData(0)
+      await  fetchData(0,limit)
       // console.log(categoriesAll);
       const regex = new RegExp(key, 'i');
       const temp = await categoriesAll
@@ -133,16 +166,14 @@ const ManagementCategory = () => {
           // Kiểm tra xem có ít nhất một từ trong `keyWords` tồn tại trong `categoryWords`
         return keyWords.some((word) => categoryWords.some((categoryWord) => categoryWord.includes(word)));
         // regex.test(c.name)
-      }
-    
-    );
-    console.log(resultSearch);
-    
+      });
+
+    setTotalPages(1)
     setCategories(resultSearch);
-    // fetchData(currentPage)
-    }
+    
+    } 
+  
   }
-  console.log(categories);
   
   const handleChange = (e:any) => {
     setKey(e.target.value)
@@ -159,113 +190,7 @@ const ManagementCategory = () => {
             </h1>
           </div>
           <div className="font-bold text-xl pb-6">
-            <form className="pb-6">
-              <div className="flex">
-                <label
-                  htmlFor="-dropdown"
-                  className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                >
-                  Your Email
-                </label>
-                <button
-                  id="dropdown-button"
-                  data-dropdown-toggle="dropdown"
-                  className="flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-                  type="button"
-                >
-                  All categories
-                  <svg
-                    className="w-2.5 h-2.5 ml-2.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </button>
-                <div
-                  id="dropdown"
-                  className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-                >
-                  <ul
-                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdown-button"
-                  >
-                    <li>
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Mockups
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Templates
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Design
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Logos
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-                <div className="relative w-full">
-                  <input
-                    type="search"
-                    onChange={handleChange}
-                    id="search-dropdown"
-                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-gray-500"
-                    placeholder="Search Mockups, Logos, Design Templates..."
-              
-                  />
-                  <button
-                    type="button"
-                    onClick={() => search()}
-                    className="absolute top-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                      />
-                    </svg>
-                    <span className="sr-only">Search</span>
-                  </button>
-                </div>
-              </div>
-            </form>
+              <SearchCategory onHandleChange={handleChange} onSearch={search}/>
             <button
               type="submit"
               onClick={() => {
@@ -290,36 +215,37 @@ const ManagementCategory = () => {
             </button>
           </div>
         </section>
-        <table className="w-full text-sm text-left table-auto text-gray-500 dark:text-gray-400">
+        <table className="w-full  table text-sm text-left table-auto text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 ">
                 STT
               </th>
               <th scope="col" className="px-6 py-3">
                 Category name
               </th>
 
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 overflow-x-auto ">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-            {categories?.map((cate, index) => {
+        
+            { categories.length !== 0 ? categories.map((cate, index) => {
               return (
                 <tr
                   key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  className="bg-white border-b  hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700"
                 >
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white "
                   >
                     {index + 1}
                   </th>
                   <td className="px-6 py-4">{cate.name}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 ">
                     <div className="flex items-center space-x-4">
                       <button
                         type="button"
@@ -350,7 +276,7 @@ const ManagementCategory = () => {
 
                       <button
                         type="button"
-                        onClick={() => handleDelete(cate._id)}
+                        onClick={() => {handleDelete(cate._id), setCategory(cate);}}
                         data-modal-target="delete-modal"
                         data-modal-toggle="delete-modal"
                         className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
@@ -374,19 +300,39 @@ const ManagementCategory = () => {
                   </td>
                 </tr>
               );
-            })}
+            }): (
+              <tr>
+              <td colSpan={3} className=" p-4  text-center bg-white  ">
+                <div className="flex align-center justify-center ">
+                            Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
+            <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
+            </svg> 
+                </div>
+             </td>
+            </tr>
+            )}
           </tbody>
         </table>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage}/>
+        <Pagination currentPage={currentPage} limit={limit} totalItems={totalItems} totalPages={totalPages} onPageChange={handleChangePage}/>
       </div>
       <Toaster ref={toasterRef} />
+      <Modal isOpen={modal}  handleClose={() => setModal(false)}>
       <ModelCategory
-        isvisible={modal}
+        
         add={handleAdd}
         update={handleUpdate}
         category={category}
-        onClose={() => setModal(false)}
+       onClose={() => setModal(false)}
       />
+      </Modal>
+   
+      {isOpen && (
+        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+        <ConfirmModal  onClose={() => setIsOpen(false)} onDelete={handleDelete} id={category._id}/>
+        </Modal>
+ 
+      )}
+    
     </div>
   );
 };
