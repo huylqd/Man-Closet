@@ -168,7 +168,7 @@ const Modal = ({
 
 
 const CartPage = () => {
-  const { user_id } = useParams<any>();
+  // const { user_id } = useParams<any>();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const productList = useAppSelector((state) => state.cart.products);
@@ -179,7 +179,7 @@ const CartPage = () => {
   const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
-    dispatchThunk(getProductsInCart(user_id));
+    dispatchThunk(getProductsInCart("6569e4cd3cbecf5a80c0c9df"));
   }, [dispatchThunk]);
 
   useEffect(() => {

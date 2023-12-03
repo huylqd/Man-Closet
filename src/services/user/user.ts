@@ -15,3 +15,8 @@ export const updateUserInfo = (id: string, data: {[key:string] : number | string
   const response = instance.patch(`/user/${id}`, data)
   return response
 }
+
+export const getUserAddress = (id:string) => {
+  const response = instance.get(`/user/${id}/address`)
+  return response
+}

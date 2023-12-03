@@ -13,8 +13,10 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getUserByIdState, updateUserInfoState } from "@/redux/reducer/user.reducer";
 import { IUser } from "@/interfaces/user";
+import { useRouter } from "next/navigation";
 
 const InfoProfile = () => {
+  const router = useRouter()
   const userSession = JSON.parse(localStorage.getItem("user") as string)
   const userState = useAppSelector((state) => state.user.user)
   // user value state
@@ -138,7 +140,7 @@ const InfoProfile = () => {
           </div>
           {/* address */}
           <div className="pb-4">
-            <h5 className="text-blue-500 text-md hover:text-blue-300 transitions-all w-fit cursor-pointer">
+            <h5 onClick={() => router.push("/user/address")} className="text-blue-500 text-md hover:text-blue-300 transitions-all w-fit cursor-pointer">
               Cài đặt địa chỉ
             </h5>
           </div>
