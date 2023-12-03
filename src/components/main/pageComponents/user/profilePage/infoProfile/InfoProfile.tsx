@@ -3,23 +3,52 @@
 import Modal from "@/components/modal/Modal";
 import { PenSquare } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ModalEditAvatar,
   ModalEditEmail,
   ModalEditName,
   ModalEditPassword,
 } from "./infoProductModals";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { getUserByIdState, updateUserInfoState } from "@/redux/reducer/user.reducer";
+import { IUser } from "@/interfaces/user";
 
 const InfoProfile = () => {
-
+  const userSession = JSON.parse(localStorage.getItem("user") as string)
+  const userState = useAppSelector((state) => state.user.user)
   // user value state
-  const [user,setUser] = useState({})
+  const [user,setUser] = useState({} as IUser)
   // modal state
   const [isEditName, setIsEditName] = useState(false);
   const [isEditEmail, setIsEditEmail] = useState(false);
   const [isEditAvatar, setIsEditAvatar] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+
+
+  const dispatchThunk = useAppDispatch()
+
+  useEffect(() => {
+    dispatchThunk(getUserByIdState(userSession._id))
+  }, [dispatchThunk])
+
+  useEffect(() => {
+    setUser(userState)
+  }, [userState])
+
+  const handleUpdateUserInfo = (data: {[key:string]: number | string}) => {
+    try {
+      const value = {
+        id: user._id as string,
+        data: data
+      }
+
+      dispatchThunk(updateUserInfoState(value))
+    } catch (error) {
+      
+    }
+  }
+
   const handleCloseModal = () => {
     setIsEditName(false);
     setIsEditEmail(false);
@@ -66,7 +95,7 @@ const InfoProfile = () => {
               onClick={() => setIsEditName(true)}
             >
               <h5 className="flex-[1] text-gray-800 text-md font-normal border-b pr-4 md:pr-10">
-                Lê Tuấn Dương
+                {user.name}
               </h5>
               <span className="text-base text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
                 <PenSquare className="w-5 h-5" />
@@ -83,7 +112,7 @@ const InfoProfile = () => {
               onClick={() => setIsEditEmail(true)}
             >
               <h5 className="flex-[1] text-gray-800 text-md font-normal border-b pr-4 md:pr-10">
-                duongltph28310@gfpt.edu.vn
+                {user.email}
               </h5>
               <span className="text-base text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
                 <PenSquare className="w-5 h-5" />
@@ -120,11 +149,11 @@ const InfoProfile = () => {
 
       {/* modal edit name */}
       <Modal isOpen={isEditName} handleClose={handleCloseModal}>
-        <ModalEditName onClose={handleCloseModal} initialValue="Lê Tuấn Dương"/>
+        <ModalEditName onClose={handleCloseModal} initialValue={user.name} onUpdate={handleUpdateUserInfo}/>
       </Modal>
       {/* modal edit email */}
       <Modal isOpen={isEditEmail} handleClose={handleCloseModal}>
-        <ModalEditEmail />
+        <ModalEditEmail onClose={handleCloseModal} onUpdate={handleUpdateUserInfo} initialValue={user.password}/>
       </Modal>
       {/* modal edit avatar */}
       <Modal isOpen={isEditAvatar} handleClose={handleCloseModal}>
@@ -132,7 +161,7 @@ const InfoProfile = () => {
       </Modal>
       {/* modal edit password */}
       <Modal isOpen={isEditPassword} handleClose={handleCloseModal}>
-        <ModalEditPassword />
+        <ModalEditPassword onUpdate={handleUpdateUserInfo} onClose={handleCloseModal} initialValue={user.password}/>
       </Modal>
     </>
   );

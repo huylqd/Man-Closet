@@ -3,33 +3,57 @@
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
+import bcrypt from "bcryptjs";
+import { toast } from "react-toastify";
 
-const ModalEditEmail = () => {
+interface Props {
+  onClose: () => void;
+  onUpdate: (data: { [key: string]: string | number }) => void;
+  initialValue: string;
+}
+
+const ModalEditEmail = ({ onClose, onUpdate, initialValue }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleUpdate = () => {
+    const isMatch = bcrypt.compareSync(password, initialValue);
+    let invalidToSubmit = false;
+
+    if (!email.match(/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/)) {
+      invalidToSubmit = true;
+    }
+    if (email.length === 0) {
+      invalidToSubmit = true;
+    }
+
+    if (!isMatch) {
+      invalidToSubmit = true;
+    }
+
+    if (invalidToSubmit) {
+      toast.error("Xem lại email hoặc mật khẩu");
+      return;
+    }
+
+    const data = { email: email };
+    onUpdate(data);
+    toast.success("Đổi email thành công");
+    onClose();
+  };
 
   return (
     <>
       <div className="bg-white p-3 rounded overflow-hidden">
-        <div className="pb-6">
-          <label htmlFor="oldEmail" className="text-sm text-gray-600">
-            Email đang sử dụng
-          </label>
-          <input
-            type="text"
-            // value={name}
-            // onChange={(e) => handleChangeValue(e.target.value)}
-            id="oldEmail"
-            className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
-          />
-        </div>
         <div className="pb-6">
           <label htmlFor="newEmail" className="text-sm text-gray-600">
             Email mới
           </label>
           <input
             type="text"
-            // value={name}
-            // onChange={(e) => handleChangeValue(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             id="newEmail"
             className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
           />
@@ -44,8 +68,8 @@ const ModalEditEmail = () => {
           <div className="flex items-center">
             <input
               type={showPassword ? "text" : "password"}
-              // value={name}
-              // onChange={(e) => handleChangeValue(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               id="passwordToChangeEmail"
               className="w-full text-gray-800 flex-[1] pt-1 text-md font-normal focus:outline-none border-b"
             />
@@ -66,11 +90,16 @@ const ModalEditEmail = () => {
         </div>
 
         <div className="flex items-center gap-3 pt-6">
-          <Button variant={"primary"} className="flex-[1]">
+          <Button
+            onClick={() => handleUpdate()}
+            onKeyDown={(e) => {e.key === "Enter" && handleUpdate()}}
+            variant={"primary"}
+            className="flex-[1]"
+          >
             Thay đổi
           </Button>
           <Button
-            // onClick={() => onClose()}
+            onClick={() => onClose()}
             variant={"bordered"}
             className="flex-[1]"
           >

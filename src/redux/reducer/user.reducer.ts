@@ -1,30 +1,15 @@
+import { IUser } from "@/interfaces/user";
 import { User } from "@/interfaces/user.interface";
-import { getAllUser } from "@/services/user/user";
+import { getAllUser, getUserById, updateUserInfo } from "@/services/user/user";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
-  user: User;
+  user: IUser;
   users: User[];
 }
 
-const dummyUserState = {
-  _id: "",
-  name: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  address: [
-    {
-      city: "",
-      district: "",
-      wards: "",
-      detailAdress: "",
-    },
-  ],
-};
-
 const initialState: UserState = {
-  user: dummyUserState,
+  user: {} as IUser,
   users: [],
 };
 
@@ -35,7 +20,30 @@ export const getAllUserState = createAsyncThunk(
     const response = await getAllUser(0,5)
     return response.data
   }
+)
 
+export const getUserByIdState = createAsyncThunk(
+  "user/getUserById",
+  async(id:string, thunkAPI) => {
+    const response = await getUserById(id)
+    return response.data
+  }
+)
+
+
+interface UpdateUserInfoParams{
+  id:string,
+  data: {
+    [key:string] : number | string | boolean
+  }
+}
+export const updateUserInfoState = createAsyncThunk(
+  "user/updateUserInfo",
+  async(value : UpdateUserInfoParams, thunkAPI) => {
+    const {id,data} = value
+    const response = await updateUserInfo(id, data)
+    return response.data
+  }
 )
 
 const userSlice = createSlice({
@@ -45,6 +53,12 @@ const userSlice = createSlice({
   extraReducers(builder){
     builder.addCase(getAllUserState.fulfilled, (state, action) => {
       state.users = action.payload
+    }),
+    builder.addCase(getUserByIdState.fulfilled, (state, action) => {
+      state.user = action.payload
+    }),
+    builder.addCase(updateUserInfoState.fulfilled, (state, action) => {
+      state.user = action.payload
     })
   }
 })

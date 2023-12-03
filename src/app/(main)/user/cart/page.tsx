@@ -30,7 +30,7 @@ interface ProductInPayment {
   };
   sub_total: number;
 }
-   const user = JSON.parse(localStorage.getItem('user') as string);
+  const user = JSON.parse(localStorage.getItem('user') as string);
 
 
 const Modal = ({

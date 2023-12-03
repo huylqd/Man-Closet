@@ -6,3 +6,12 @@ export const getAllUser = (page:number,limit:number) => {
   return response
 }
 
+export const getUserById = (id: string) => {
+  const response = instance.get(`/user/${id}`)
+  return response
+}
+
+export const updateUserInfo = (id: string, data: {[key:string] : number | string | boolean}) => {
+  const response = instance.patch(`/user/${id}`, data)
+  return response
+}

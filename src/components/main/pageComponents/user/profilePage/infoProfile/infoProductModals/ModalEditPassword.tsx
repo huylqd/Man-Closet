@@ -1,7 +1,62 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState } from "react";
+import bcrypt from "bcryptjs";
+import { toast } from "react-toastify";
 
-const ModalEditPassword = () => {
+interface Props {
+  initialValue: string;
+  onClose: () => void;
+  onUpdate: (data: { [key: string]: number | string }) => void;
+}
+
+const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleUpdate = () => {
+    let invalidToSubmit = false;
+    let errorMessage = "";
+    const isMatch = bcrypt.compareSync(password, initialValue);
+
+    if (password.length === 0) {
+      invalidToSubmit = true;
+      errorMessage = "Các trường không được để rỗng";
+    }
+
+    if (newPassword.length === 0) {
+      invalidToSubmit = true;
+      errorMessage = "Các trường không được để rỗng";
+    }
+
+    if (confirmPassword.length === 0) {
+      invalidToSubmit = true;
+      errorMessage = "Các trường không được để rỗng";
+    }
+
+    if (!isMatch) {
+      invalidToSubmit = true;
+      errorMessage = "Xem lại các trường mật khẩu";
+    }
+
+    if (confirmPassword !== newPassword) {
+      invalidToSubmit = true;
+      errorMessage = "Xem lại các trường mật khẩu";
+    }
+
+    if (invalidToSubmit) {
+      toast.error(errorMessage);
+      return;
+    }
+
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    const data = {
+      password: hashedPassword,
+    };
+    onUpdate(data);
+    onClose();
+  };
+
   return (
     <>
       <div className="bg-white p-3 rounded overflow-hidden">
@@ -11,8 +66,8 @@ const ModalEditPassword = () => {
           </label>
           <input
             type="text"
-            // value={name}
-            // onChange={(e) => handleChangeValue(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             id="oldPassword"
             className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
           />
@@ -23,8 +78,8 @@ const ModalEditPassword = () => {
           </label>
           <input
             type="text"
-            // value={name}
-            // onChange={(e) => handleChangeValue(e.target.value)}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             id="newPassword"
             className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
           />
@@ -36,20 +91,26 @@ const ModalEditPassword = () => {
           </label>
           <input
             type="text"
-            // value={name}
-            // onChange={(e) => handleChangeValue(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             id="confirmNewPassword"
             className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
           />
         </div>
-        
 
         <div className="flex items-center gap-3 pt-6">
-          <Button variant={"primary"} className="flex-[1]">
+          <Button
+            onClick={() => handleUpdate()}
+            onKeyDown={(e) => {
+              e.key === "Enter" && handleUpdate();
+            }}
+            variant={"primary"}
+            className="flex-[1]"
+          >
             Thay đổi
           </Button>
           <Button
-            // onClick={() => onClose()}
+            onClick={() => onClose()}
             variant={"bordered"}
             className="flex-[1]"
           >
