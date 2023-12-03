@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import instance from "./instance";
 import { ProductInCartResponse } from "./responses/product.responses";
 import { IProductInCart } from "@/interfaces/product";
