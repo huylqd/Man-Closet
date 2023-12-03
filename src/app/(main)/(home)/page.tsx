@@ -12,7 +12,6 @@ import React from "react";
 
 // demo data
 import { BannerCarousel } from "@/components/carousel";
-import { listProduct } from "@/data/product";
 import Image from "next/image";
 import { homeBanner1 } from "@/assets/media/images/bannerImg";
 
