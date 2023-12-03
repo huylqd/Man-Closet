@@ -1,17 +1,21 @@
 
 import TitleGap from '@/components/titleGap';
 import { ICategory } from '@/interfaces/category';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { v4 as uuidv4 } from "uuid";
+import "./category.scss"
 interface CategoryProp {
     title: string;
     data: ICategory[];
+  
+  
 }
 const Category = ({ title, data }: CategoryProp) => {
+  
     return (
         <div className="mt-1 pr-4 overflow-x-auto md:w-full ">
-            <TitleGap title={title}/>
-            <div className="hidden md:block">
+            <TitleGap  title={title}/>
+            <div className="hidden">
                 {data?.map((category, index) => {
                     return (<div key={uuidv4()} className='flex flex-row align-center   mb-8 pt-1 justify-center '>
 

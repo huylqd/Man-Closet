@@ -16,6 +16,8 @@ import "./detailCustomSwiper.scss";
 import AddToCardModal from "../addToCartModal/AddToCartModal";
 import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "lucide-react";
+import { commonErrorToast, commonInfoToast, commonSuccessToast } from "@/utils/notify";
+import { addRemoveWishList } from "@/services/auth/auth";
 
 const ImageItem = ({ src }: { src: string }) => {
   return (
@@ -37,10 +39,8 @@ const Detail = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const productState = useAppSelector((state) => state.product.product);
   const [product, setProduct] = useState<IProduct>({} as IProduct);
-
-  // useEffect
+  const user = JSON.parse(localStorage.getItem("user") as string)
   const dispatchThunk = useAppDispatch();
-
   useEffect(() => {
     dispatchThunk(getProductState(productId.toString()));
   }, [dispatchThunk, productId]);
@@ -54,6 +54,31 @@ const Detail = () => {
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
+  const handleWishlist = async () => {
+    try {
+      if(!user){
+        commonErrorToast("Bạn cần đăng nhập để thực hiện chức năng")
+      }else{
+        const data = {
+          name:product.productName,
+          imageUrl:product.properties[0].imageUrl,
+          price:product.price,
+        }
+       const addWishList =  await addRemoveWishList(data)
+        if(addWishList){
+          commonSuccessToast("Thêm sản phẩm yêu thích thành công")
+        }
+  
+      }
+    } catch (error:any) {
+      // console.log(error);
+      
+      commonErrorToast(`${error.response.data.message}`)
+      
+    }
+  
+  
+  }
 
   return (
     <>
@@ -88,7 +113,7 @@ const Detail = () => {
             >
               Thêm vào giỏ hàng
             </button>
-            <button className="flex-[1] py-2 w-[300px] px-2 rounded border-2 border-zinc-800 text-gray-800 text-base md:text-md hover:text-gray-700 hover:border-zinc-600 transition-all">
+            <button onClick={() => handleWishlist()} className="flex-[1] py-2 w-[300px] px-2 rounded border-2 border-zinc-800 text-gray-800 text-base md:text-md hover:text-gray-700 hover:border-zinc-600 transition-all">
               Thêm vào yêu thích
             </button>
           </div>
@@ -147,7 +172,7 @@ const Detail = () => {
           >
             Thêm vào giỏ hàng
           </button>
-          <button className="flex-[1] py-2 md:py-3 px-2 rounded border-2 border-zinc-800 text-gray-800 text-base md:text-md hover:text-gray-700 hover:border-zinc-600 transition-all">
+          <button onClick={() => handleWishlist()} className="flex-[1] py-2 md:py-3 px-2 rounded border-2 border-zinc-800 text-gray-800 text-base md:text-md hover:text-gray-700 hover:border-zinc-600 transition-all">
             Thêm vào yêu thích
           </button>
         </div>

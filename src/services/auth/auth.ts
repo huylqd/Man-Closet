@@ -19,8 +19,8 @@ export const getListWishListByUserId = (userId: any) => {
     return res
 }
 
-export const addRemoveWishList = (userId: string,item:any) => {
-    const res = instance.patch(`/user/${userId}/wishlist`,item);
+export const addRemoveWishList = (data:any) => {
+    const res = instance.patch(`/user/wishlist`,data);
     return res
 }
 
