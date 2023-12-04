@@ -2,8 +2,8 @@ import instance from "./instance";
 import { ProductInCartResponse } from "./responses/product.responses";
 import { IProductInCart } from "@/interfaces/product";
 
-export const getAllProductInCart = (user_id: string) => {
-  const res = instance.get<any, ProductInCartResponse>(`api/cart/${user_id}`);
+export const getAllProductInCart = () => {
+  const res = instance.get<any, ProductInCartResponse>(`api/cart`);
   return res;
 };
 
