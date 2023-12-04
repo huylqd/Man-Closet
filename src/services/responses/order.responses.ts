@@ -10,4 +10,10 @@ export interface GetProductSoldRes extends AxiosResponse {
 export interface GetAllOrderBillRes extends AxiosResponse {
   message: string;
   data: OrderItem[];
+  paginate: {
+    currentPage: number,
+    totalPages: number,
+    totalItems: number,
+    limit: number
+  },
 }

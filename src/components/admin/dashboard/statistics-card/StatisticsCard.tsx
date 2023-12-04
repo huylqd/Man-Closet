@@ -25,8 +25,8 @@ const StatisticsCard = () => {
   }, [dispatchThunk]);
 
   useEffect(() => {
-    setOrders(ordersState.length);
-    setUsers(usersState.length)
+    setOrders(ordersState?.length);
+    setUsers(usersState?.length)
   }, [ordersState, usersState]);
 
 
