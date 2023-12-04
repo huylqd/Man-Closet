@@ -10,34 +10,36 @@ import { IProduct, IProductResponse } from '@/interfaces/product';
 import { useState, useEffect } from 'react'
 import Pagination from '@/components/pagination/Pagination';
 import TitleGap from '@/components/titleGap';
-import { getAll } from '@/services/products/products';
+import { filterProduct, getAll } from '@/services/products/products';
 
 interface ShopListProp {
-  title: string;
+  sort:string,
+  sortOrder:string
 
 }
 
-const ShopList = ({ title }: ShopListProp) => {
+const ShopList = ({sort, sortOrder}:ShopListProp) => {
+
   
   const [product,setProduct] = useState<IProduct[]>([])
   const [productAll,setProductAll] = useState<IProduct[]>([])
   const [currentPage,setCurrentPage] = useState(1)
   const [totalPages,setTotalPages] = useState(1)
   const [totalItems,setTotalItems] = useState(1)
-  
+ 
   useEffect(() =>{
     fetchData(currentPage)
     fetchDataAll(0)
-  },[])
-  const fetchData =async (page:number) => {
-    const response:any = await getAll(page)
+  },[sort,sortOrder])
+  const fetchData = async (page:number) => {
+    const response:any = await filterProduct(page,sort,sortOrder)
     setProduct(response.data)
     setCurrentPage(response.pagination.currentPage)
     setTotalItems(response.pagination.totalItems)
     setTotalPages(response.pagination.totalPages)
   }
-  const fetchDataAll =async (page:number) => {
-    const response:any = await getAll(page)
+  const fetchDataAll = async (page:number) => {
+    const response:any = await filterProduct(page,sort,sortOrder)
     setProductAll(response.data)
   }
 
