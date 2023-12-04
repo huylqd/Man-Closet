@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import "./modalFilter.scss"
 import { Category } from '..';
 import { categoryCarouselData } from '@/app/(main)/(home)/demo.data';
+import CategoryContainer from '../category/Category';
+import { dataFake } from '../category/dataFake';
 
 interface ModalFilter {
     onClose: () => void;
@@ -42,14 +44,11 @@ const ModalFilter = ({onClose,isOpen}:ModalFilter) => {
         )}
       >
         <div className="flex flex-col w-full h-full">
-          <div className="flex justify-between items-start">
-          <div className="flex flex-col align-center justify-between   ">
-              <Category  title="Product Brand" data={categoryCarouselData}/>
-              <Category title="Categories" data={categoryCarouselData} />
-              <Category  title="Riting Item" data={categoryCarouselData} />
-              <Category  title="Price Filter" data={categoryCarouselData} />
+          <div className="flex justify-between w-[90%] items-start">
+          <div className="flex flex-col align-center justify-between w-full transition  ">
+             <CategoryContainer data={dataFake}/>
             </div>
-            <div className="p-1">
+            <div className="">
               <X onClick={() => onClose()} className="w-5 h-5 cursor-pointer" />
             </div>
           </div>

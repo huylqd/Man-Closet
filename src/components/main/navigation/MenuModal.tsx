@@ -56,7 +56,7 @@ const menuModalData = [
   },
   {
     icon: <Heart className="w-5 h-5" />,
-    href: `users/${user_id}/wishlist`,
+    href: `user/wishlist`,
     name: "Danh sách yêu thích",
   } 
 ];
@@ -148,7 +148,7 @@ const menuModalData = [
               style={{ objectFit: "cover" }}
             />) : ( <Image
               onClick={() => {
-                router.push("/users");onClose(false)
+                router.push("/user");onClose(false)
               }}
              src={gc_4}
              alt="avatar"

@@ -4,19 +4,37 @@ import React, { useState, useEffect } from 'react'
 import Breadcrumb from '@/components/breadcrumb'
 import { Filter } from 'lucide-react'
 import { categoryCarouselData } from '@/app/(main)/(home)/demo.data'
-import { Category, ShopList } from '..'
+import {  ShopList } from '..'
 import ModalFilter from './ModalFilter'
+import CategoryContainer from '../category/Category'
+import { dataFake } from '../category/dataFake'
+
 
 
 
 
 const Shop = () => {
-    const [isOpen,setIsOpen] = useState(false)
-
-
+    const [isOpen,setIsOpen] = useState(false);
+    const [sort,setSort] = useState("createdAt");
+    const [sortOrder,setSortOrder] = useState("desc");
     const handleCloseModal = () => {
         setIsOpen(false);
       };
+      const handleChanSelect = async (e:any) => {
+        const selectedValue = e.target.value;
+        let newSortOrder = "asc";
+        if (selectedValue === sort) {
+          newSortOrder = sortOrder === "desc" ? "asc" : "desc";
+        }else{
+          newSortOrder = sortOrder === "desc" ? "asc" : "desc";
+        }
+        setSort(selectedValue);
+        setSortOrder(newSortOrder);      
+      }
+
+      
+
+      
   return (
     <div>
       <section>
@@ -42,11 +60,12 @@ const Shop = () => {
               </div>
             
               <div className="pr-2 mt-2 w-1/2">
-                <select className=" w-full ml-2 border-gray-300 cursor-pointer focus:outline-none pr-2 pl-2 flex flex-row border-2 p-3 align-center justify-center hover:border-gray-800 transition ease-in-out rounded-sm">
-                  <option value="">Mới nhất</option>
-                  <option value="">Cũ nhất</option>
-                  <option value="">Giá : Tăng dần</option>
-                  <option value="">Giá: Giảm dần </option>
+                <select onChange={handleChanSelect} className=" 
+              w-full ml-2 border-gray-300 cursor-pointer focus:outline-none pr-2 pl-2 flex flex-row border-2 p-3 align-center justify-center hover:border-gray-800 transition ease-in-out rounded-sm" name='sort'>
+                  <option value="createdAt">Mới nhất</option>
+                  <option value="createdAt">Cũ nhất</option>
+                  <option value="price">Giá: Giảm dần</option>
+                  <option value="price">Giá: Tăng dần </option>
                 </select>
               </div>
            
@@ -57,15 +76,12 @@ const Shop = () => {
 
           <div className="flex-auto hidden w-full md:w-1/6  md:block mr-2">
             <div className="flex flex-row align-center justify-between md:flex-col  ">
-              <Category  title="Product Brand" data={categoryCarouselData}/>
-              <Category title="Categories" data={categoryCarouselData} />
-              <Category title="Riting Item" data={categoryCarouselData} />
-              <Category title="Price Filter" data={categoryCarouselData} />
+              <CategoryContainer data={dataFake}/>
             </div>
           </div>
         
-          <div className='flex-auto w-full md:w-4/6 ml-2'>
-            <ShopList title='Tất cả sản phẩm' />
+          <div className='flex-auto w-full md:w-3/6 ml-2'>
+            <ShopList sort={sort} sortOrder={sortOrder}/>
           </div>
         </div>
 

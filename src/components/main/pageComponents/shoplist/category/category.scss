@@ -1,7 +1,8 @@
 .atc_modal.close{
     opacity: 0;
-    transform: translateY(200%);
+    transform: translateX(200%);
     transition: all ease-in-out 0.3s;
+    height: 0;
   }
   
   .atc_modal.open{
