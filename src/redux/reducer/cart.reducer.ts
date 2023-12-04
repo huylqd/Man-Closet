@@ -13,7 +13,7 @@ const initialState: CartState = {
 export const getProductsInCart = createAsyncThunk(
   "cart/getProductsInCart",
   async (user_id: string, thunkAPI) => {
-    const response = await getAllProductInCart(user_id);
+    const response = await getAllProductInCart();
     return response.result;
   }
 );

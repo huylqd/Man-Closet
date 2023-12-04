@@ -8,7 +8,7 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
     if (!isvisiblePro) return null
     const [cate, setCate] = useState([])
     useEffect(() => {
-        getAllCategory(0)?.then(({ data }) => setCate(data))
+        getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({ data }) => setCate(data))
     }, [])
 
 

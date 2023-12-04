@@ -210,6 +210,8 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
         price: product.price,
       },
     };
+    console.log(data);
+    
 
     if (validData) {
       dispatchThunk(addProductToCart(data));

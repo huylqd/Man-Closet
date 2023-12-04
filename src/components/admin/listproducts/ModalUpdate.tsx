@@ -11,7 +11,7 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
     // const [product, setProduct] = useState({})
     const [cate, setCate] = useState<ICategory[]>([])
     useEffect(() => {
-        getAllCategory(0)?.then(({ data }) => setCate(data))
+        getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({ data }) => setCate(data))
     }, [])
     const {
         register,

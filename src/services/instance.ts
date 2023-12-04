@@ -2,14 +2,9 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL: "http://localhost:8088/",
-
-
-  // headers: {
-  //     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  // },
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
 });
 
 instance.interceptors.response.use(
