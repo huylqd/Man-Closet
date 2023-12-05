@@ -76,6 +76,9 @@ const ManagementCategory = () => {
         );
         setTotalItems(categories.length)
         fetchData(currentPage,limit)
+        // if(totalItems) {
+        //   fetchData(currentPage - 1,limit)
+        // }
         setIsOpen(false)
  
       })
@@ -118,8 +121,8 @@ const ManagementCategory = () => {
         setModal(false);
         fetchData(currentPage,limit)
       })
-      .catch(() => {
-        toasterRef.current.showToast("error", "Add Fail!");
+      .catch((err) => {
+       
       });
   };
   const handleChangePage = (page:number) => {

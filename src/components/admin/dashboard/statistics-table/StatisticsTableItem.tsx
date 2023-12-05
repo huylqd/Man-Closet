@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/hooks";
 import { IProduct, ProductSold } from "@/interfaces/product";
-import { getProduct } from "@/redux/reducer/product.reducer";
+import { getProductState } from "@/redux/reducer/product.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ const StatisticsTableItem = ({ data, index }: StatisticsTableItemProps) => {
   const dispatchThunk = useAppDispatch()
 
   useEffect(() => {
-    dispatchThunk(getProduct(product_id))
+    dispatchThunk(getProductState(product_id))
   }, [dispatchThunk, product_id])
 
   useEffect(() => {
