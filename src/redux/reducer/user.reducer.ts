@@ -1,16 +1,19 @@
 import { IUser } from "@/interfaces/user";
 import { User } from "@/interfaces/user.interface";
+import { TAddress, addNewAddress } from "@/services/address.services";
 import { getAllUser, getUserById, updateUserInfo } from "@/services/user/user";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
   user: IUser;
   users: User[];
+  address: TAddress[]
 }
 
 const initialState: UserState = {
   user: {} as IUser,
   users: [],
+  address: []
 };
 
 // asyncThunk
@@ -46,6 +49,24 @@ export const updateUserInfoState = createAsyncThunk(
   }
 )
 
+// address
+type AddNewAddressStateParams = {
+  user_id:string,
+  data: {
+    city: string,
+    district: string,
+    wards: string,
+    detailAddress:string
+  }
+}
+export const addNewAddressState = createAsyncThunk(
+  "address/addNewAddress",
+  async({user_id, data}:AddNewAddressStateParams, thunkAPI) => {
+    const response = await addNewAddress(user_id, data)
+    return response.data
+  }
+)
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -59,6 +80,9 @@ const userSlice = createSlice({
     }),
     builder.addCase(updateUserInfoState.fulfilled, (state, action) => {
       state.user = action.payload
+    }),
+    builder.addCase(addNewAddressState.fulfilled, (state, action) => {
+      state.address.push(action.payload)
     })
   }
 })
