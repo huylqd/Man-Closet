@@ -22,73 +22,72 @@ const ManagementCategory = () => {
   const [categoriesAll, setCategoriesAll] = useState<ICategory[]>([]);
   const [modal, setModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentPage,setCurrentPage] = useState<number>(1);
-  const [limit,setLimit] = useState<number>(2);
-  const [totalItems,setTotalItems] = useState<number>(1);
-  const [totalPages,setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(2);
+  const [totalItems, setTotalItems] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [category, setCategory] = useState<any>();
   const [key, setKey] = useState<string>('');
   const toasterRef = useRef<any>(null);
- useEffect(() => {
-    fetchData(currentPage,limit)
-    fetchDataAll(0,Number.MAX_SAFE_INTEGER)
+  useEffect(() => {
+    fetchData(currentPage, limit)
+    fetchDataAll(0, Number.MAX_SAFE_INTEGER)
   }, []);
-  const  fetchDataAll = async (currentPage:number,limit:number) => {
-    const response = await getAllCategory(currentPage,limit);
+  const fetchDataAll = async (currentPage: number, limit: number) => {
+    const response = await getAllCategory(currentPage, limit);
     if (response) {
-      const data:any  = response;
+      const data: any = response;
       setCategoriesAll(data.data)
-
     } else {
 
     }
   }
-  const fetchData = async (currentPage: number,limit:number) => {
-    if(currentPage !== 0){
-      const response = await getAllCategory(currentPage,limit);
+  const fetchData = async (currentPage: number, limit: number) => {
+    if (currentPage !== 0) {
+      const response = await getAllCategory(currentPage, limit);
       if (response) {
-        const  data:any  = response;
-      
-        
+        const data: any = response;
+
+
         setCategories(data.data)
         setTotalPages(data.paginate.totalPages)
         setTotalItems(data.paginate.totalItems)
-        
+
       } else {
 
       }
     }
-   
-    
-  
+
+
+
 
   };
 
 
   const handleDelete = (id: string | undefined) => {
-     setIsOpen(true);
-     if(isOpen){
+    setIsOpen(true);
+    if (isOpen) {
       deleteCategory(id)
-      .then(({ data }: any) => {
-        toasterRef.current.showToast("success", "Delete successfully");
-        setCategories(
-          categoriesAll.filter((item) => item._id !== data._id)
-        );
-        setTotalItems(categories.length)
-        fetchData(currentPage,limit)
-        setIsOpen(false)
- 
-      })
-      .catch((err) => {
-        toasterRef.current.showToast("error", "Delete Fail!");
-      });
-  
-     }
-    
+        .then(({ data }: any) => {
+          toasterRef.current.showToast("success", "Delete successfully");
+          setCategories(
+            categoriesAll.filter((item) => item._id !== data._id)
+          );
+          setTotalItems(categories.length)
+          fetchData(currentPage, limit)
+          setIsOpen(false)
+
+        })
+        .catch((err) => {
+          toasterRef.current.showToast("error", "Delete Fail!");
+        });
+
+    }
+
   };
   const handleUpdate = async (category: ICategory) => {
-    
-   await updateCategory(category)
+
+    await updateCategory(category)
       .then((cate) => {
         // console.log(cate);
         // Gọi hàm showToast bên trong component Toaster
@@ -105,8 +104,8 @@ const ManagementCategory = () => {
         toasterRef.current.showToast("error", "Update Fail!");
       });
   };
-  const handleAdd = async (category: ICategory) => {  
-  await  addCategory(category)
+  const handleAdd = async (category: ICategory) => {
+    await addCategory(category)
       .then(({ data }: any) => {
         // getAllCategory()?.then(({ data }) => setCategories(data.data));
         const newCategories = [...categories];
@@ -116,66 +115,66 @@ const ManagementCategory = () => {
         setCategories(newCategories);
         toasterRef.current.showToast("success", "Add successfully!");
         setModal(false);
-        fetchData(currentPage,limit)
+        fetchData(currentPage, limit)
       })
       .catch(() => {
         toasterRef.current.showToast("error", "Add Fail!");
       });
   };
-  const handleChangePage = (page:number) => {
+  const handleChangePage = (page: number) => {
     setCurrentPage(page)
-    fetchData(page,limit)
+    fetchData(page, limit)
   }
 
-  
-  
+
+
   const search = async () => {
     // if(key.length === 0 ){
     //   await  fetchData(currentPage,limit,key)
     // }else{
     //   const response = await getAllCategory(currentPage,limit,key);
     //   if (response) {
-        
+
     //     const  data:any  = response;
     //     if(data.data.length !== 0){
     //       setCategories(data.data)
     //       setTotalPages(data.paginate.totalPages)
     //       setTotalItems(data.paginate.totalItems)
-          
+
     //     }else{
     //       toasterRef.current.showToast("error", "Get data faild!");
     //     }
-    
+
     //   } 
-      
-      
+
+
     //   // setCategories(searchData);
     // }
-    if(!key ){
-   await  fetchData(currentPage,limit)
+    if (!key) {
+      await fetchData(currentPage, limit)
 
-    }else{
-      await  fetchData(0,limit)
+    } else {
+      await fetchData(0, limit)
       // console.log(categoriesAll);
       const regex = new RegExp(key, 'i');
       const temp = await categoriesAll
-      let resultSearch = await  temp.filter((c:ICategory) => {
-         // Chuyển chuỗi `key` và tên danh mục thành chữ thường và tách thành mảng từ
+      let resultSearch = await temp.filter((c: ICategory) => {
+        // Chuyển chuỗi `key` và tên danh mục thành chữ thường và tách thành mảng từ
         const keyWords = key.toLowerCase().split(' ');
         const categoryWords = c.name.toLowerCase().split(' ')
-          // Kiểm tra xem có ít nhất một từ trong `keyWords` tồn tại trong `categoryWords`
+        // Kiểm tra xem có ít nhất một từ trong `keyWords` tồn tại trong `categoryWords`
         return keyWords.some((word) => categoryWords.some((categoryWord) => categoryWord.includes(word)));
         // regex.test(c.name)
       });
 
-    setTotalPages(1)
-    setCategories(resultSearch);
-    
-    } 
-  
+      setTotalPages(1)
+      setCategories(resultSearch);
+
+    }
+
   }
-  
-  const handleChange = (e:any) => {
+
+  const handleChange = (e: any) => {
     setKey(e.target.value)
   }
 
@@ -190,7 +189,7 @@ const ManagementCategory = () => {
             </h1>
           </div>
           <div className="font-bold text-xl pb-6">
-              <SearchCategory onHandleChange={handleChange} onSearch={search}/>
+            <SearchCategory onHandleChange={handleChange} onSearch={search} />
             <button
               type="submit"
               onClick={() => {
@@ -231,8 +230,8 @@ const ManagementCategory = () => {
             </tr>
           </thead>
           <tbody>
-        
-            { categories.length !== 0 ? categories.map((cate, index) => {
+
+            {categories.length !== 0 ? categories.map((cate, index) => {
               return (
                 <tr
                   key={index}
@@ -276,7 +275,7 @@ const ManagementCategory = () => {
 
                       <button
                         type="button"
-                        onClick={() => {handleDelete(cate._id), setCategory(cate);}}
+                        onClick={() => { handleDelete(cate._id), setCategory(cate); }}
                         data-modal-target="delete-modal"
                         data-modal-toggle="delete-modal"
                         className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
@@ -300,39 +299,39 @@ const ManagementCategory = () => {
                   </td>
                 </tr>
               );
-            }): (
+            }) : (
               <tr>
-              <td colSpan={3} className=" p-4  text-center bg-white  ">
-                <div className="flex align-center justify-center ">
-                            Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
-            <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
-            </svg> 
-                </div>
-             </td>
-            </tr>
+                <td colSpan={3} className=" p-4  text-center bg-white  ">
+                  <div className="flex align-center justify-center ">
+                    Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
+                      <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
+                    </svg>
+                  </div>
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
-        <Pagination currentPage={currentPage} limit={limit} totalItems={totalItems} totalPages={totalPages} onPageChange={handleChangePage}/>
+        <Pagination currentPage={currentPage} limit={limit} totalItems={totalItems} totalPages={totalPages} onPageChange={handleChangePage} />
       </div>
       <Toaster ref={toasterRef} />
-      <Modal isOpen={modal}  handleClose={() => setModal(false)}>
-      <ModelCategory
-        
-        add={handleAdd}
-        update={handleUpdate}
-        category={category}
-       onClose={() => setModal(false)}
-      />
+      <Modal isOpen={modal} handleClose={() => setModal(false)}>
+        <ModelCategory
+
+          add={handleAdd}
+          update={handleUpdate}
+          category={category}
+          onClose={() => setModal(false)}
+        />
       </Modal>
-   
+
       {isOpen && (
         <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
-        <ConfirmModal  onClose={() => setIsOpen(false)} onDelete={handleDelete} id={category._id}/>
+          <ConfirmModal onClose={() => setIsOpen(false)} onDelete={handleDelete} id={category._id} />
         </Modal>
- 
+
       )}
-    
+
     </div>
   );
 };

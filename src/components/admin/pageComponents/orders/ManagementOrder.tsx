@@ -3,48 +3,112 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import SearchOrder from './SearchOrder'
 import { IBill } from '@/interfaces/bill';
-import { getAllOrderBill } from '@/services/order/order';
+import { exportBillById, getAllOrderBill } from '@/services/order/order';
 import Toaster from '@/components/Toaster/Toaster';
 import { getAllUser } from '@/services/user/user';
 import { IUser } from '@/interfaces/user';
+import Image from 'next/image';
+import { useCurrency } from '@/hooks';
+import Pagination from '@/components/pagination/Pagination';
 
 
 const ManagementOrder = () => {
     const [billAll, setBillAll] = useState<IBill[]>([]);
-    const [bill, setBill] = useState<IBill[]>([]);
+    const [bill, setBill] = useState<IBill[]>([])
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [limit, setLimit] = useState<number>(2);
+    const [totalItems, setTotalItems] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [key, setKey] = useState<string>('');
     const [user, setUser] = useState<IUser[]>([])
     const toasterRef = useRef<any>();
     useEffect(() => {
-        fetchDataAll(0, Number.MAX_SAFE_INTEGER);
-        fetchAllUser(0, Number.MAX_SAFE_INTEGER)
-    }, [])
-    const fetchDataAll = async (currentpage: number, limit: number) => {
-        const response = await getAllOrderBill(currentpage, limit);
-        if (response) {
-            const data: any = response.data;
-            setBillAll(data)
-        } else {
-            toasterRef.current.showToast("error", "Delete Fail!");
-        }
-    };
-    const fetchAllUser = async (currentPage: number, limit: number) => {
-        const response = await getAllUser(currentPage, limit);
-        if (response) {
-            const data: any = response;
-            setUser(data.data)
-        } else {
+        fetchData(currentPage, limit)
+        Promise.all([
+            getAllOrderBill(0, Number.MAX_SAFE_INTEGER),
+            getAllUser(0, Number.MAX_SAFE_INTEGER),
+            getAllOrderBill(currentPage, limit)
+        ]).then(([orderData, userData, billData]: any) => {
 
+            const userMap = new Map(userData?.data?.map((user: any) => [user._id, user.name]));
+            setUser(userData?.data);
+            setBillAll(orderData?.data?.map((item: any) => {
+                return {
+                    ...item,
+                    userName: userMap.get(item.user_id),
+                };
+            }));
+            setBill(billData?.data?.map((item: any) => {
+                return {
+                    ...item,
+                    userName: userMap.get(item.user_id),
+                };
+            }));
+            setTotalPages(billData.paginate.totalPages)
+            setTotalItems(billData.paginate.totalItems)
+        }).catch((error) => {
+            // Handle errors
+            console.error("Error fetching data: ", error);
+        });
+    }, [currentPage]);
+    const fetchData = async (currentPage: number, limit: number) => {
+        if (currentPage !== 0) {
+            const response = await getAllOrderBill(currentPage, limit);
+            if (response) {
+                const data: any = response;
+
+
+                setBill(data.data)
+                setTotalPages(data.paginate.totalPages)
+                setTotalItems(data.paginate.totalItems)
+
+            } else {
+
+            }
         }
+
     }
-    billAll.map((item: any) => {
+    const handleChangePage = (page: number) => {
+        setCurrentPage(page)
+        fetchData(page, limit)
+    }
 
-        const userName = user?.filter((user: IUser) => user._id === item.user_id);
-        console.log("userName: ", user)
-        return {
-            ...item,
-            // user_id: userName?[0]?.name
+
+    console.log("bill", billAll)
+    const customDay = (createdAt: string) => {
+        const date = new Date(createdAt);
+        const formatDate = `${date.getHours()}:${date.getMinutes()}  ${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+        return formatDate
+    }
+    const URL = "http://localhost:8088/order/export";
+    const exportBill = (id: any) => {
+        // window.location("http")
+        exportBillById(id)
+        window.open(`${URL}/${id}`)
+        // window.location.reload()
+    }
+
+    // handle submit search
+    const handleChangeSearch = (e: any) => {
+        setKey(e.target.value)
+    }
+    const search = async () => {
+        if (!key) {
+            await fetchData(currentPage, limit)
+        } else {
+            await fetchData(0, limit);
+            let resultSearch = billAll.filter((bill: IBill) => {
+                const keyWords = key.toLocaleLowerCase().split(' ');
+                const billName = bill._id?.toLocaleLowerCase().split(' ');
+                return keyWords.some((word) => billName?.some((bill) => bill.includes(word)))
+            })
+            setTotalPages(1);
+            setBill(resultSearch)
         }
-    })
+
+
+    }
+    console.log("bill", bill)
 
 
 
@@ -59,7 +123,7 @@ const ManagementOrder = () => {
                         </h1>
                     </div>
                     <div className="font-bold text-xl pb-6">
-                        <SearchOrder />
+                        <SearchOrder onHandleChange={handleChangeSearch} onSearch={search} />
                     </div>
 
                 </section>
@@ -71,7 +135,7 @@ const ManagementOrder = () => {
                             </th>
 
                             <th scope="col" className="px-6 py-3">
-                                Id Order
+                                Id
                             </th>
 
                             <th scope="col" className="px-6 py-3">
@@ -87,21 +151,21 @@ const ManagementOrder = () => {
                             </th>
 
                             <th scope="col" className="px-6 py-3">
-                                Status Order
+                                Status
                             </th>
 
                             <th scope="col" className="px-6 py-3">
                                 CreatedAt
                             </th>
 
-                            <th scope="col" className="px-6 py-3 overflow-x-auto ">
+                            <th scope="col" className=" px-6 py-3 overflow-x-auto ">
                                 Action
                             </th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        {/* {categories.length !== 0 ? categories.map((cate, index) => {
+                        {bill?.length !== 0 ? bill?.map((bill, index) => {
                             return (
                                 <tr
                                     key={index}
@@ -113,75 +177,49 @@ const ManagementOrder = () => {
                                     >
                                         {index + 1}
                                     </th>
-                                    <td className="px-6 py-4">{cate.name}</td>
-                                    <td className="px-6 py-4 ">
-                                        <div className="flex items-center space-x-4">
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setModal(true);
-                                                    setCategory(cate);
-                                                }}
-                                                data-drawer-show="drawer-update-product"
-                                                aria-controls="drawer-update-product"
-                                                className="py-2 px-3 flex items-center text-sm font-medium text-center bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-4 w-4 mr-2 -ml-0.5"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                                Edit
-                                            </button>
+                                    <td className="px-6 py-4">{bill._id}</td>
+                                    <td className="px-6 py-4">{bill.userName}</td>
+                                    <td className="px-6 py-4 flex justify-between w-[200px]">{bill.items.map((item) => {
+                                        return <>
+                                            <figure className="w-[80px] h-[80px] relative rounded overflow-hidden">
+                                                <Image
+                                                    src={item.property.imageUrl}
+                                                    fill
+                                                    objectFit="contain"
+                                                    className="absolute"
+                                                    alt=""
+                                                />
+                                            </figure>
+                                        </>
+                                    })}</td>
+                                    <td className="px-6 py-4">{useCurrency(bill.total_price)}</td>
+                                    <td className="px-6 py-4">{bill.history_order_status[0].status}</td>
+                                    <td className="px-6 py-4">{customDay(bill.createdAt.toString())}</td>
 
-                                            <button
-                                                type="button"
-                                                onClick={() => { handleDelete(cate._id), setCategory(cate); }}
-                                                data-modal-target="delete-modal"
-                                                data-modal-toggle="delete-modal"
-                                                className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-4 w-4 mr-2 -ml-0.5"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                                Delete
-                                            </button>
-                                        </div>
+
+                                    <td className="px-6 py-4 ">
+
+                                        <button type="button" onClick={() => exportBill(bill._id)} className="flex items-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512" className="mr-2 ml-0.5"><path fill="#ffffff" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" /></svg>Export</button>
+
                                     </td>
                                 </tr>
                             );
-                        }) : ( */}
-                        <tr>
-                            <td colSpan={3} className=" p-4  text-center bg-white  ">
-                                <div className="flex align-center justify-center ">
-                                    Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
-                                        <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                        {/* )} */}
+                        }) : (
+                            <tr>
+                                <td colSpan={3} className=" p-4  text-center bg-white  ">
+                                    <div className="flex align-center justify-center ">
+                                        Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
+                                            <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
+                                        </svg>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+
                     </tbody>
                 </table>
+                <Pagination currentPage={currentPage} limit={limit} totalItems={totalItems} totalPages={totalPages} onPageChange={handleChangePage} />
             </div>
             <Toaster ref={toasterRef} />
         </div>
