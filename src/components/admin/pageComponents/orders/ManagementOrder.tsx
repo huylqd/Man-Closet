@@ -9,26 +9,27 @@ import { getAllUser } from '@/services/user/user';
 import { IUser } from '@/interfaces/user';
 import Image from 'next/image';
 import { useCurrency } from '@/hooks';
+import Pagination from '@/components/pagination/Pagination';
 
 
 const ManagementOrder = () => {
     const [billAll, setBillAll] = useState<IBill[]>([]);
+    const [bill, setBill] = useState<IBill[]>([])
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(2);
     const [totalItems, setTotalItems] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
-
-
-    const [bill, setBill] = useState<IBill[]>([])
+    const [key, setKey] = useState<string>('');
     const [user, setUser] = useState<IUser[]>([])
     const toasterRef = useRef<any>();
     useEffect(() => {
+        fetchData(currentPage, limit)
         Promise.all([
             getAllOrderBill(0, Number.MAX_SAFE_INTEGER),
-            getAllUser(0, Number.MAX_SAFE_INTEGER)
-        ]).then(([orderData, userData]: any) => {
-            setTotalPages(orderData.paginate.totalPages)
-            setTotalItems(orderData.paginate.totalItems)
+            getAllUser(0, Number.MAX_SAFE_INTEGER),
+            getAllOrderBill(currentPage, limit)
+        ]).then(([orderData, userData, billData]: any) => {
+
             const userMap = new Map(userData?.data?.map((user: any) => [user._id, user.name]));
             setUser(userData?.data);
             setBillAll(orderData?.data?.map((item: any) => {
@@ -37,14 +38,40 @@ const ManagementOrder = () => {
                     userName: userMap.get(item.user_id),
                 };
             }));
+            setBill(billData?.data?.map((item: any) => {
+                return {
+                    ...item,
+                    userName: userMap.get(item.user_id),
+                };
+            }));
+            setTotalPages(billData.paginate.totalPages)
+            setTotalItems(billData.paginate.totalItems)
         }).catch((error) => {
             // Handle errors
             console.error("Error fetching data: ", error);
         });
-    }, []);
+    }, [currentPage]);
+    const fetchData = async (currentPage: number, limit: number) => {
+        if (currentPage !== 0) {
+            const response = await getAllOrderBill(currentPage, limit);
+            if (response) {
+                const data: any = response;
 
 
+                setBill(data.data)
+                setTotalPages(data.paginate.totalPages)
+                setTotalItems(data.paginate.totalItems)
 
+            } else {
+
+            }
+        }
+
+    }
+    const handleChangePage = (page: number) => {
+        setCurrentPage(page)
+        fetchData(page, limit)
+    }
 
 
     console.log("bill", billAll)
@@ -53,13 +80,35 @@ const ManagementOrder = () => {
         const formatDate = `${date.getHours()}:${date.getMinutes()}  ${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
         return formatDate
     }
+    const URL = "http://localhost:8088/order/export";
     const exportBill = (id: any) => {
         // window.location("http")
         exportBillById(id)
-        window.open(`
-http://localhost:8088/order/export/${id}`)
+        window.open(`${URL}/${id}`)
         // window.location.reload()
     }
+
+    // handle submit search
+    const handleChangeSearch = (e: any) => {
+        setKey(e.target.value)
+    }
+    const search = async () => {
+        if (!key) {
+            await fetchData(currentPage, limit)
+        } else {
+            await fetchData(0, limit);
+            let resultSearch = billAll.filter((bill: IBill) => {
+                const keyWords = key.toLocaleLowerCase().split(' ');
+                const billName = bill._id?.toLocaleLowerCase().split(' ');
+                return keyWords.some((word) => billName?.some((bill) => bill.includes(word)))
+            })
+            setTotalPages(1);
+            setBill(resultSearch)
+        }
+
+
+    }
+    console.log("bill", bill)
 
 
 
@@ -74,7 +123,7 @@ http://localhost:8088/order/export/${id}`)
                         </h1>
                     </div>
                     <div className="font-bold text-xl pb-6">
-                        <SearchOrder />
+                        <SearchOrder onHandleChange={handleChangeSearch} onSearch={search} />
                     </div>
 
                 </section>
@@ -109,14 +158,14 @@ http://localhost:8088/order/export/${id}`)
                                 CreatedAt
                             </th>
 
-                            <th scope="col" className="px-6 py-3 overflow-x-auto ">
+                            <th scope="col" className=" px-6 py-3 overflow-x-auto ">
                                 Action
                             </th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        {billAll?.length !== 0 ? billAll?.map((bill, index) => {
+                        {bill?.length !== 0 ? bill?.map((bill, index) => {
                             return (
                                 <tr
                                     key={index}
@@ -146,37 +195,13 @@ http://localhost:8088/order/export/${id}`)
                                     <td className="px-6 py-4">{useCurrency(bill.total_price)}</td>
                                     <td className="px-6 py-4">{bill.history_order_status[0].status}</td>
                                     <td className="px-6 py-4">{customDay(bill.createdAt.toString())}</td>
-                                    <td className="px-6 py-4">
 
-                                    </td>
 
                                     <td className="px-6 py-4 ">
-                                        <div className="flex justify-center">
-                                            <button
-                                                type="button"
-                                                onClick={() => exportBill(bill._id)}
-                                                data-drawer-show="drawer-update-product"
-                                                aria-controls="drawer-update-product"
-                                                className="py-2 px-3 flex items-center text-sm font-medium text-center bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-4 w-4 mr-2 -ml-0.5"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                                Export
-                                            </button>
 
-                                        </div>
+                                        <button type="button" onClick={() => exportBill(bill._id)} className="flex items-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512" className="mr-2 ml-0.5"><path fill="#ffffff" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" /></svg>Export</button>
+
                                     </td>
                                 </tr>
                             );
@@ -194,6 +219,7 @@ http://localhost:8088/order/export/${id}`)
 
                     </tbody>
                 </table>
+                <Pagination currentPage={currentPage} limit={limit} totalItems={totalItems} totalPages={totalPages} onPageChange={handleChangePage} />
             </div>
             <Toaster ref={toasterRef} />
         </div>
