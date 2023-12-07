@@ -9,9 +9,9 @@ import Image from 'next/image';
 import style from './authform.module.scss'
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { signIn, signUp } from '@/services/auth/auth';
+import {loginWithGoogle, signIn, signUp } from '@/services/auth/auth';
 import Toaster from '@/components/Toaster/Toaster';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { validateInput } from '@/components/validation/ValidateForm';
 type Variant = "LOGIN" | "REGISTER" | "FORGOT_PASSWORD";
 const AuthForm = () => {
@@ -104,8 +104,15 @@ const AuthForm = () => {
     }
 
   };
-  const socialAction = (action: string) => {
+  const socialAction = async (action: string) => {
     setIsLoading(true);
+    if(action === "google"){
+       window.location.href = "http://localhost:8088/api/auth/google";  
+      
+    //  const loginGoogle =  await loginWithGoogle();
+    //  console.log(loginGoogle);
+     
+    }
   };
   return (
     <section>

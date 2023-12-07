@@ -13,7 +13,7 @@ export const getAllOrderBill = (page: number, limit: number) => {
   const response = instance.get<any, GetAllOrderBillRes>(`/order?_page=${page}&_limit=${limit}`)
   return response
 }
-export const exportBillById = (billId: string) => {
+export const exportBillById = (billId: string | undefined) => {
   const response = instance.get<any>(`/order/export/${billId}`);
   return response
 }

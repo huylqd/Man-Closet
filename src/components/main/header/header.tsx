@@ -19,6 +19,12 @@ const Header = () => {
   // const handleOpenMenuMobile = (value: boolean) => {
   //   setIsOpenMenuMb(value)
   // }
+  const url = new URL(window.location.href);
+  const accessToken = url.searchParams.get('accessToken');
+  if(accessToken !== null){
+    localStorage.setItem("accessToken",accessToken)
+  }
+  
 
   const user = JSON.parse(localStorage.getItem('user') as string)
    let user_id = '';

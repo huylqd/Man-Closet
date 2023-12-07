@@ -14,9 +14,9 @@ interface StatisticsTableItemProps {
 }
 
 const StatisticsTableItem = ({ data, index }: StatisticsTableItemProps) => {
-  const  {product_id, totalAmountSold, totalQuantitySold}  = data
+  const { product_id, totalAmountSold, totalQuantitySold } = data
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [product, setProduct] = useState({} as IProduct) 
+  const [product, setProduct] = useState({} as IProduct)
   const productState = useAppSelector(state => state.product.product)
 
   const dispatchThunk = useAppDispatch()
@@ -55,7 +55,7 @@ const StatisticsTableItem = ({ data, index }: StatisticsTableItemProps) => {
           {product.productName}
         </div>
         <div className="flex-[3] flex justify-center items-center">
-         {useCurrency(totalAmountSold)}
+          {useCurrency(totalAmountSold)}
         </div>
         <div className="flex-[3] flex justify-center items-center">
           {totalQuantitySold}
