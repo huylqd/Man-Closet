@@ -4,13 +4,15 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import productReducer from "./reducer/product.reducer";
 import orderReducer from "./reducer/order.reducer";
 import userReducer from "./reducer/user.reducer";
+import addressReducer from "./reducer/address.reducer";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
     product: productReducer,
     order: orderReducer,
-    user: userReducer
+    user: userReducer,
+    address: addressReducer,
   },
 });
 

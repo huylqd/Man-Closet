@@ -12,6 +12,7 @@ import Modal from "@/components/modal/Modal";
 import { IUser } from "@/interfaces/user";
 import { getAllUser } from "@/services/user/user";
 import { lockUser } from "@/services/auth/auth";
+import SearchUser from "./SearchUser";
 
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
@@ -22,8 +23,8 @@ const ManagementUser = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [totalItems, setTotalItems] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(2)
-
+  const [limit, setLimit] = useState<number>(10)
+  const [key,setKey] = useState<string>("")
   useEffect(() => {
     fetchData(currentPage, limit)
     fetchDataAll(0, Number.MAX_SAFE_INTEGER)
@@ -42,6 +43,8 @@ const ManagementUser = () => {
       const response = await getAllUser(currentPage, limit);
       if (response) {
         const data: any = response;
+       
+        
         // const user = data.data.filter((u:IUser) => u.role !== "admin");
         setUsers(data.data)
         setTotalPages(data.paginate.totalPages)
@@ -62,6 +65,37 @@ const ManagementUser = () => {
     const user = await lockUser(userId)
     fetchData(currentPage, limit)
   }
+    const search = async () => {
+
+    if (!key) {
+     
+      
+      await fetchData(currentPage, limit)
+
+    } else {
+
+      // console.log(categoriesAll);
+      const regex = new RegExp(key, 'i');
+      const temp = await userAll
+      let resultSearch = await temp.filter((u: IUser) => {
+        // Chuyển chuỗi `key` và tên danh mục thành chữ thường và tách thành mảng từ
+        const keyWords = key.toLowerCase().split(' ');
+        const userWords = u.name.toLowerCase().split(' ')
+        // Kiểm tra xem có ít nhất một từ trong `keyWords` tồn tại trong `categoryWords`
+        return keyWords.some((word) => userWords.some((userWord) => userWord.includes(word) ));
+        // regex.test(c.name)
+      });
+
+      setTotalPages(1)
+      setUsers(resultSearch);
+
+    }
+
+  }
+
+  const handleChange = (e: any) => {
+    setKey(e.target.value)
+  }
 
   return (
     <div>
@@ -74,8 +108,7 @@ const ManagementUser = () => {
             </h1>
           </div>
           <div className="font-bold text-xl pb-6">
-
-
+              <SearchUser onHandleChange={handleChange} onSearch={search}/>
           </div>
         </section>
         <table className="w-full  table text-sm text-left table-auto text-gray-500 dark:text-gray-400">

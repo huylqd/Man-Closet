@@ -20,9 +20,6 @@ import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { commonSuccessToast } from "@/utils/notify";
 
-
-
-
 interface MenuModalProps {
   onClose: (value: boolean) => void;
   isOpen: boolean;
@@ -79,10 +76,10 @@ const menuModalData = [
     };
   }, [isOpen]);
   const logout = () => {
-      localStorage.clear();
-      commonSuccessToast("Đăng xuất thành công")
-      router.push("/auth")
-  }
+    localStorage.clear();
+    commonSuccessToast("Đăng xuất thành công");
+    router.push("/auth");
+  };
 
   return (
     <>
@@ -135,52 +132,57 @@ const menuModalData = [
           </div>
 
           <div className="mt-auto">
-          
-            {user ? (<div className="flex items-center gap-2 md:gap-3">
-              
-             <div className="relative w-[30px] h-[30px] md:w-[50px] md:h-[50px] rounded-full overflow-hidden border border-zinc-800">
-              {user?.role == "admin" ? ( <Image
-               
-                onClick={() => {router.push("/admin"),  onClose(false)}}
-              src={gc_4}
-              alt="avatar"
-              fill
-              style={{ objectFit: "cover" }}
-            />) : ( <Image
-              onClick={() => {
-                router.push("/user");onClose(false)
-              }}
-             src={gc_4}
-             alt="avatar"
-             fill
-             style={{ objectFit: "cover" }}
-           />)}
-              
-             </div>
-             <div className="flex flex-col justify-center">
-               <span className="text-md text-gray-800 font-medium">
-                 {userName}
-               </span>
-               <span className="text-sm text-gray-600 font-normal">
-                 {userEmail}
-               </span>
-             </div>
-             <button onClick={() => logout()} className="bg-zinc-800 rounded overflow-hidden flex items-center justify-center w-[30px] h-[30px] md:w-[50px] md:h-[50px] ml-auto hover:bg-zinc-600 transition-all">
-               <LogOut className="w-4 h-4 text-white" />
-             </button>
-           </div> ) :  (
-            
-             <button
-             onClick={() => router.push("/auth")}
-             className="bg-zinc-800 text-white w-full py-1 md:py-3 rounded"
-           >
-             Đăng nhập
-           </button>
+            {user ? (
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="relative w-[30px] h-[30px] md:w-[50px] md:h-[50px] rounded-full overflow-hidden border border-zinc-800">
+                  {user?.role == "admin" ? (
+                    <Image
+                      onClick={() => {
+                        router.push("/admin"), onClose(false);
+                      }}
+                      src={gc_4}
+                      alt="avatar"
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  ) : (
+                    <Image
+                      onClick={() => {
+                        router.push("/user/dashboard");
+                        onClose(false);
+                      }}
+                      src={gc_4}
+                      alt="avatar"
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  )}
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="text-md text-gray-800 font-medium">
+                    {userName}
+                  </span>
+                  <span className="text-sm text-gray-600 font-normal">
+                    {userEmail}
+                  </span>
+                </div>
+                <button
+                  onClick={() => logout()}
+                  className="bg-zinc-800 rounded overflow-hidden flex items-center justify-center w-[30px] h-[30px] md:w-[50px] md:h-[50px] ml-auto hover:bg-zinc-600 transition-all"
+                >
+                  <LogOut className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => router.push("/auth")}
+                className="bg-zinc-800 text-white w-full py-1 md:py-3 rounded"
+              >
+                Đăng nhập
+              </button>
             )}
-           
 
             {/* sau khi dang nhap thanh cong thi hien cai o duoi */}
-            
           </div>
         </div>
       </div>

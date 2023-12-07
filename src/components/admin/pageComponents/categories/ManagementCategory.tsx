@@ -117,8 +117,8 @@ const ManagementCategory = () => {
         setModal(false);
         fetchData(currentPage, limit)
       })
-      .catch(() => {
-        toasterRef.current.showToast("error", "Add Fail!");
+      .catch((err) => {
+       
       });
   };
   const handleChangePage = (page: number) => {
@@ -154,7 +154,7 @@ const ManagementCategory = () => {
       await fetchData(currentPage, limit)
 
     } else {
-      await fetchData(0, limit)
+
       // console.log(categoriesAll);
       const regex = new RegExp(key, 'i');
       const temp = await categoriesAll
