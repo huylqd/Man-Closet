@@ -1,7 +1,7 @@
 import { IUser } from "@/interfaces/user";
 import { User } from "@/interfaces/user.interface";
 import { TAddress, addNewAddress } from "@/services/address.services";
-import { getAllUser, getUserById, updateUserInfo } from "@/services/user/user";
+import { deleteUserAddress, getAllUser, getUserAddress, getUserById, updateUserAddress, updateUserInfo } from "@/services/user/user";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -60,9 +60,44 @@ type AddNewAddressStateParams = {
   }
 }
 export const addNewAddressState = createAsyncThunk(
-  "address/addNewAddress",
+  "user/addNewAddress",
   async({user_id, data}:AddNewAddressStateParams, thunkAPI) => {
     const response = await addNewAddress(user_id, data)
+    return response.data
+  }
+)
+
+export const getAddressByUserIdState = createAsyncThunk(
+  "user/getAddressByUserId",
+  async(id:string, thunkAPI) => {
+    const response = await getUserAddress(id)
+    return response.results
+  }
+)
+
+type TDeleteAddress = {
+  user_id: string
+  address_id: string
+}
+export const deleteAddressState = createAsyncThunk(
+  "user/deleteAddress",
+  async({user_id, address_id}:TDeleteAddress, thunkAPI) => {
+    const response = await deleteUserAddress(user_id, address_id)
+    return response.data
+  }
+)
+
+type TUpdateAddress = {
+  user_id: string
+  address_id: string
+  data: {
+    [key: string]: string | boolean
+  }
+}
+export const updateUserAddressState = createAsyncThunk(
+  "user/updateAddress",
+  async({user_id,address_id,data} : TUpdateAddress, thunkAPI) => {
+    const response = await updateUserAddress(user_id, address_id, data)
     return response.data
   }
 )
@@ -83,6 +118,15 @@ const userSlice = createSlice({
     }),
     builder.addCase(addNewAddressState.fulfilled, (state, action) => {
       state.address.push(action.payload)
+    }),
+    builder.addCase(getAddressByUserIdState.fulfilled, (state, action) => {
+      state.address = action.payload
+    })
+    builder.addCase(deleteAddressState.fulfilled, (state, action) => {
+      state.address = action.payload
+    }),
+    builder.addCase(updateUserAddressState.fulfilled, (state, action) => {
+      state.address = action.payload
     })
   }
 })

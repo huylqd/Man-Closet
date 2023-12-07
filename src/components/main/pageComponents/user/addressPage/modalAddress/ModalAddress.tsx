@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import SelectAddress from "../selectAddress/SelectAddress";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
@@ -11,74 +11,44 @@ import {
 } from "@/redux/reducer/address.reducer";
 import { addNewAddressState } from "@/redux/reducer/user.reducer";
 import { toast } from "react-toastify";
-
-const fakeData = [
-  {
-    province_id: "92",
-    province_name: "Thành phố Cần Thơ",
-    province_type: "Thành phố Trung ương",
-  },
-  {
-    province_id: "48",
-    province_name: "Thành phố Đà Nẵng",
-    province_type: "Thành phố Trung ương",
-  },
-  {
-    province_id: "01",
-    province_name: "Thành phố Hà Nội",
-    province_type: "Thành phố Trung ương",
-  },
-];
+import { TAddress } from "@/services/address.services";
+import { useAddress, useUserInfo } from "@/hooks";
 
 interface Props {
   onClose: () => void;
 }
 
 const ModalAddress = ({ onClose }: Props) => {
-  const {_id} = JSON.parse(localStorage.getItem("user") as string);
-  const provincesState = useAppSelector((state) => state.address.provinces);
-  const districtsState = useAppSelector((state) => state.address.districts);
-  const wardsState = useAppSelector((state) => state.address.wards);
+  const { _id } = useUserInfo();
   const dispatchThunk = useAppDispatch();
 
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
-  const [ward, setWard] = useState("");
-  const [detail, setDetail] = useState("");
+  const detailRef = useRef("")
 
-  const resetData = useCallback(() => {
-    setDistrict("");
-    setWard("");
-  }, [setDistrict, setWard]);
-
-  useEffect(() => {
-    dispatchThunk(getProvincesState());
-  }, [dispatchThunk]);
-
-  useEffect(() => {
-    resetData();
-  }, [province]);
-
-  useEffect(() => {
-    province && dispatchThunk(getDistrictsState(province));
-  }, [dispatchThunk, province]);
-
-  useEffect(() => {
-    district && dispatchThunk(getWardsState(district));
-  }, [dispatchThunk, district]);
-
+  const {
+    districts,
+    provinces,
+    wards,
+    district,
+    province,
+    ward,
+    setDistrict,
+    setProvince,
+    setWard,
+  } = useAddress();
 
   const handleAddNewAddress = () => {
-    if (province === "" && district === "" && detail === "") {
+    if (province === "" && district === "" && detailRef.current === "") {
       toast.error("Bắt buộc lựa chọn các trường");
       return;
     }
 
     const value = {
-      city: provincesState.find(item => item.province_id === province)?.province_name as string,
-      district: districtsState.find(item => item.district_id === district)?.district_name as string,
-      wards: wardsState.find(item => item.ward_id === ward)?.ward_name as string,
-      detailAddress: detail,
+      city: provinces.find((item) => item.province_id === province)
+        ?.province_name as string,
+      district: districts.find((item) => item.district_id === district)
+        ?.district_name as string,
+      wards: wards.find((item) => item.ward_id === ward)?.ward_name as string,
+      detailAddress: detailRef.current,
     };
 
     dispatchThunk(addNewAddressState({ user_id: _id, data: value }));
@@ -102,21 +72,21 @@ const ModalAddress = ({ onClose }: Props) => {
           <SelectAddress
             value={province}
             label="Tỉnh/Thành phố"
-            options={provincesState}
+            options={provinces}
             type_address="province"
             setValue={setProvince}
           />
           <SelectAddress
             value={district}
             label="Quận/Huyện"
-            options={districtsState}
+            options={districts}
             type_address="district"
             setValue={setDistrict}
           />
           <SelectAddress
             value={ward}
             label="Xã/Phường"
-            options={wardsState}
+            options={wards}
             type_address="ward"
             setValue={setWard}
           />
@@ -129,8 +99,7 @@ const ModalAddress = ({ onClose }: Props) => {
               Địa chỉ chi tiết
             </label>
             <input
-              value={detail}
-              onChange={(e) => setDetail(e.target.value)}
+              onChange={(e) => detailRef.current = e.target.value}
               type="text"
               id="detail-address"
               className="px-3 py-2 rounded text-sm md:text-base text-gray-800 border border-zinc-400 focus:border-zinc-800 focus:outline-none"

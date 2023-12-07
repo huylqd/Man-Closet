@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import ModalAddress from '../modalAddress/ModalAddress'
 
 const AddressPageHeader = () => {
-  const [openModal, setOpenModal] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
 
   const handleCloseModal = () => {
     setOpenModal(false)

@@ -148,7 +148,7 @@ const menuModalData = [
               style={{ objectFit: "cover" }}
             />) : ( <Image
               onClick={() => {
-                router.push("/users");onClose(false)
+                router.push("/user/dashboard");onClose(false)
               }}
              src={gc_4}
              alt="avatar"
