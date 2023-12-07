@@ -1,7 +1,7 @@
-import { getAddressByUserIdState } from "@/redux/reducer/user.reducer";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+"use client"
+
 import { TAddress } from "@/services/address.services";
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 type TUserInfo = {
   _id: string;
@@ -14,7 +14,11 @@ type TUserInfo = {
 };
 
 const useUserInfo = () => {
-  const user: TUserInfo = JSON.parse(localStorage.getItem("user") as string);
+  const [user, setUser] = useState({} as TUserInfo)
+
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user") as string))
+  }, [])
 
   return user;
 };

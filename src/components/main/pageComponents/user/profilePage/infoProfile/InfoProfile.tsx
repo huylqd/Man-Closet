@@ -11,45 +11,41 @@ import {
   ModalEditPassword,
 } from "./infoProductModals";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { getUserByIdState, updateUserInfoState } from "@/redux/reducer/user.reducer";
+import {
+  getUserByIdState,
+  updateUserInfoState,
+} from "@/redux/reducer/user.reducer";
 import { IUser } from "@/interfaces/user";
 import { useRouter } from "next/navigation";
+import { useUserInfo } from "@/hooks";
 
 const InfoProfile = () => {
-  const router = useRouter()
-  const userSession = JSON.parse(localStorage.getItem("user") as string)
-  const userState = useAppSelector((state) => state.user.user)
-  // user value state
-  const [user,setUser] = useState({} as IUser)
+  const router = useRouter();
+  const {_id} = useUserInfo()
+  const user = useAppSelector((state) => state.user.user);
+
   // modal state
   const [isEditName, setIsEditName] = useState(false);
   const [isEditEmail, setIsEditEmail] = useState(false);
   const [isEditAvatar, setIsEditAvatar] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
 
-
-  const dispatchThunk = useAppDispatch()
-
-  useEffect(() => {
-    dispatchThunk(getUserByIdState(userSession._id))
-  }, [dispatchThunk])
+  const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
-    setUser(userState)
-  }, [userState])
+    dispatchThunk(getUserByIdState(_id));
+  }, [dispatchThunk]);
 
-  const handleUpdateUserInfo = (data: {[key:string]: number | string}) => {
+  const handleUpdateUserInfo = (data: { [key: string]: number | string }) => {
     try {
       const value = {
         id: user._id as string,
-        data: data
-      }
+        data: data,
+      };
 
-      dispatchThunk(updateUserInfoState(value))
-    } catch (error) {
-      
-    }
-  }
+      dispatchThunk(updateUserInfoState(value));
+    } catch (error) {}
+  };
 
   const handleCloseModal = () => {
     setIsEditName(false);
@@ -80,7 +76,7 @@ const InfoProfile = () => {
               htmlFor="changeAvatar"
               className="absolute bottom-0 left-0 right-0 bg-zinc-700/60 py-1 md:py-2 cursor-pointer"
             >
-              <h5 className="text-white text-sm md:text-md text-center">Sửa</h5>
+              <p className="text-white text-center">Sửa</p>
             </label>
           </div>
           <input type="file" id="changeAvatar" className="hidden" />
@@ -89,34 +85,34 @@ const InfoProfile = () => {
         <div className="flex-[1]">
           {/* name */}
           <div className="pb-4">
-            <label className="text-gray-600 uppercase text-sm font-normal pb-2">
+            <label className="text-gray-600 uppercase font-normal pb-2">
               Tên người dùng
             </label>
             <div
               className="flex w-full md:w-fit"
               onClick={() => setIsEditName(true)}
             >
-              <h5 className="flex-[1] text-gray-800 text-md font-normal border-b pr-4 md:pr-10">
+              <h5 className="flex-[1] text-gray-800 font-normal border-b pr-4 md:pr-10">
                 {user.name}
               </h5>
-              <span className="text-base text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
+              <span className="text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
                 <PenSquare className="w-5 h-5" />
               </span>
             </div>
           </div>
           {/* email */}
           <div className="pb-4">
-            <label className="text-gray-600 uppercase text-sm font-normal pb-2">
+            <label className="text-gray-600 uppercase font-normal pb-2">
               Email
             </label>
             <div
               className="flex w-full md:w-fit"
               onClick={() => setIsEditEmail(true)}
             >
-              <h5 className="flex-[1] text-gray-800 text-md font-normal border-b pr-4 md:pr-10">
+              <h5 className="flex-[1] text-gray-800  border-b pr-4 md:pr-10">
                 {user.email}
               </h5>
-              <span className="text-base text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
+              <span className=" text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
                 <PenSquare className="w-5 h-5" />
               </span>
             </div>
@@ -130,19 +126,22 @@ const InfoProfile = () => {
               className="flex w-full md:w-fit"
               onClick={() => setIsEditPassword(true)}
             >
-              <h5 className="flex-[1] text-gray-800 text-md font-normal border-b pr-4 md:pr-10">
+              <h5 className="flex-[1] text-gray-800 border-b pr-4 md:pr-10">
                 ****************
               </h5>
-              <span className="text-base text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
+              <span className="text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
                 <PenSquare className="w-5 h-5" />
               </span>
             </div>
           </div>
           {/* address */}
           <div className="pb-4">
-            <h5 onClick={() => router.push("/user/address")} className="text-blue-500 text-md hover:text-blue-300 transitions-all w-fit cursor-pointer">
+            <p
+              onClick={() => router.push("/user/address")}
+              className="text-blue-500 text-md hover:text-blue-300 transitions-all w-fit cursor-pointer"
+            >
               Cài đặt địa chỉ
-            </h5>
+            </p>
           </div>
         </div>
       </div>
@@ -151,11 +150,19 @@ const InfoProfile = () => {
 
       {/* modal edit name */}
       <Modal isOpen={isEditName} handleClose={handleCloseModal}>
-        <ModalEditName onClose={handleCloseModal} initialValue={user.name} onUpdate={handleUpdateUserInfo}/>
+        <ModalEditName
+          onClose={handleCloseModal}
+          initialValue={user.name}
+          onUpdate={handleUpdateUserInfo}
+        />
       </Modal>
       {/* modal edit email */}
       <Modal isOpen={isEditEmail} handleClose={handleCloseModal}>
-        <ModalEditEmail onClose={handleCloseModal} onUpdate={handleUpdateUserInfo} initialValue={user.password}/>
+        <ModalEditEmail
+          onClose={handleCloseModal}
+          onUpdate={handleUpdateUserInfo}
+          initialValue={user.password}
+        />
       </Modal>
       {/* modal edit avatar */}
       <Modal isOpen={isEditAvatar} handleClose={handleCloseModal}>
@@ -163,7 +170,11 @@ const InfoProfile = () => {
       </Modal>
       {/* modal edit password */}
       <Modal isOpen={isEditPassword} handleClose={handleCloseModal}>
-        <ModalEditPassword onUpdate={handleUpdateUserInfo} onClose={handleCloseModal} initialValue={user.password}/>
+        <ModalEditPassword
+          onUpdate={handleUpdateUserInfo}
+          onClose={handleCloseModal}
+          initialValue={user.password}
+        />
       </Modal>
     </>
   );

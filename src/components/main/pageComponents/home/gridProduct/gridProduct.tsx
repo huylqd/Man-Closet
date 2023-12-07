@@ -32,7 +32,7 @@ const Banner = ({
       />
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-700/50 z-[8]"></div>
       <div className="absolute inset-0 z-10 flex flex-col justify-center items-center gap-y-2">
-        <h3 className="text-lg md:text-xl text-white font-medium">{label}</h3>
+        <h4 className="text-white font-medium">{label}</h4>
         <Link href={href}>
           <Button variant={"shop_now"}>Xem ngay</Button>
         </Link>
@@ -42,8 +42,7 @@ const Banner = ({
 };
 
 const GridProduct = () => {
-  const productsState = useAppSelector((state) => state.product.products);
-  const [product, setProduct] = useState<IProduct[]>([]);
+  const products = useAppSelector((state) => state.product.products?.slice(0,4));
 
   const dispatchThunk = useAppDispatch();
 
@@ -51,15 +50,12 @@ const GridProduct = () => {
     dispatchThunk(getAllProductState());
   }, [dispatchThunk]);
 
-  useEffect(() => {
-    setProduct(productsState);
-  }, [productsState]);
   return (
     <div>
       <TitleGap title="Sản phẩm trending" />
       <div className="py-2">
         <GridView className="py-3 gap-y-6" marginLeft="30px" wrap previews={4}>
-          {product?.map((item: any) => {
+          {products?.map((item: any) => {
             const data = {
               _id: item._id,
               name: item.productName,

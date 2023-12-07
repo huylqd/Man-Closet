@@ -1,18 +1,22 @@
+"use client"
+
+import { useUserInfo } from "@/hooks";
 import Image from "next/image";
 import React from "react";
 
 const UserDashboardHeader = () => {
+  const {name} = useUserInfo()
   return (
     <>
       <div className="p-7 md:p-10 bg-zinc-800 rounded-md text-white relative">
         <div className="flex items-center justify-between ">
           <div>
-            <h3 className="text-xl md:text-3xl text-white font-medium pb-2 md:pb-3">
-              Xin chào, Dương
+            <h3 className="text-white font-medium pb-2 md:pb-3">
+              Xin chào, {name}
             </h3>
-            <h5 className="text-[14px] md:text-lg max-w-[250px] md:max-w-[400px]">
+            <p className="max-w-[250px] md:max-w-[400px]">
               Sẵn sàng thoả sức mua sắm với chúng tôi
-            </h5>
+            </p>
           </div>
           <div className="md:relative md:w-[100px] md:h-[100px] w-[60px] h-[60px] rounded-full border-2 border-white overflow-hidden absolute bottom-0 right-4 translate-y-[30%] md:bottom-[unset] md:right-[unset] md:translate-y-[unset] z-[25]">
             <Image

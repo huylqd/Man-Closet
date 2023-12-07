@@ -47,7 +47,7 @@ const ModalEditEmail = ({ onClose, onUpdate, initialValue }: Props) => {
     <>
       <div className="bg-white p-3 rounded overflow-hidden">
         <div className="pb-6">
-          <label htmlFor="newEmail" className="text-sm text-gray-600">
+          <label htmlFor="newEmail" className=" text-gray-600">
             Email mới
           </label>
           <input
@@ -55,14 +55,11 @@ const ModalEditEmail = ({ onClose, onUpdate, initialValue }: Props) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             id="newEmail"
-            className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
+            className="w-full text-gray-800 pt-1  font-normal focus:outline-none border-b"
           />
         </div>
         <div className="pb-6">
-          <label
-            htmlFor="passwordToChangeEmail"
-            className="text-sm text-gray-600"
-          >
+          <label htmlFor="passwordToChangeEmail" className="text-gray-600">
             Mật khẩu
           </label>
           <div className="flex items-center">
@@ -71,7 +68,7 @@ const ModalEditEmail = ({ onClose, onUpdate, initialValue }: Props) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               id="passwordToChangeEmail"
-              className="w-full text-gray-800 flex-[1] pt-1 text-md font-normal focus:outline-none border-b"
+              className="w-full text-gray-800 flex-[1] pt-1 font-normal focus:outline-none border-b"
             />
             <button>
               {showPassword ? (
@@ -91,19 +88,21 @@ const ModalEditEmail = ({ onClose, onUpdate, initialValue }: Props) => {
 
         <div className="flex items-center gap-3 pt-6">
           <Button
-            onClick={() => handleUpdate()}
-            onKeyDown={(e) => {e.key === "Enter" && handleUpdate()}}
-            variant={"primary"}
-            className="flex-[1]"
-          >
-            Thay đổi
-          </Button>
-          <Button
             onClick={() => onClose()}
             variant={"bordered"}
             className="flex-[1]"
           >
             Huỷ
+          </Button>
+          <Button
+            onClick={() => handleUpdate()}
+            onKeyDown={(e) => {
+              e.key === "Enter" && handleUpdate();
+            }}
+            variant={"primary"}
+            className="flex-[1]"
+          >
+            Thay đổi
           </Button>
         </div>
       </div>

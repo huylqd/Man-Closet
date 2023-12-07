@@ -7,9 +7,13 @@ import Link from "next/link";
 import Modal from "@/components/modal/Modal";
 import SearchModal from "./SearchModal";
 import MenuModal from "../navigation/MenuModal";
+import { useUserInfo } from "@/hooks";
 
 const Header = () => {
   const [isSearch, setIsSearch] = useState(false);
+
+  const user = useUserInfo()
+
   const closeSearchModal = () => {
     setIsSearch(false);
   };
@@ -19,22 +23,17 @@ const Header = () => {
   // const handleOpenMenuMobile = (value: boolean) => {
   //   setIsOpenMenuMb(value)
   // }
-  const url = new URL(window.location.href);
-  const accessToken = url.searchParams.get('accessToken');
-  if(accessToken !== null){
-    localStorage.setItem("accessToken",accessToken)
+  if(typeof window !== 'undefined'){
+    const url = new URL(window.location.href);
+    const accessToken = url.searchParams.get('accessToken');
+    if(accessToken !== null){
+      localStorage.setItem("accessToken",accessToken)
+    }
   }
-  
-
-  const user = JSON.parse(localStorage.getItem('user') as string)
    let user_id = '';
    if(user){
     user_id = user._id
    }
-  
- 
-  
-  
   
   // console.log(isOpenMenuMb)
   const [isOpenMenu, setIsOpenMenu] = useState(false);

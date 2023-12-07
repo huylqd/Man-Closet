@@ -1,4 +1,6 @@
-import { useCurrency } from "@/hooks";
+"use client"
+
+import { useCurrency, useUserInfo } from "@/hooks";
 import { IProduct, Variant } from "@/interfaces/product";
 import { cn } from "@/lib/utils";
 import { addProductToCart } from "@/redux/reducer/cart.reducer";
@@ -20,7 +22,7 @@ interface AddToCardModalProps {
 
 const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
   const router = useRouter();
-  const user = JSON.parse(localStorage.getItem("user") as string);
+  const user = useUserInfo()
 
   const [sizeSelected, setSizeSelected] = useState("");
   const [colorSelected, setColorSelected] = useState("");
@@ -252,23 +254,23 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
                 />
               </div>
               <div className="flex flex-col h-[60px] md:h-[100px]">
-                <h4 className="text-xl font-medium">
+                <h4 className="font-medium">
                   {useCurrency(product.price)}
                 </h4>
-                <h5 className="py-1 text-base md:text-md font-medium text-gray-800">
+                <h5 className="py-1  font-medium text-gray-800">
                   {property}
                 </h5>
-                <h5 className="text-md mt-auto">
-                  <span className="text-base md:text-md font-medium text-gray-600">
+                <h5 className=" mt-auto">
+                  <span className=" font-medium text-gray-600">
                     Trong kho:{" "}
                   </span>
                   {colorSelected !== "" && sizeSelected !== "" ? (
                     inventoryQuantity > 0 ? (
-                      <span className="text-base md:text-md font-medium text-gray-800">
+                      <span className=" font-medium text-gray-800">
                         {inventoryQuantity}
                       </span>
                     ) : (
-                      <span className="text-base md:text-md font-medium text-rose-500">
+                      <span className=" font-medium text-rose-500">
                         Hết hàng
                       </span>
                     )
@@ -285,7 +287,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
 
           <div className="py-4 flex-[1]">
             <div className="py-2 md:py-4">
-              <h4 className="pb-2 text-base md:text-md text-gray-600 font-medium">
+              <h4 className="pb-2  text-gray-600 font-medium">
                 Kích cỡ
               </h4>
               <ul className="flex flex-wrap gap-2 gap-y-2">
@@ -307,7 +309,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
               </ul>
             </div>
             <div className="py-2 md:py-4">
-              <h4 className="pb-2 text-base md:text-md text-gray-600 font-medium">
+              <h4 className="pb-2  text-gray-600 font-medium">
                 Màu sắc
               </h4>
               <ul className="flex flex-wrap gap-2 gap-y-2">
@@ -330,7 +332,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
             </div>
             <div className="py-2 md:py-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-base md:text-md text-gray-600 font-medium">
+                <h4 className=" text-gray-600 font-medium">
                   Số lượng
                 </h4>
                 <div className="flex items-center gap-x-2">
@@ -352,7 +354,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
                     }
                     inputMode="numeric"
                     onChange={(e) => checkAmountInput(e)}
-                    className="focus:outline-none w-[50px] text-center text-lg"
+                    className="focus:outline-none w-[50px] text-center"
                   />
                   <button onClick={() => incrementAmount()} className="p-[6px]">
                     <Plus
@@ -374,7 +376,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
               onClick={() => addToCart()}
               disabled={isDisableAdd ? true : false}
               className={cn(
-                "block w-full py-2 text-base md:text-md rounded text-white font-medium transition-all",
+                "block w-full py-2  rounded text-white font-medium transition-all",
                 isDisableAdd
                   ? "text-zinc-300 bg-zinc-200 cursor-not-allowed"
                   : "text-white bg-zinc-800 hover:bg-zinc-700"

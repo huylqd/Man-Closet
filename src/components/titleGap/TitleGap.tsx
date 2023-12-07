@@ -4,9 +4,9 @@ const TitleGap = ({title}: {title:string}) => {
   return (
     <>
       <div className="flex flex-col items-center justify-center gap-2 py-2 md:py-4">
-        <h2 className=" overflow-x-auto md:text-2xl  font-bold text-gray-800 uppercase">
+        <h3 className=" overflow-x-auto font-bold text-gray-800 uppercase">
           {title}
-        </h2>
+        </h3>
         <div className="w-[50px] md:w-[70px] h-[4px] bg-[#BE7178] rounded"></div>
       </div>
     </>

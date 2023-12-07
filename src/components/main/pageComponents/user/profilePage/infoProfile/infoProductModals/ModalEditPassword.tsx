@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
@@ -61,7 +63,7 @@ const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
     <>
       <div className="bg-white p-3 rounded overflow-hidden">
         <div className="pb-6">
-          <label htmlFor="oldPassword" className="text-sm text-gray-600">
+          <label htmlFor="oldPassword" className=" text-gray-600">
             Mật khẩu đang sử dụng
           </label>
           <input
@@ -69,11 +71,11 @@ const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             id="oldPassword"
-            className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
+            className="w-full text-gray-800 pt-1 font-normal focus:outline-none border-b"
           />
         </div>
         <div className="pb-6">
-          <label htmlFor="newPassword" className="text-sm text-gray-600">
+          <label htmlFor="newPassword" className=" text-gray-600">
             Mật khẩu mới
           </label>
           <input
@@ -81,12 +83,12 @@ const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             id="newPassword"
-            className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
+            className="w-full text-gray-800 pt-1 font-normal focus:outline-none border-b"
           />
         </div>
 
         <div className="pb-6">
-          <label htmlFor="confirmNewPassword" className="text-sm text-gray-600">
+          <label htmlFor="confirmNewPassword" className=" text-gray-600">
             Xác nhận mật khẩu mới
           </label>
           <input
@@ -94,11 +96,18 @@ const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             id="confirmNewPassword"
-            className="w-full text-gray-800 pt-1 text-md font-normal focus:outline-none border-b"
+            className="w-full text-gray-800 pt-1 font-normal focus:outline-none border-b"
           />
         </div>
 
         <div className="flex items-center gap-3 pt-6">
+          <Button
+            onClick={() => onClose()}
+            variant={"bordered"}
+            className="flex-[1]"
+          >
+            Huỷ
+          </Button>
           <Button
             onClick={() => handleUpdate()}
             onKeyDown={(e) => {
@@ -108,13 +117,6 @@ const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
             className="flex-[1]"
           >
             Thay đổi
-          </Button>
-          <Button
-            onClick={() => onClose()}
-            variant={"bordered"}
-            className="flex-[1]"
-          >
-            Huỷ
           </Button>
         </div>
       </div>
