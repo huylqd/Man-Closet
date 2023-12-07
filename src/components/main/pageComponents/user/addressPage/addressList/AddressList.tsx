@@ -1,27 +1,33 @@
 "use client";
 
 import Modal from "@/components/modal/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TAddress } from "@/services/address.services";
 import { v4 as uuidv4 } from "uuid";
 import AddressListItem from "../addressListItem/AddressListItem";
 import style from "./addressList.module.scss";
 import ModalAddress from "../modalAddress/ModalAddress";
 import { useUserInfo } from "@/hooks";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
   deleteAddressState,
+  getAddressByUserIdState,
   updateUserAddressState,
 } from "@/redux/reducer/user.reducer";
 import ConfirmModalV2 from "@/components/modal/confirmModal-v2/ConfirmModalV2";
 
 const AddressList = () => {
-  const { _id, name, address } = useUserInfo();
+  const { _id, name } = useUserInfo();
   const dispatchThunk = useAppDispatch();
+  const address = useAppSelector(state => state.user.address)
 
   const [openSetDefaultModal, setOpenSetDefaultModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState("");
+
+  useEffect(() => {
+    dispatchThunk(getAddressByUserIdState(_id))
+  }, [dispatchThunk, _id])
 
   const handleCloseModal = () => {
     setOpenSetDefaultModal(false);
