@@ -18,6 +18,6 @@ export const exportBillById = (billId: string | undefined) => {
   return response
 }
 export const getProductSold = () => {
-  const response = instance.get<any, GetProductSoldRes>("/analyst");
+  const response = instance.get<any, GetProductSoldRes>("/analyst/product");
   return response
 };
