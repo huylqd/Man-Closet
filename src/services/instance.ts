@@ -1,4 +1,6 @@
+import { commonErrorToast, commonSuccessToast } from "@/utils/notify";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 interface MyResponseData {
   accessToken: string; // or the actual type of your accessToken
@@ -32,24 +34,35 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-
     if(originalConfig.url !== '/signIn' && err.response) {
-      if(err.response.status === 401 && !originalConfig._retry) {
+      if(err.response.status === 401 && !originalConfig._retry && err.response.data.message == 'Token hết hạn') {
         originalConfig._retry = true
-      }
+      
       try {
-
         const rs = await instance.post('refreshToken', {
           refreshToken: localStorage.getItem("refresh")
         })
-
+        
         const accessToken  = rs.data
+
         localStorage.setItem("accessToken", accessToken);
+
         return instance(originalConfig)
-      } catch (error) {
+      }catch (error: any) {
+      
         return Promise.reject(error)
+        
+      }
+     
+      }
+      if(err.response.status === 401 && err.response.data.message == 'Refresh Token hết hạn') {
+        // const router = useRouter();
+        localStorage.clear()
+        commonErrorToast("Token hết hạn")
+        // router.push("/auth")
       }
     }
+    return Promise.reject(err);
   }
 )
 
