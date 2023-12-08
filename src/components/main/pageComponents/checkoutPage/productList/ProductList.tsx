@@ -2,7 +2,9 @@ import React from 'react'
 
 const ProductList = () => {
   return (
-    <div>ProductList</div>
+    <>
+      <h5 className="text-gray-800 font-semibold pb-2">Đơn hàng</h5>
+    </>
   )
 }
 

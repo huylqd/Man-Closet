@@ -1,5 +1,5 @@
 
-
+import { ICategory } from "@/interfaces/category";
 import { getAllCategory, getCategoryById } from "@/services/categories/category";
 import { log } from "console";
 import { useEffect, useState } from "react"
@@ -17,11 +17,21 @@ export const fetchData = async (currentPage: number) => {
  
     return response?.data
 };
+export const getAllCate = async () => {
+  const [category, setCategory] = useState<ICategory[]>([]);
+  useEffect(() => {
+    getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then((data) => setCategory(data.data))
+    
+  },[])
+  return category
+
+
+}
 export const listCategory = () => {
     const [category, setCategory] = useState<any>();
 
   useEffect(() => {
-    getAllCategory(0)?.then(({data}:any) => setCategory(data.data))
+    getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({data}:any) => setCategory(data.data))
   }, [])
   return category
 //   console.log(category);

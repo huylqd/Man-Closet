@@ -42,7 +42,7 @@ const Banner = ({
 };
 
 const GridProduct = () => {
-  const products = useAppSelector((state) => state.product.products?.slice(0,4));
+  const products = useAppSelector((state) => state.product.products);
 
   const dispatchThunk = useAppDispatch();
 

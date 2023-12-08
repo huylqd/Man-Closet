@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter()
+    const router = useRouter()
     const user = JSON.parse(localStorage.getItem("user") as string )
   
   return (
