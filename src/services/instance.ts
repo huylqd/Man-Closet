@@ -16,12 +16,13 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
-
-    return config
+    return config;
   },
   (error) => {
     return Promise.reject(error)
@@ -34,7 +35,7 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-    if(originalConfig.url !== '/signIn' && err.response) {
+    if(originalConfig?.url !== '/signIn' && err.response) {
       if(err.response.status === 401 && !originalConfig._retry && err.response.data.message == 'Token hết hạn') {
         originalConfig._retry = true
       
