@@ -1,18 +1,25 @@
 "use client";
 
 import { AlignLeft, Search, ShoppingBag, ShoppingCart } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 import Link from "next/link";
 import Modal from "@/components/modal/Modal";
 import SearchModal from "./SearchModal";
 import MenuModal from "../navigation/MenuModal";
 import { useUserInfo } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { getProductsInCart } from "@/redux/reducer/cart.reducer";
 
 const Header = () => {
   const [isSearch, setIsSearch] = useState(false);
-
+  const cart = useAppSelector(state =>state.cart.products)
+  const dispatchThunk = useAppDispatch()
   const user = useUserInfo()
+
+  useEffect(() => {
+    dispatchThunk(getProductsInCart())
+  }, [dispatchThunk])
 
   const closeSearchModal = () => {
     setIsSearch(false);
@@ -41,8 +48,6 @@ const Header = () => {
     setIsOpenMenu(value);
   };
 
-  const cartLength = 1;
-
   return (
     <>
       <header className="divide-y divide-zinc-800 dark:divide-slate-50/10">
@@ -70,10 +75,10 @@ const Header = () => {
               </div>
               <div className="hidden md:block">
                 <Link
-                  href={"/user/cart"}
+                  href={"/cart"}
                   className="relative group w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"
                 >
-                  {cartLength > 0 && (
+                  {cart.length > 0 && (
                     <div
                       className="absolute w-[8px] h-[8px] rounded-full bg-red-500 top-1 right-1"
                       style={{
