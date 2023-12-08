@@ -12,24 +12,18 @@ import { GridView } from "@/components/dataViews";
 // css
 import "swiper/css";
 import "swiper/css/pagination";
-import { IProduct } from "@/interfaces/product";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getAllProductState } from "@/redux/reducer/product.reducer";
 import TitleGap from "@/components/titleGap";
 
 const ProductList = () => {
-  const productsState = useAppSelector((state) => state.product.products);
-  const [product, setProduct] = useState<IProduct[]>([]);
+  const products = useAppSelector((state) => state.product.products);
 
   const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
     dispatchThunk(getAllProductState());
   }, [dispatchThunk]);
-
-  useEffect(() => {
-    setProduct(productsState);
-  }, [productsState]);
 
   return (
     <div>
@@ -41,7 +35,7 @@ const ProductList = () => {
           wrap
           className="gap-y-4 hidden sm:flex"
         >
-          {product?.map((item) => {
+          {products?.map((item) => {
             const data = {
               _id: item._id,
               name: item.productName,
@@ -53,10 +47,10 @@ const ProductList = () => {
             );
           })}
         </GridView>
-        
+
         <div className="block sm:hidden">
           <BasicCarousel previews={1}>
-            {product?.map((item) => {
+            {products?.map((item) => {
               const data = {
                 _id: item._id,
                 name: item.productName,

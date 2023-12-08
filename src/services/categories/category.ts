@@ -1,5 +1,6 @@
 import { ICategory } from "@/interfaces/category";
 import instance from "../instance";
+import { commonErrorToast } from "@/utils/notify";
 
 
 const getAllCategory = (page:number,limit:number) => {
@@ -26,8 +27,10 @@ const addCategory = async (category: any) => {
     try {
         const res = await instance.post(`api/category`, category)
         return res
-    } catch (error) {
+    } catch (error:any) {
         console.log(error);
+        
+        commonErrorToast(`${error.response.data.message}`)
 
     }
 }

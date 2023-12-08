@@ -12,18 +12,13 @@ import { useEffect, useState } from "react";
 import { getAllProductState } from "@/redux/reducer/product.reducer";
 
 const ProductCarousel = () => {
-  const productsState = useAppSelector((state) => state.product.products);
-  const [product, setProduct] = useState<IProduct[]>([]);
+  const products = useAppSelector((state) => state.product.products);
 
   const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
     dispatchThunk(getAllProductState());
   }, [dispatchThunk]);
-
-  useEffect(() => {
-    setProduct(productsState);
-  }, [productsState]);
 
   return (
     <div>
@@ -32,7 +27,7 @@ const ProductCarousel = () => {
       </div>
       <div className="pt-2">
         <BasicCarousel previews={4}>
-          {product?.map((item) => {
+          {products?.map((item) => {
             const data = {
               _id: item._id,
               name: item.productName,

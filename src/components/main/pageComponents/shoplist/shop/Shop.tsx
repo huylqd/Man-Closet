@@ -53,20 +53,28 @@ const Shop = () => {
             </div>
             <div className="flex w-full md:w-1/2 flex-row justify-center align-center ">
             <div className="pr-2 mt-2 w-1/2">
-              <button onClick={() => setIsOpen(true)} className="w-full flex flex-row md:hidden border-gray-200 border-2 p-3 align-center justify-center hover:border-gray-800 transition ease-in-out rounded-sm ">
+              <button onClick={() => setIsOpen(true)} className="w-full flex flex-row md:hidden border-gray-200 border-2 p-2 align-center justify-center hover:border-gray-800 transition ease-in-out rounded-sm ">
               <Filter />  
               <span className="pl-2" >Bộ lọc </span>
               </button>
               </div>
             
-              <div className="pr-2 mt-2 w-1/2">
-                <select onChange={handleChanSelect} className=" 
-              w-full ml-2 border-gray-300 cursor-pointer focus:outline-none pr-2 pl-2 flex flex-row border-2 p-3 align-center justify-center hover:border-gray-800 transition ease-in-out rounded-sm" name='sort'>
+              <div className="md:flex   md:align-center md:items-center pr-2 mt-2 w-1/2">
+                
+                <span className="w-[100px] hidden md:block">
+                Sort by: 
+                </span>
+            
+              <select onChange={handleChanSelect} className=" p-2 text-gray-700
+              w-full ml-2 border-gray-300 cursor-pointer focus:outline-none pr-2 pl-2 border-2  hover:border-gray-400 transition ease-in-out rounded-sm" name='sort' >
+           
                   <option value="createdAt">Mới nhất</option>
                   <option value="createdAt">Cũ nhất</option>
                   <option value="price">Giá: Giảm dần</option>
                   <option value="price">Giá: Tăng dần </option>
                 </select>
+  
+              
               </div>
            
             </div>

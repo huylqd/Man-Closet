@@ -7,7 +7,9 @@ import {
   Settings,
   Shirt,
   UserCircle,
-  LogOut
+  LogOut,
+  X,
+  Home,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +19,7 @@ import { Logo } from "@/components/Logo";
 import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import SidebarAdminItemLink from "./SidebarAdminItemLink";
 
 const data = [
   {
@@ -48,62 +51,26 @@ const data = [
     href: "settings",
     icon: <Settings className="w-6 h-6" />,
     name: "Cài đặt",
-  }
+  },
+  {
+    href: "home",
+    icon: <Home className="w-6 h-6" />,
+    name: "Trở về trang chủ",
+  },
 ];
 
 const SidebarAdmin = () => {
   const pathName = usePathname();
   const [activeLink, setActiveLink] = useState("");
-  useEffect(()=> {
-    setActiveLink(pathName.split("/")[pathName.split("/").length - 1])
-  },[pathName])
 
-  window.onload = function () {
-    const sidebar = document.querySelector(".sidebar") as Element;
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
-    const sidebarMenuBtn = document.querySelector(
-      "#sidebar_menu_btn"
-    ) as HTMLElement;
+  useEffect(() => {
+    setActiveLink(pathName.split("/")[pathName.split("/").length - 1]);
+  }, [pathName]);
 
-    const headerSidebarMenuBtn = document.querySelector(
-      "#header_sidebar_menu_btn"
-    ) as HTMLElement;
-
-    const layer = document.querySelector(".sidebar_menu_layer") as HTMLElement;
-
-    const linkItems = document.querySelectorAll(".link_item");
-
-    linkItems.forEach(function (item) {
-      item.addEventListener("click", function () {
-        sidebar.classList.remove("open");
-        menuBtnChange();
-      });
-    });
-
-    sidebarMenuBtn.addEventListener("click", function () {
-      sidebar.classList.toggle("open");
-      menuBtnChange();
-    });
-
-    headerSidebarMenuBtn.addEventListener("click", function () {
-      sidebar.classList.toggle("open");
-      menuBtnChange();
-    });
-
-    layer.addEventListener("click", function () {
-      sidebar.classList.remove("open");
-      menuBtnChange();
-    });
-
-    function menuBtnChange() {
-      if (sidebar.classList.contains("open")) {
-        layer.style.opacity = "1";
-        layer.style.zIndex = "40";
-      } else {
-        layer.style.opacity = "0";
-        layer.style.zIndex = "-1";
-      }
-    }
+  const toggleSidebar = () => {
+    setIsOpenSidebar((curr) => !curr);
   };
 
   return (
@@ -117,14 +84,25 @@ const SidebarAdmin = () => {
           className="link_icon flex items-center justify-center"
           id="header_sidebar_menu_btn"
         >
-          <MenuIcon className="w-5 h-5" />
+          <MenuIcon onClick={() => toggleSidebar()} className="w-5 h-5" />
         </span>
       </div>
 
-      <div className="sidebar_menu_layer opacity-0 fixed inset-0 z-[-1] w-screen h-screenblock md:hidden"></div>
+      <label
+        onClick={() => setIsOpenSidebar(false)}
+        className={cn(
+          "sidebar_menu_layer opacity-0 fixed inset-0 z-[-1] w-screen h-screen block md:hidden",
+          isOpenSidebar ? "opacity-100 z-30" : "opacity-0 -z-[1]"
+        )}
+      ></label>
 
       {/* default sidebar */}
-      <aside className="sidebar bg-zinc-50 dark:bg-zinc-900">
+      <aside
+        className={cn(
+          "sidebar bg-zinc-50 dark:bg-zinc-900 z-40",
+          isOpenSidebar ? "open" : ""
+        )}
+      >
         <div className="logo_details hidden md:flex">
           <span className="sidebar_logo_fwb">
             <Logo />
@@ -133,29 +111,29 @@ const SidebarAdmin = () => {
             className="link_icon flex items-center justify-center"
             id="sidebar_menu_btn"
           >
-            <MenuIcon className="w-5 h-5 text-zinc-800 dark:text-stone-50" />
+            <MenuIcon
+              onClick={() => toggleSidebar()}
+              className="w-5 h-5 text-zinc-800 dark:text-stone-50"
+            />
           </span>
         </div>
+
+        <div className="flex md:hidden items-center justify-between">
+          <Logo />
+          <span>
+            <X onClick={() => toggleSidebar()} className="w-5 h-5" />
+          </span>
+        </div>
+
         <ul className="nav-list relative">
           {data.map((item) => {
             return (
-              <li key={uuidv4()}>
-                <Link
-                  href={`/admin/${item.href === "statistics" ? "" : item.href}`}
-                  className={cn("after:bg-zinc-800 dark:after:bg-white group link_item", `${activeLink === (item.href === "statistics" ? "admin" : item.href) ? "active bg-zinc-800 dark:bg-slate-50 text-slate-50 dark:text-zinc-800" : ""}`)}
-                >
-                  <span className="link_icon dark:group-hover:text-zinc-800 group-hover:text-slate-50 transition-all">
-                    {item.icon}
-                  </span>
-                  <span className="link_name dark:group-hover:text-zinc-800 group-hover:text-slate-50 transition-all">
-                    {item.name}
-                  </span>
-                </Link>
-                <span className="tooltip hidden md:block bg-slate-50 dark:bg-zinc-900">
-                  {item.name}
-                </span>
-                
-              </li>
+              <SidebarAdminItemLink
+                key={uuidv4()}
+                activeLink={activeLink}
+                item={item}
+                setIsOpenSidebar={setIsOpenSidebar}
+              />
             );
           })}
         </ul>

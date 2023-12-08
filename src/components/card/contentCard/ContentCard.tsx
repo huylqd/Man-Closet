@@ -37,10 +37,10 @@ const ContentCard = ({ data, marginLeft = 0 }: ContentCardProps) => {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <h3 className="text-center text-base md:text-md text-gray-800 font-bold">
+        <h5 className="text-center  text-gray-800 font-bold">
           {title}
-        </h3>
-        <p className="ff-secondary text-sm md:text-base text-gray-600">{sub}</p>
+        </h5>
+        <p className="ff-secondary text-gray-600">{sub}</p>
       </div>
     </div>
   );

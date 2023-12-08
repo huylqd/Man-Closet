@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
-import { useCurrency } from "@/hooks";
+import { useCurrency, useUserInfo } from "@/hooks";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -37,17 +37,14 @@ const Detail = () => {
   const { productId } = useParams();
   // state
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const productState = useAppSelector((state) => state.product.product);
-  const [product, setProduct] = useState<IProduct>({} as IProduct);
-  const user = JSON.parse(localStorage.getItem("user") as string)
+  const product= useAppSelector((state) => state.product.product);
+  const user = useUserInfo()
+
   const dispatchThunk = useAppDispatch();
   useEffect(() => {
     dispatchThunk(getProductState(productId.toString()));
   }, [dispatchThunk, productId]);
 
-  useEffect(() => {
-    setProduct(productState);
-  }, [productState]);
 
   const imageArr = product.properties?.map((item) => item?.imageUrl);
 
@@ -97,10 +94,10 @@ const Detail = () => {
           </Swiper>
         </div>
         <div className="flex-[1]">
-          <h3 className="text-xl md:text-3xl font-medium text-gray-800 pb-2">
+          <h3 className="font-medium text-gray-800 pb-2">
             {product.productName}
           </h3>
-          <h4 className="py-1 md:py-3 text-xl md:text-2xl font-semibold text-[--secondary-color]">
+          <h4 className="py-1 md:py-3 font-semibold text-[--secondary-color]">
             {useCurrency(product.price)}
           </h4>
 
@@ -109,29 +106,29 @@ const Detail = () => {
           <div className="hidden md:flex flex-col gap-2 pt-6 pb-3 md:pt-10">
             <button
               onClick={() => setIsOpenModal(true)}
-              className="flex-[1] py-3 px-2 w-[300px] rounded bg-zinc-800 text-white text-base md:text-md font-medium hover:bg-zinc-700 transition-all"
+              className="flex-[1] py-3 px-2 w-[300px] rounded bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-all"
             >
               Thêm vào giỏ hàng
             </button>
-            <button onClick={() => handleWishlist()} className="flex-[1] py-2 w-[300px] px-2 rounded border-2 border-zinc-800 text-gray-800 text-base md:text-md hover:text-gray-700 hover:border-zinc-600 transition-all">
+            <button onClick={() => handleWishlist()} className="flex-[1] py-2 w-[300px] px-2 rounded border-2 border-zinc-800 text-gray-800  hover:text-gray-700 hover:border-zinc-600 transition-all">
               Thêm vào yêu thích
             </button>
           </div>
 
           <div className="pt-6 pb-3 md:pt-10">
-            <h4 className="text-md md:text-lg text-gray-800 font-semibold pb-2">
+            <h4 className=" text-gray-800 font-semibold pb-2">
               Mô tả:
             </h4>
-            <p className="pl-3 md:pl-4 text-base md:text-md font-normal text-gray-600">
+            <p className="pl-3 md:pl-4 font-normal text-gray-600">
               {product.description}
             </p>
           </div>
 
           <div className="pt-6 pb-3 md:pt-10">
-            <h4 className="pb-2 text-md md:text-lg text-gray-800 font-semibold">
+            <h4 className="pb-2  text-gray-800 font-semibold">
               Chia sẻ:
             </h4>
-            <ul className="pl-3 md:pl-4 text-base md:text-md font-normal text-gray-600 flex items-center gap-3">
+            <ul className="pl-3 md:pl-4  font-normal text-gray-600 flex items-center gap-3">
               <li className=" w-[30px] h-[30px] rounded-full border border-zinc-800">
                 <Link
                   href=""
@@ -168,11 +165,11 @@ const Detail = () => {
         <div className="flex flex-row gap-2 w-full">
           <button
             onClick={() => setIsOpenModal(true)}
-            className="flex-[1] py-3 px-2 rounded bg-zinc-800 text-white text-base md:text-md font-medium hover:bg-zinc-700 transition-all"
+            className="flex-[1] py-3 px-2 rounded bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-all"
           >
             Thêm vào giỏ hàng
           </button>
-          <button onClick={() => handleWishlist()} className="flex-[1] py-2 md:py-3 px-2 rounded border-2 border-zinc-800 text-gray-800 text-base md:text-md hover:text-gray-700 hover:border-zinc-600 transition-all">
+          <button onClick={() => handleWishlist()} className="flex-[1] py-2 md:py-3 px-2 rounded border-2 border-zinc-800 text-gray-800  hover:text-gray-700 hover:border-zinc-600 transition-all">
             Thêm vào yêu thích
           </button>
         </div>

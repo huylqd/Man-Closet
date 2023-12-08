@@ -41,18 +41,18 @@ const ProductCardV2 = ({ data, marginLeft = "0px" }: ProductCardV2Props) => {
             style={{ objectFit: "cover" }}
           />
           <button className="absolute -bottom-[60px] left-[50%] translate-x-[-50%] bg-white px-4 py-1 rounded shadow-sm group-hover:bottom-5 transition-all text-sm text-gray-800 hover:bg-slate-200">
-            Xem
+            <span>xem</span>
           </button>
         </div>
         <div className="flex-[1] py-3 flex flex-col items-center gap-2">
-          <h3
+          <h5
             className={
-              style.name + " text-gray-800 text-md font-medium flex-[1]"
+              style.name + " text-gray-800 flex-[1]"
             }
           >
             {name}
-          </h3>
-          <h4 className="text-[#BE7178] text-base font-medium">
+          </h5>
+          <p className="text-[#BE7178]">
             {priceFormatted}
             {oldPrice ? (
               <span className="text-gray-500 line-through">
@@ -61,7 +61,7 @@ const ProductCardV2 = ({ data, marginLeft = "0px" }: ProductCardV2Props) => {
             ) : (
               ""
             )}
-          </h4>
+          </p>
         </div>
       </Link>
     </>

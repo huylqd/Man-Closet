@@ -25,7 +25,7 @@ export const getProductSoldState = createAsyncThunk(
 export const getAllOrderBillState = createAsyncThunk(
   "order/getAllOrderBill",
   async(_, thunkAPI) => {
-    const response = await getAllOrderBill()
+    const response = await getAllOrderBill(0, Number.MAX_SAFE_INTEGER)
     return response.data
   }
 )

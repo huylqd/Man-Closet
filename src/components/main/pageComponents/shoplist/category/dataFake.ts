@@ -1,24 +1,14 @@
+import { useCurrency } from "@/hooks";
 import { getAllCategory } from "@/services/categories/category"
 
 
 
 
 
-export const getAllCate = async () => {
-    try {
-        const res = await getAllCategory(0,Number.MAX_SAFE_INTEGER)
-        
-        
-        return res?.data;
-    } catch (error) {
-        
-    }
-  
-    
-}
+
 export const dataFake = [
     {
-        title: 'Category',
+        title: 'Danh mục',
         data: [
                 {name:"Duy"},
                 {name:"Duy"},
@@ -26,7 +16,7 @@ export const dataFake = [
             ]
         },
       {
-        title: 'Rating Item',
+        title: 'Đánh giá',
         data: [
             {name:"Duy"},
             {name:"Duy"},
@@ -34,16 +24,19 @@ export const dataFake = [
         ]
     },
       {
-        title: 'Price Filter',
+        title: 'Giá',
         data: [
-            { name:"Duy" },
-            { name:"Duy" },
-            { name:"Duy" },
+            { name:`Dưới ${useCurrency(100000)}`,maxPrice: 100000},
+            { name:`${useCurrency(100000)} - ${useCurrency(200000)}`,minPrice: 100000,maxPrice: 200000},
+            { name:`${useCurrency(200000)} - ${useCurrency(500000)}`,minPrice:200000,maxPrice:500000 },
+            { name:`${useCurrency(500000)} - ${useCurrency(1000000)}`,minPrice:500000,maxPrice:1000000 },
+            { name:`${useCurrency(1000000)} - ${useCurrency(5000000)}`,minPrice:1000000,maxPrice:5000000 },
+            { name:`Trên ${useCurrency(5000000)}`,minPrice:5000000 },
         ]
     }
     ,
       {
-        title: 'Filter By Color',
+        title: 'Size',
         data: [
             { name:"Duy" },
             { name:"Duy" },

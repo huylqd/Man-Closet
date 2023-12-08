@@ -34,9 +34,9 @@ const GridCategoryItem = ({ imageUrl, title, href }: GridCategoryItemProps) => {
           style={{ objectFit: "cover", width: "100%", height: "100%" }}
         />
         <span className="absolute inset-0 bg-gradient-to-l from-zinc-800/30"></span>
-        <span className="absolute top-4 right-4 text-white text-lg md:text-xl lg:text-2xl font-medium">
+        <h4 className="absolute top-4 right-4 text-white  font-medium">
           {title}
-        </span>
+        </h4>
 
         <button
           onClick={() => changeUrl(href)}

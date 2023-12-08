@@ -28,6 +28,7 @@ const UserPageNavigation = () => {
   useEffect(()=> {
     setActiveLink(pathName.split("/")[pathName.split("/").length - 1])
   },[pathName])
+
   return (
     <>
       <nav className="">
@@ -36,12 +37,12 @@ const UserPageNavigation = () => {
             <li key={uuidv4()} className="flex-[1]">
               <Link
                 href={`/user/${item.href}`}
-                className={cn("flex gap-1 md:gap-2 flex-col md:flex-row items-center px-2 py-1 text-gray-800 cursor-pointer rounded hover:text-[--secondary-color] transition-all", 
+                className={cn("text-center md:text-left flex gap-1 md:gap-2 flex-col md:flex-row items-center px-2 py-1 text-gray-800 cursor-pointer rounded hover:text-[--secondary-color] transition-all", 
                   activeLink === item.href ? "active text-[--secondary-color]" : ""
                 )}
               >
                 {item.icon}
-                <h4>{item.title}</h4>
+                <p>{item.title}</p>
               </Link>
             </li>
           ))}

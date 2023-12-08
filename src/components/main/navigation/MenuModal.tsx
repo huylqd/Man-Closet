@@ -19,9 +19,8 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { commonSuccessToast } from "@/utils/notify";
-
-
-
+import { useUserInfo } from "@/hooks";
+import MenuModalLinkItem from "./MenuModalLinkItem";
 
 interface MenuModalProps {
   onClose: (value: boolean) => void;
@@ -29,37 +28,30 @@ interface MenuModalProps {
 }
 
 const MenuModal = ({ onClose, isOpen }: MenuModalProps) => {
-const user = JSON.parse(localStorage.getItem('user') as string)
-let user_id = '';
-let userName = '';
-let userEmail = '';
-if(user){
- user_id = user._id
- userName = user.name
- userEmail = user.email
-}
-const menuModalData = [
-  {
-    icon: <Home className="w-5 h-5" />,
-    href: "home",
-    name: "Trang chủ",
-  },
-  {
-    icon: <Shirt className="w-5 h-5" />,
-    href: "shop",
-    name: "Sản phẩm",
-  },
-  {
-    icon: <Contact className="w-5 h-5" />,
-    href: "contact",
-    name: "Liên hệ",
-  },
-  {
-    icon: <Heart className="w-5 h-5" />,
-    href: `user/wishlist`,
-    name: "Danh sách yêu thích",
-  } 
-];
+  const user = useUserInfo();
+
+  const menuModalData = [
+    {
+      icon: <Home className="w-5 h-5" />,
+      href: "home",
+      name: "Trang chủ",
+    },
+    {
+      icon: <Shirt className="w-5 h-5" />,
+      href: "shop",
+      name: "Sản phẩm",
+    },
+    {
+      icon: <Contact className="w-5 h-5" />,
+      href: "contact",
+      name: "Liên hệ",
+    },
+    {
+      icon: <Heart className="w-5 h-5" />,
+      href: `user/wishlist`,
+      name: "Danh sách yêu thích",
+    },
+  ];
 
   const router = useRouter();
   const pathName = usePathname();
@@ -79,10 +71,10 @@ const menuModalData = [
     };
   }, [isOpen]);
   const logout = () => {
-      localStorage.clear();
-      commonSuccessToast("Đăng xuất thành công")
-      router.push("/auth")
-  }
+    localStorage.clear();
+    commonSuccessToast("Đăng xuất thành công");
+    router.push("/auth");
+  };
 
   return (
     <>
@@ -111,76 +103,68 @@ const menuModalData = [
           <div className="pt-14">
             <ul className="flex flex-col gap-2">
               {menuModalData.map((item) => (
-                <li key={uuidv4()}>
-                  <Link
-                    onClick={() => onClose(false)}
-                    href={`/${item.href === "home" ? "" : item.href}`}
-                    className={cn(
-                      "flex items-center justify-between text-gray-600 hover:text-[#BE7178] group transition-all p-[6px] m-1",
-                      itemSelected === (item.href === "home" ? "" : item.href)
-                        ? "text-[#BE7178]"
-                        : ""
-                    )}
-                  >
-                    <h4 className="group-hover:translate-x-2 transition-all">
-                      {item.name}
-                    </h4>
-                    <span>
-                      <ChevronRight className="w-4 h-4" />
-                    </span>
-                  </Link>
-                </li>
+                <MenuModalLinkItem
+                  key={uuidv4()}
+                  item={item}
+                  onClose={onClose}
+                  itemSelected={itemSelected}
+                />
               ))}
+              { user?.role === "admin" && (
+                <MenuModalLinkItem
+                  key={uuidv4()}
+                  item={{
+                    href: "admin",
+                    name: "Đi tới Admin",
+                  }}
+                  onClose={onClose}
+                  itemSelected={itemSelected}
+                />
+              )}
             </ul>
           </div>
 
           <div className="mt-auto">
-          
-            {user ? (<div className="flex items-center gap-2 md:gap-3">
-              
-             <div className="relative w-[30px] h-[30px] md:w-[50px] md:h-[50px] rounded-full overflow-hidden border border-zinc-800">
-              {user?.role == "admin" ? ( <Image
-               
-                onClick={() => {router.push("/admin"),  onClose(false)}}
-              src={gc_4}
-              alt="avatar"
-              fill
-              style={{ objectFit: "cover" }}
-            />) : ( <Image
-              onClick={() => {
-                router.push("/user");onClose(false)
-              }}
-             src={gc_4}
-             alt="avatar"
-             fill
-             style={{ objectFit: "cover" }}
-           />)}
-              
-             </div>
-             <div className="flex flex-col justify-center">
-               <span className="text-md text-gray-800 font-medium">
-                 {userName}
-               </span>
-               <span className="text-sm text-gray-600 font-normal">
-                 {userEmail}
-               </span>
-             </div>
-             <button onClick={() => logout()} className="bg-zinc-800 rounded overflow-hidden flex items-center justify-center w-[30px] h-[30px] md:w-[50px] md:h-[50px] ml-auto hover:bg-zinc-600 transition-all">
-               <LogOut className="w-4 h-4 text-white" />
-             </button>
-           </div> ) :  (
-            
-             <button
-             onClick={() => router.push("/auth")}
-             className="bg-zinc-800 text-white w-full py-1 md:py-3 rounded"
-           >
-             Đăng nhập
-           </button>
-            )}
-           
+            {user ? (
+              <div className="flex items-center gap-2 md:gap-3">
+                <div
+                  onClick={() => {
+                    router.push("/user/dashboard");
+                    onClose(false);
+                  }}
+                  className="flex flex-[1] gap-2 items-center rounded bg-white hover:bg-zinc-200 transition-all cursor-pointer"
+                >
+                  <div className="relative w-[30px] h-[30px] md:w-[50px] md:h-[50px] rounded-full overflow-hidden border border-zinc-800">
+                    <Image
+                      src={gc_4}
+                      alt="avatar"
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h5 className="text-gray-800 font-medium">{user.name}</h5>
+                    <span className="text-gray-600 font-normal">
+                      {user.email}
+                    </span>
+                  </div>
+                </div>
 
-            {/* sau khi dang nhap thanh cong thi hien cai o duoi */}
-            
+                <button
+                  onClick={() => logout()}
+                  className="bg-zinc-800 rounded overflow-hidden flex items-center justify-center w-[30px] h-[30px] md:w-[50px] md:h-[50px] ml-auto hover:bg-zinc-600 transition-all"
+                >
+                  <LogOut className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => router.push("/auth")}
+                className="bg-zinc-800 text-white w-full py-1 md:py-3 rounded"
+              >
+                <p>Đăng nhập</p>
+              </button>
+            )}
           </div>
         </div>
       </div>

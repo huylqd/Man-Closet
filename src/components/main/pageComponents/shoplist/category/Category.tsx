@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from "uuid";
 import "./category.scss"
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { getAllCate } from './dataFake';
+
 interface CategoryProp {
     title: string;
     data: ICategory[];
@@ -18,8 +18,7 @@ interface ModalCate{
 
 }
 const CategoryContainer = ({ data }:ModalCate) => {
-  
-  getAllCate()
+
     const [openCategory, setOpenCategory] = useState(null);
     const handleCategoryClick = (index:any) => {
       setOpenCategory((prevIndex) => (prevIndex === index ? null : index));
@@ -52,7 +51,7 @@ const Category = ({ title, data, isOpen, onCategoryClick }:CategoryProp) => {
           <div  className="flex flex-col items-start rounded-lg p-2 ">
             {data?.map((item, i) => (
               <div className="flex  justify-start cursor-pointer rounded-r-lg border-l-transparent" key={i}>
-                <input type="checkbox" className="accent-zinc-800" />
+                <input type="checkbox"  className="accent-zinc-800" />
                 <h3 className="p-4 text-xs">{item.name}</h3>
               </div>
             ))}
