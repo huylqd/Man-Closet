@@ -1,4 +1,5 @@
 'use client'
+import { Button } from '@/components/ui/button'
 import { getAllCategory } from '@/services/categories/category'
 import { createPro } from '@/services/products/products'
 import React, { useState, useEffect } from 'react'
@@ -6,6 +7,8 @@ import { useForm } from 'react-hook-form'
 
 const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
     if (!isvisiblePro) return null
+    const [indexes, setIndexes] = useState<number[]>([]);
+    const [counter, setCounter] = useState(0);
     const [cate, setCate] = useState([])
     useEffect(() => {
         getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({ data }) => setCate(data))
@@ -16,7 +19,19 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
         register,
         handleSubmit
     } = useForm()
+
+    const addFriend = () => {
+
+        setIndexes(prevIndexes => [...prevIndexes, counter]);
+        setCounter(counter + 1);
+
+    };
+    const removeFriend = (index: any) => () => {
+        setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
+        setCounter(prevCounter => prevCounter - 1);
+    };
     const onHandleSubmit = async (data: any) => {
+
         const body = {
             productName: data.productName,
             price: data.price,
@@ -33,10 +48,14 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
             categoryId: data.categoryId
         }
 
-        await add(body)
+        await add(data)
+
+
+
 
     }
-    console.log(cate);
+
+
     return (
         <div className="overflow-y-auto pt-[40px]  fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
             <div className=" overflow-y-auto relative p-4 w-full max-w-3xl h-full md:h-auto">
@@ -51,6 +70,7 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
                         </button>
                     </div>
                     <form action='' onSubmit={handleSubmit(onHandleSubmit)} >
+
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
                             <div>
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
@@ -73,44 +93,45 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
                                 <input type="number"  {...register('price')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="$2999" required />
                             </div>
-                            <div className="grid gap-4 sm:col-span-2 md:gap-6 sm:grid-cols-4">
-                                {/* {product ? product.properties.map((item:any) => { */}
-                                {/* return ( */}
-                                <div>
-                                    <div className="mb-4">
-                                        <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Images</span>
-                                        <div className="flex justify-center items-center w-full">
-                                            {/* <label  className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"> */}
-                                            {/* <div className="flex flex-col justify-center items-center pt-5 pb-6">
-                                        <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                        </svg>
-                                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                            <span className="font-semibold">Click to upload</span>
-                                            or drag and drop
-                                        </p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                    </div> */}
-                                            <input type="text" {...register('imageUrl')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
-                                            {/* </label> */}
-                                        </div>
-                                    </div>
-                                   
-                                    <div>
-                                        <label htmlFor="breadth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color</label>
-                                        <input type="text" {...register('color')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
-                                    </div>
-                                    <div>
-                                    <div>
-                                        <label htmlFor="length" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size</label>
-                                        <input type="text" {...register('size')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="width" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
-                                        <input type="number" {...register('quantity')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
-                                    </div>
-                                    </div>
-                                </div>
+                            <div className="grid gap-4 sm:col-span-2 md:gap-6 sm:grid-cols-4 ">
+                                {indexes.map((item, index) => {
+                                    console.log('nhwcc', item);
+                                    return (
+                                        <fieldset>
+                                            <div className="mb-4">
+                                                <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Images</span>
+                                                <div className="flex justify-center items-center w-full">
+
+                                                    <input type="text" {...register(`properties[${index}].imageUrl`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
+
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="breadth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color</label>
+                                                <input type="text" {...register(`properties[${index}].color`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <label htmlFor="length" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size</label>
+                                                    <input type="text" {...register(`properties[${index}].variants[0].size`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="width" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                                                    <input type="number" {...register(`properties[${index}].variants[0].quantity`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
+                                                </div>
+                                            </div>
+                                            <Button variant={'primary'} type="button" className='mt-4' onClick={removeFriend(index)}>
+                                                Remove
+                                            </Button>
+                                        </fieldset>
+                                    )
+
+                                })}
+                                <Button variant={'primary'} type="submit" onClick={addFriend} >
+                                    Add
+                                </Button>
+
 
 
 
