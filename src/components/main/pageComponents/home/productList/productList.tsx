@@ -12,13 +12,12 @@ import { GridView } from "@/components/dataViews";
 // css
 import "swiper/css";
 import "swiper/css/pagination";
-import { IProduct } from "@/interfaces/product";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getAllProductState } from "@/redux/reducer/product.reducer";
 import TitleGap from "@/components/titleGap";
 
 const ProductList = () => {
-  const products = useAppSelector((state) => state.product.products?.slice(0,4));
+  const products = useAppSelector((state) => state.product.products);
 
   const dispatchThunk = useAppDispatch();
 
