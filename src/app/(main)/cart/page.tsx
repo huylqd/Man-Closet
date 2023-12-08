@@ -4,7 +4,7 @@ import CartProductCard from "@/components/card/productCard/cart-product-card/Car
 import { ListView } from "@/components/dataViews";
 import { PrivateRouter } from "@/components/privateRouter";
 import { Button } from "@/components/ui/button";
-import { useCurrency } from "@/hooks";
+import { useCurrency, useUserInfo } from "@/hooks";
 import { IProductInCart } from "@/interfaces/product";
 import { cn } from "@/lib/utils";
 import { getProductsInCart } from "@/redux/reducer/cart.reducer";
@@ -30,8 +30,6 @@ interface ProductInPayment {
   };
   sub_total: number;
 }
-  const user = JSON.parse(localStorage.getItem('user') as string);
-
 
 const Modal = ({
   isOpen,
@@ -48,6 +46,7 @@ const Modal = ({
   const [products, setProducts] = useState<ProductInPayment[]>([]);
   const [totalPriceOfProducts, setTotalPriceOfProducts] = useState(0);
   const router = useRouter();
+  const user = useUserInfo()
 
   useEffect(() => {
     setAddress({ shipping_address: "HA NOi" });
@@ -168,7 +167,8 @@ const Modal = ({
 
 
 const CartPage = () => {
- 
+  const router = useRouter()
+
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const productList = useAppSelector((state) => state.cart.products);

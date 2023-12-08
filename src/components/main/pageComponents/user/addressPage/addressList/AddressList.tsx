@@ -2,11 +2,11 @@
 
 import Modal from "@/components/modal/Modal";
 import { useEffect, useState } from "react";
-import { TAddress } from "@/services/address.services";
+
 import { v4 as uuidv4 } from "uuid";
-import AddressListItem from "../addressListItem/AddressListItem";
+
 import style from "./addressList.module.scss";
-import ModalAddress from "../modalAddress/ModalAddress";
+
 import { useUserInfo } from "@/hooks";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
@@ -15,6 +15,7 @@ import {
   updateUserAddressState,
 } from "@/redux/reducer/user.reducer";
 import ConfirmModalV2 from "@/components/modal/confirmModal-v2/ConfirmModalV2";
+import AddressListItem from "../addressListItem/addressListItem";
 
 const AddressList = () => {
   const { _id, name } = useUserInfo();

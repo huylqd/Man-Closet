@@ -34,7 +34,7 @@ const InfoProfile = () => {
 
   useEffect(() => {
     dispatchThunk(getUserByIdState(_id));
-  }, [dispatchThunk]);
+  }, [dispatchThunk, _id]);
 
   const handleUpdateUserInfo = (data: { [key: string]: number | string }) => {
     try {
