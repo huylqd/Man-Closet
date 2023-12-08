@@ -110,7 +110,7 @@ const MenuModal = ({ onClose, isOpen }: MenuModalProps) => {
                   itemSelected={itemSelected}
                 />
               ))}
-              { user?.role === "admin" && (
+              {user?.role === "admin" && (
                 <MenuModalLinkItem
                   key={uuidv4()}
                   item={{
