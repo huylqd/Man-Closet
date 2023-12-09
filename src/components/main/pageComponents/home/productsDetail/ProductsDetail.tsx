@@ -52,7 +52,7 @@ const ProductsDetail = () => {
     
 
     dispatchThunk(addProductToCart({ user_id, product }));
-    commonSuccessToast("Thêm sản phẩm thành cồng")
+    commonSuccessToast("Thêm sản phẩm thành công")
   };
 
   return (

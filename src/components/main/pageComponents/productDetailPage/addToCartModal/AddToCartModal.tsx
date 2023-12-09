@@ -5,7 +5,7 @@ import { IProduct, Variant } from "@/interfaces/product";
 import { cn } from "@/lib/utils";
 import { addProductToCart } from "@/redux/reducer/cart.reducer";
 import { useAppDispatch } from "@/redux/store";
-import { commonSuccessToast } from "@/utils/notify";
+import { commonErrorToast, commonSuccessToast } from "@/utils/notify";
 import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -185,11 +185,13 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
   // ===================================
 
   const addToCart = () => {
-    const userId = user._id;
+    const userId = user?._id;
     if (!userId) {
       router.push("/auth");
+      commonErrorToast('Bạn cần đăng nhập để thực hiện hành động này')
     }
-
+    else {
+      
     let validData = false;
     if (
       inventoryQuantity > 0 &&
@@ -212,17 +214,17 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
         price: product.price,
       },
     };
-    console.log(data);
-    
 
     if (validData) {
       dispatchThunk(addProductToCart(data));
       onClose();
-      commonSuccessToast("Thêm sản phẩm thành cồng");
+      commonSuccessToast("Thêm sản phẩm thành công");
     } else {
       toast.error("Vui lòng xem lại dữ liệu đã lựa chọn");
       console.log("no");
     }
+    }
+
   };
 
   return (
