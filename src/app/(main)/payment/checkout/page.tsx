@@ -19,7 +19,7 @@ const CheckoutPage = () => {
             </article>
           </div>
 
-          <aside className="w-full lg:w-[300px]">
+          <aside className="w-full lg:w-[360px]">
             <CheckoutInfo/>
           </aside>
         </div>

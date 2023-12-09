@@ -1,7 +1,7 @@
 import { IProductInCart } from "@/interfaces/product";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import MediumTableItem_SC from "./mediumTableItem_SC/MediumTableItem_SC";
+import MediumTableItem_SC from "./mediumTableItem/MediumTableItem_SC";
 
 const tableHeaderData = [
   {
@@ -22,16 +22,31 @@ const tableHeaderData = [
   },
 ];
 
+interface ProductInCart extends IProductInCart {
+  totalPrice: number;
+  selected: boolean;
+}
+
 type Props = {
-  data: IProductInCart[];
+  data: ProductInCart[];
+  handleChangeSelect: (product_id: string, isChecked: boolean) => void;
+  handleUpdateQuantity: (
+    product_id: string,
+    quantity: number,
+    totalPrice: number
+  ) => void;
 };
 
-const MediumTable_SC = ({ data }: Props) => {
+const MediumTable_SC = ({
+  data,
+  handleChangeSelect,
+  handleUpdateQuantity,
+}: Props) => {
   return (
     <>
-      <div className="h-[70vh] overflow-y-auto w-full bg-zinc-100">
+      <div className="w-full">
         {/* table header */}
-        <ul className="flex gap-3 pb-3 border-b">
+        <ul className="flex gap-3 pb-3">
           <li className="flex-[1]"></li>
           {tableHeaderData.map(({ label, className }) => (
             <li key={uuidv4()} className={`${className}`}>
@@ -42,11 +57,18 @@ const MediumTable_SC = ({ data }: Props) => {
         </ul>
 
         {/* table content */}
-        <ul>
-          {data?.map((item) => (
-            <MediumTableItem_SC key={uuidv4()} data={item} />
-          ))}
-        </ul>
+        <div className="bg-zinc-50 h-[70vh] rounded overflow-hidden">
+          <ul className="overflow-y-auto ">
+            {data?.map((item) => (
+              <MediumTableItem_SC
+                key={uuidv4()}
+                data={item}
+                handleChangeSelect={handleChangeSelect}
+                handleUpdateQuantity={handleUpdateQuantity}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );

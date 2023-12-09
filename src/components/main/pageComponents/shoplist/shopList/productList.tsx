@@ -65,7 +65,7 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
               _id: item._id,
               name: item.productName,
               price: item.price,
-              imageUrl: item.properties[0].imageUrl,
+              imageUrl: item.properties[0]?.imageUrl,
             };
             return (
               <ProductCardV2 key={uuidv4()} data={data} marginLeft="40px" />

@@ -1,18 +1,54 @@
-import React from 'react'
+"use client";
 
-const ControlBar_SC = () => {
+import { Button } from "@/components/ui/button";
+import { useHash, useLocalStorage } from "@/hooks";
+import { ProductInCart } from "@/interfaces/product";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+const ControlBar_SC = ({
+  totalBillPrice,
+  productsSelected,
+}: {
+  totalBillPrice: string;
+  productsSelected: ProductInCart[];
+}) => {
+  const router = useRouter();
+  const {setItem} = useLocalStorage("checkoutData")
+  const {encodeObjectBase64} = useHash()
+
+  const goToCheckout = () => {
+    if(productsSelected.length === 0 ){
+      return  
+    }
+
+    const data = {
+      products: productsSelected,
+      total: totalBillPrice
+    }
+
+    const encoded = encodeObjectBase64(data)
+
+    setItem(encoded)
+    router.push("/payment/checkout")
+  };
   return (
     <>
-      <div>
-        <p>
-          <span>Tổng:</span>
-          <span>10000000</span>
+      <div className="flex items-center justify-between">
+        <p className="flex item-center gap-2">
+          <span>Tổng ({productsSelected.length}):</span>
+          <span className="text-[--secondary-color] font-medium">
+            {totalBillPrice}
+          </span>
         </p>
-
-        <button>Mua hàng</button>
+        <Button 
+          onClick={() => goToCheckout()}
+          variant={"primary"} className="">
+          Mua hàng
+        </Button>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ControlBar_SC
+export default ControlBar_SC;

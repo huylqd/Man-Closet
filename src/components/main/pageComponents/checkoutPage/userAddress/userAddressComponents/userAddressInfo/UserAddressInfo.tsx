@@ -1,20 +1,22 @@
 "use client";
 
 import Modal from "@/components/modal/Modal";
-import { useUserInfo } from "@/hooks";
+import { useLocalStorage, useUserInfo } from "@/hooks";
 import { getAddressByUserIdState } from "@/redux/reducer/user.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { TAddress } from "@/services/address.services";
 import React, { useEffect, useState } from "react";
 import SwitchModal from "../customModal/SwitchModal";
+import { setBillAddress } from "@/redux/reducer/bill.reducer";
 
 const UserAddressInfo = () => {
+  const billAddress = useAppSelector(state =>state.bill.address)
   const { _id, name } = useUserInfo();
-  const [address, setAddress] = useState({} as TAddress);
   const addressState = useAppSelector((state) => state.user.address);
 
   const [isSwitchAddress, setIsSwitchAddress] = useState(false);
-  const [isNewAddress, setIsNewAddress] = useState(false);
+
+  const {} = useLocalStorage("address")
 
   const dispatchThunk = useAppDispatch();
 
@@ -23,11 +25,10 @@ const UserAddressInfo = () => {
   }, [dispatchThunk, _id]);
 
   useEffect(() => {
-    setAddress(addressState.find((item) => item.isDefault) as TAddress);
-  }, [addressState]);
+    dispatchThunk(setBillAddress(addressState.find((item) => item.isDefault) as TAddress))
+  }, [dispatchThunk,addressState]);
 
   const handleCloseModal = () => {
-    setIsNewAddress(false);
     setIsSwitchAddress(false);
   };
 
@@ -37,10 +38,10 @@ const UserAddressInfo = () => {
         <p>{name}</p>
         <p>(+84) 097482950609</p>
         <p>
-          {address?.detailAddress ? `${address?.detailAddress}, ` : ""}
-          {address?.wards ? `${address.wards}, ` : ""}
-          {address?.district ? `${address.district}, ` : ""}
-          {address?.city ? `${address.city}` : ""}
+          {billAddress?.detailAddress ? `${billAddress.detailAddress}, ` : ""}
+          {billAddress?.wards ? `${billAddress.wards}, ` : ""}
+          {billAddress?.district ? `${billAddress.district}, ` : ""}
+          {billAddress?.city ? `${billAddress.city}` : ""}
         </p>
       </article>
 
@@ -51,17 +52,14 @@ const UserAddressInfo = () => {
         >
           Thay đổi (Địa chỉ có sẵn)
         </button>
-        <button className="text-blue-500 hover:text-blue-300 w-fit">
-          Đặt hộ (Địa chỉ không có sẵn)
-        </button>
+        
       </div>
 
       <Modal isOpen={isSwitchAddress} handleClose={handleCloseModal}>
         <SwitchModal
-          setAddress={setAddress}
           addressList={addressState}
           onClose={handleCloseModal}
-          addressIdSelected={address?._id as string}
+          addressIdSelected={billAddress?._id as string}
         />
       </Modal>
     </>
