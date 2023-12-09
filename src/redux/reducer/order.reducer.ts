@@ -1,22 +1,28 @@
-import { OrderItem } from "@/interfaces/order.interface";
-import { ProductSold } from "@/interfaces/product";
-import { Thongkedoanhthu, Thongkedonhang } from "@/services/analyst/analyst";
-import { getAllOrderBill, getProductSold } from "@/services/order/order";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { IBill } from "@/interfaces/bill"
+import { OrderItem } from "@/interfaces/order.interface"
+import { ProductSold } from "@/interfaces/product"
+import { Thongkedoanhthu, Thongkedonhang } from "@/services/analyst/analyst"
+import { getAllOrderBill, getProductSold, updateBill } from "@/services/order/order"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 interface OrderState {
-  productSold: ProductSold[];
-  orders: OrderItem[];
-  countBill: number;
-  doanhthu: number;
+  productSold: ProductSold[]
+  orders: OrderItem[],
+  updateBill: IBill[],
+  countBill: number,
+  doanhthu: number,
 }
-
+interface IUpdateProps {
+  billId: string;
+  status: string
+}
 const initialState: OrderState = {
   productSold: [],
   orders: [],
+  updateBill: [],
   countBill: 0,
   doanhthu: 0,
-};
+}
 
 export const getProductSoldState = createAsyncThunk(
   "order/getProductSold",
@@ -48,6 +54,16 @@ export const getDoanhThuState = createAsyncThunk(
   }
 );
 
+export const changeStatusBillState = createAsyncThunk(
+  "order/updateStatusBillState",
+  async (data: IUpdateProps) => {
+    const { billId, status } = data
+    const response = await updateBill(billId, status)
+    return response.data
+  }
+)
+
+
 const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -65,6 +81,9 @@ const orderSlice = createSlice({
     builder.addCase(getDoanhThuState.fulfilled, (state, action) => {
       state.doanhthu = action.payload[0].totalAmountSold;
     });
+    builder.addCase(changeStatusBillState.fulfilled, (state, action) => {
+      state.updateBill = action.payload
+    })
   },
 });
 

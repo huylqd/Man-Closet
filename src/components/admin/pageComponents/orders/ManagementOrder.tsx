@@ -3,16 +3,21 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import SearchOrder from './SearchOrder'
 import { IBill } from '@/interfaces/bill';
-import { exportBillById, getAllOrderBill } from '@/services/order/order';
+import { exportBillById, getAllOrderBill, updateBill } from '@/services/order/order';
 import Toaster from '@/components/Toaster/Toaster';
 import { getAllUser } from '@/services/user/user';
 import { IUser } from '@/interfaces/user';
 import Image from 'next/image';
 import { useCurrency } from '@/hooks';
 import Pagination from '@/components/pagination/Pagination';
+import { Button } from '@/components/form';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { changeStatusBillState } from '@/redux/reducer/order.reducer';
 
 
 const ManagementOrder = () => {
+    const [valueStatus, setValueStatus] = useState<string>("")
+    const [rowSelected, setRowSelected] = useState<IBill[]>([])
     const [billAll, setBillAll] = useState<IBill[]>([]);
     const [bill, setBill] = useState<IBill[]>([])
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -22,8 +27,12 @@ const ManagementOrder = () => {
     const [key, setKey] = useState<string>('');
     const [user, setUser] = useState<IUser[]>([])
     const toasterRef = useRef<any>();
+
+    const order = useAppSelector((state) => state.order.updateBill);
+    const dispatchThunk = useAppDispatch();
     useEffect(() => {
-        fetchData(currentPage, limit)
+
+        // fetchData(currentPage, limit)
         Promise.all([
             getAllOrderBill(0, Number.MAX_SAFE_INTEGER),
             getAllUser(0, Number.MAX_SAFE_INTEGER),
@@ -74,7 +83,7 @@ const ManagementOrder = () => {
     }
 
 
-    console.log("bill", billAll)
+    // console.log("bill", billAll)
     const customDay = (createdAt: string) => {
         const date = new Date(createdAt);
         const formatDate = `${date.getHours()}:${date.getMinutes()}  ${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -108,10 +117,69 @@ const ManagementOrder = () => {
 
 
     }
-    console.log("bill", bill)
+    // console.log("bill", bill)
+    const handleChangeRowData = (e: any, data: IBill) => {
+        console.log("data", e.target.checked)
+        const isChecked = e.target.checked
+        if (isChecked) {
+            setRowSelected((prev) => [...prev, data])
+        } else {
+            setRowSelected(
+                rowSelected.filter((row) => row._id !== data._id)
+            )
+        }
+    }
+    // console.log("rowSelected", rowSelected)
+    const status = [
+        "Đang xử lý",
+        "Chưa thanh toán",
+        "Đã thanh toán",
+        "Đang giao hàng",
+        "Đã nhận",
+        "Đã hủy",
+    ]
+    console.log("value change", valueStatus)
+    const onHandleChange = () => {
+        rowSelected?.map((item, index) => {
+            const data: any = {
+                billId: item._id,
+                status: valueStatus
+            }
+            return (
 
+                dispatchThunk(changeStatusBillState(data))
+                // updateBill(item._id, valueStatus)
+            )
+        })
+    }
+    useEffect(() => {
+        Promise.all([
+            getAllOrderBill(0, Number.MAX_SAFE_INTEGER),
+            getAllUser(0, Number.MAX_SAFE_INTEGER),
+            getAllOrderBill(currentPage, limit)
+        ]).then(([orderData, userData, billData]: any) => {
 
-
+            const userMap = new Map(userData?.data?.map((user: any) => [user._id, user.name]));
+            setUser(userData?.data);
+            setBillAll(orderData?.data?.map((item: any) => {
+                return {
+                    ...item,
+                    userName: userMap.get(item.user_id),
+                };
+            }));
+            setBill(billData?.data?.map((item: any) => {
+                return {
+                    ...item,
+                    userName: userMap.get(item.user_id),
+                };
+            }));
+            setTotalPages(billData.paginate.totalPages)
+            setTotalItems(billData.paginate.totalItems)
+        }).catch((error) => {
+            // Handle errors
+            console.error("Error fetching data: ", error);
+        });
+    }, [order]);
 
     return (
         <div>
@@ -127,15 +195,30 @@ const ManagementOrder = () => {
                     </div>
 
                 </section>
-                <table className="w-full  table text-sm text-left table-auto text-gray-500 dark:text-gray-400">
+                <div className="relative">
+
+
+                    <div className="z-10 flex bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 ">
+                        <select id="countries" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-3 inline-flex dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            onChange={(e: any) => setValueStatus(e.target.value)}
+                        >
+                            <option>Chọn trạng thái đơn hàng</option>
+                            {status.map((item, index) => {
+                                return <option value={item} key={index} >{item}</option>
+                            })}
+                        </select>
+
+                        {valueStatus && rowSelected.length !== 0 && <Button onClick={onHandleChange}>Submit</Button>}
+                    </div>
+
+
+
+                </div>
+                <table className="w-full table text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-6 py-3 ">
                                 STT
-                            </th>
-
-                            <th scope="col" className="px-6 py-3">
-                                Id
                             </th>
 
                             <th scope="col" className="px-6 py-3">
@@ -175,9 +258,8 @@ const ManagementOrder = () => {
                                         scope="row"
                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white "
                                     >
-                                        {index + 1}
+                                        <input type="checkbox" onChange={(e) => handleChangeRowData(e, bill)} />
                                     </th>
-                                    <td className="px-6 py-4">{bill._id}</td>
                                     <td className="px-6 py-4">{bill.userName}</td>
                                     <td className="px-6 py-4 flex justify-between w-[200px]">{bill.items.map((item) => {
                                         return <>
@@ -193,14 +275,18 @@ const ManagementOrder = () => {
                                         </>
                                     })}</td>
                                     <td className="px-6 py-4">{useCurrency(bill.total_price)}</td>
-                                    <td className="px-6 py-4">{bill.history_order_status[0].status}</td>
+                                    <td className="px-6 py-4">{bill.history_order_status[bill.history_order_status.length - 1].status}</td>
                                     <td className="px-6 py-4">{customDay(bill.createdAt.toString())}</td>
 
 
-                                    <td className="px-6 py-4 ">
+                                    <td className="px-6 py-4 position-relative">
 
-                                        <button type="button" onClick={() => exportBill(bill._id)} className="flex items-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512" className="mr-2 ml-0.5"><path fill="#ffffff" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" /></svg>Export</button>
+                                        {bill.history_order_status[bill.history_order_status.length - 1].status === "Đã thanh toán" || bill.history_order_status[bill.history_order_status.length - 1].status === "Đã nhận" ? (
+                                            <button type="button" onClick={() => exportBill(bill._id)} className="flex items-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512" className="mr-2 ml-0.5"><path fill="#ffffff" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" /></svg>Export</button>
+
+                                        ) : " "}
+
 
                                     </td>
                                 </tr>

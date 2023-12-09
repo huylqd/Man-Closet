@@ -17,6 +17,10 @@ export const exportBillById = (billId: string | undefined) => {
   const response = instance.get<any>(`/order/export/${billId}`);
   return response
 }
+export const updateBill = (billId: string | undefined, status: string) => {
+  const response = instance.patch<any>(`/order/${billId}`, { status: status });
+  return response
+}
 export const getProductSold = () => {
   const response = instance.get<any, GetProductSoldRes>("/analyst/product");
   return response

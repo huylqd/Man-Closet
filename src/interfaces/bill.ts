@@ -18,7 +18,7 @@ export enum OrderStatus {
   Paid = "Đã thanh toán",
   Delivering = "Đang giao hàng",
   Received = "Đã nhận",
-  Cancelled = "Đã Hủy",
+  Cancelled = "Đã hủy",
 }
 export interface IHistoryStatus {
   _id?: string,
