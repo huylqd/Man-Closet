@@ -49,3 +49,9 @@ export interface ProductSold {
   totalAmountSold: number;
   product_id: string;
 }
+
+
+export interface ProductInCart extends IProductInCart {
+  totalPrice: number;
+  selected: boolean;
+}

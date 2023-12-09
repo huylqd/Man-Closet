@@ -1,3 +1,4 @@
+import { FulfilledAction, PendingAction, RejectedAction } from "@/interfaces/asyncThunk";
 import { IProductInCart } from "@/interfaces/product";
 import { addProductToCartAxios, getAllProductInCart } from "@/services/cart.services";
 import { commonErrorToast } from "@/utils/notify";
@@ -5,10 +6,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface CartState {
   products: IProductInCart[];
+  currentRequestId: undefined | string;
+  loading: boolean,
+  message: undefined | string
 }
 
 const initialState: CartState = {
   products: [],
+  currentRequestId: undefined,
+  loading: false,
+  message: undefined
 };
 
 export const getProductsInCart = createAsyncThunk(
@@ -45,6 +52,31 @@ const cartSlice = createSlice({
     .addCase(addProductToCart.fulfilled,(state, action) => {
       state.products.push(action.payload)
     })
+    .addMatcher<PendingAction>(
+      (action) => action.type.endsWith("/pending"),
+      (state, action) => {
+        state.loading = true
+        state.currentRequestId = action.meta.requestId
+      }
+    )
+    .addMatcher<RejectedAction>(
+      (action) => action.type.endsWith("/pending"),
+      (state, action) => {
+        if(state.loading && action.meta.requestId === state.currentRequestId){
+          state.loading = false
+          state.currentRequestId = undefined
+        }
+      }
+    )
+    .addMatcher<FulfilledAction>(
+      (action) => action.type.endsWith("/pending"),
+      (state, action) => {
+        if(state.loading && action.meta.requestId === state.currentRequestId){
+          state.loading = false
+          state.currentRequestId = undefined
+        }
+      }
+    )
   },
 });
 

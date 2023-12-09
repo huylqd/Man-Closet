@@ -1,22 +1,25 @@
 import { Button } from "@/components/ui/button";
+import { setBillAddress } from "@/redux/reducer/bill.reducer";
+import { useAppDispatch } from "@/redux/store";
 import { TAddress } from "@/services/address.services";
 import { ArrowLeft, Plus } from "lucide-react";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
+
 const ListItem = ({
   address,
-  setAddress,
   onClose,
   addressIdSelected,
 }: {
   address: TAddress;
-  setAddress: React.Dispatch<React.SetStateAction<TAddress>>;
   onClose: () => void;
   addressIdSelected: string;
 }) => {
+  const dispatch = useAppDispatch()
+
   const handleSelect = () => {
-    setAddress(address);
+    dispatch(setBillAddress(address))
     onClose();
   };
 
@@ -57,14 +60,12 @@ const ListItem = ({
 };
 
 type Props = {
-  setAddress: React.Dispatch<React.SetStateAction<TAddress>>;
   addressList: TAddress[];
   onClose: () => void;
   addressIdSelected: string;
 };
 
 const SwitchModal = ({
-  setAddress,
   addressList,
   onClose,
   addressIdSelected,
@@ -86,7 +87,6 @@ const SwitchModal = ({
               <ListItem
                 address={item}
                 key={uuidv4()}
-                setAddress={setAddress}
                 onClose={onClose}
                 addressIdSelected={addressIdSelected}
               />
