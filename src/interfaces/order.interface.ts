@@ -4,14 +4,13 @@ export interface OrderItem {
   payment_method: string;
   shipping_address: string;
   items: {
-    property: {
-      quantity: number;
-      color: string;
-      size: string;
-    };
-    product_id: string;
+    imageUrl: string;
+    name: string;
+    color: string;
+    size: string;
+    quantity: number;
     price: number;
-    sub_total: number;
+    totalPrice: number;
   }[];
   total_price: number;
   id_transaction: string;
@@ -22,6 +21,14 @@ export interface OrderItem {
       _id: string;
     },
   ];
+  payment_status: {
+    status: string,
+    updatedAt: Date
+  },
+  current_order_status: {
+    status: string,
+    updatedAt: Date
+  },
   createdAt: Date;
   updatedAt: Date;
 }
