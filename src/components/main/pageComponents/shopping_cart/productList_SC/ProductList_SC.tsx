@@ -83,12 +83,6 @@ const ProductList_SC = () => {
       : 0
   );
 
-  const totalBillPriceSendToModal =
-    billPrice.length !== 0
-      ? billPrice.reduce(
-          (accumulator, currentValue) => accumulator + currentValue
-        )
-      : 0;
 
   const handleUpdateQuantity = (
     product_id: string,

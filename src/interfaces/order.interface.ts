@@ -17,7 +17,7 @@ export interface OrderItem {
   history_order_status: [
     {
       status: string;
-      createdAt: Date;
+      updatedAt: Date;
       _id: string;
     },
   ];

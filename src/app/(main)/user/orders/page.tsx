@@ -20,7 +20,7 @@ const OrdersPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(
+    const promise =  dispatch(
       getUserOrdersHistory({
         user_id: _id,
         page: page,
@@ -28,6 +28,10 @@ const OrdersPage = () => {
         caseStatus: caseStatus
       })
     );
+
+    return () => {
+      promise.abort()
+    }
   }, [dispatch, _id, page, limitRef, caseStatus]);
 
   const changeCase = useCallback((value: string) => {

@@ -1,24 +1,18 @@
 import { parseNumberToCurrency } from "@/helper/convertCurrency";
-import { OrderStatus } from "@/interfaces/bill";
-import { OrderItem } from "@/interfaces/order.interface";
+import { IBill, OrderStatus } from "@/interfaces/bill";
 import { Hash, Receipt, ScatterChart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useMemo } from "react";
+import ButtonsFunc from "./sub_components/ButtonsFunc";
 
 type Props = {
-  data: OrderItem;
+  data: IBill;
 };
 
 const ProductListItem = ({ data }: Props) => {
   const { _id, current_order_status, total_price } = data;
   const router = useRouter();
-  const typeNextCase = useMemo(() => {
-    switch (current_order_status.status) {
-      case OrderStatus.PENDING:
-        return OrderStatus.CONFIRM;
-    }
-  }, [current_order_status]);
 
   return (
     <>
@@ -44,22 +38,13 @@ const ProductListItem = ({ data }: Props) => {
           />
         </>
 
-        <div className=" pt-2 flex w-full md:w-fit h-[50px] gap-1 sm:gap-2 sm:ml-auto">
-          <button className="flex-[1] sm:w-[180px] text-gray-800 hover:text-rose-500 transition-all border rounded border-gray-800 hover:border-rose-500">
-            <p>Huỷ</p>
-          </button>
-          <button className="flex-[1] sm:w-[180px] bg-zinc-800 text-white hover:bg-zinc-600 rounded transition-all">
-            <p>{typeNextCase}</p>
-          </button>
-        </div>
+        <ButtonsFunc orderStatus={current_order_status.status}/>
       </li>
     </>
   );
 };
 
 export default ProductListItem;
-
-
 
 type SubProps = {
   data: number | string;
@@ -79,3 +64,5 @@ const SubItem = ({ data, label, icon }: SubProps) => {
     </>
   );
 };
+
+

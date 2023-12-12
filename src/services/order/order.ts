@@ -4,6 +4,7 @@ import {
   GetAllOrderBillRes,
   GetProductSoldRes,
 } from "../responses/order.responses";
+import { OrderItem } from "@/interfaces/order.interface";
 
 export const getBillByUser = (id_user: string, page: number) => {
   // console.log(id_user);
@@ -20,18 +21,26 @@ export const exportBillById = (billId: string | undefined) => {
   const response = instance.get<any>(`/order/export/${billId}`);
   return response;
 };
+
+
+type UpdateBillResponse = {
+  message: string,
+  data: IBill[]
+}
 export const updateBill = (
-  billId: string | undefined,
+  billId: string,
   orderStatus: string,
   paymentStatus: string
 ) => {
-  const response = instance.patch<any>(`/order/${billId}`, {
+  const response = instance.patch<any, UpdateBillResponse>(`/order/${billId}`, {
     orderStatus: orderStatus,
     paymentStatus: paymentStatus,
   });
   return response;
 };
+
 export const getProductSold = () => {
   const response = instance.get<any, GetProductSoldRes>("/analyst/product");
   return response;
 };
+

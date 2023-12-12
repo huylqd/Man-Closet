@@ -1,14 +1,14 @@
 "use client";
 
 import { useHash, useLocalStorage } from "@/hooks";
-import { ProductInCart } from "@/interfaces/product";
+import { ICheckoutProduct, ProductInCart } from "@/interfaces/product";
 import React, { useEffect, useState } from "react";
 import ProductListItem from "./ProductListItem";
 import {v4 as uuidv4} from "uuid"
 import style from "./productListItem.module.scss";
 
 type TCheckoutData = {
-  products : ProductInCart[],
+  products : ICheckoutProduct[],
   total: string
 }
 
@@ -35,6 +35,8 @@ const ProductListContent = () => {
 
   const isDataEmpty = isEmpty(state)
 
+  console.log(state)
+
   if(isDataEmpty){
     return (
       <>
@@ -46,7 +48,7 @@ const ProductListContent = () => {
   return (
     <>
       <ul className={style.product_list}>
-        {state.products.map(item => (
+        {state.products?.map(item => (
           <ProductListItem key={uuidv4()} data={item}/>
         )) }
       </ul>

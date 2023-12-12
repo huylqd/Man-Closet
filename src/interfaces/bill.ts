@@ -1,7 +1,5 @@
-import { OrderItem } from "./order.interface";
-
 export interface IBill {
-  _id?: string;
+  _id: string;
   user_id: string;
   items: IOrderItem[];
   shipping_address: string;
@@ -56,7 +54,7 @@ export type GetOrderHistoryResponse = {
   data: {
     message: string;
     result: {
-      items: OrderItem[];
+      items: IBill[];
       totalItem: number;
       itemPerPage: number;
       totalPage: number;

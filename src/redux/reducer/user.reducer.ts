@@ -3,8 +3,7 @@ import {
   PendingAction,
   RejectedAction,
 } from "@/interfaces/asyncThunk";
-import { GetOrderHistoryResponse } from "@/interfaces/bill";
-import { OrderItem } from "@/interfaces/order.interface";
+import { GetOrderHistoryResponse, IBill } from "@/interfaces/bill";
 import { IUser } from "@/interfaces/user";
 import { User } from "@/interfaces/user.interface";
 import { TAddress, addNewAddress } from "@/services/address.services";
@@ -21,7 +20,7 @@ import {
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type OrderHistoryResult = {
-  items: OrderItem[];
+  items: IBill[];
   totalItem: number;
   itemPerPage: number;
   totalPage: number;
@@ -163,7 +162,7 @@ export const getUserOrdersHistory = createAsyncThunk(
         caseStatus,
         signal
       );
-      
+
       return fulfillWithValue(response.data.result);
     } catch (error: any) {
       if (error.name === "AxiosError" && error.response.status === 404) {

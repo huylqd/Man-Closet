@@ -1,12 +1,12 @@
 import React from "react";
 import ProductListItem from "./ProductListItem";
 import { v4 as uuidv4 } from "uuid";
-import { OrderItem } from "@/interfaces/order.interface";
 import style from "./productList.module.scss";
 import { LineSkeleton } from "@/components/skeletons";
+import { IBill } from "@/interfaces/bill";
 
 type Props = {
-  data: OrderItem[];
+  data: IBill[];
   isLoading: boolean;
 };
 
