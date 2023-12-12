@@ -1,6 +1,6 @@
 import Footer from "@/components/main/footer";
 import Header from "@/components/main/header/header";
-import { getCookie, useLocalStorage } from "@/hooks";
+import {  useLocalStorage } from "@/hooks";
 import React from "react";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
