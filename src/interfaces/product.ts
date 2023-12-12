@@ -44,6 +44,19 @@ export interface IProductInCart {
   updatedAt?: Date;
 }
 
+export interface ICheckoutProduct {
+  product_id: string;
+  product_name: string;
+  property: {
+    quantity: number;
+    color: string;
+    size: string;
+    imageUrl: string
+  };
+  price: number;
+  sub_total: number;
+}
+
 export interface ProductSold {
   totalQuantitySold: number;
   totalAmountSold: number;
@@ -53,5 +66,5 @@ export interface ProductSold {
 
 export interface ProductInCart extends IProductInCart {
   totalPrice: number;
-  selected: boolean;
+  selected: boolean
 }

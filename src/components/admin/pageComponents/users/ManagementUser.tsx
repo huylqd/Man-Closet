@@ -43,8 +43,6 @@ const ManagementUser = () => {
       const response = await getAllUser(currentPage, limit);
       if (response) {
         const data: any = response;
-       
-        
         // const user = data.data.filter((u:IUser) => u.role !== "admin");
         setUsers(data.data)
         setTotalPages(data.paginate.totalPages)

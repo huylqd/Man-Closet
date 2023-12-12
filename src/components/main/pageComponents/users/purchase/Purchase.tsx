@@ -77,7 +77,7 @@ const Purchase = () => {
   
    
   return (
-    <div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
+    <div className="py-14 px-4">
     <div className="flex justify-start item-start space-y-2 flex-col ">
         <h1 className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9  text-gray-800">Order history</h1>
         <p className="text-base font-medium leading-6 text-gray-600">Check the status of recent orders, manage returns, and download invoices.</p>
@@ -108,16 +108,14 @@ const Purchase = () => {
                 </div>
              
               </div>
-    <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
+    <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full space-y-4 md:space-y-6 xl:space-y-0">
 
        
         <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
         {bill.map((bills:any,index:number) => {
-        return (
- 
+        return ( 
                     <div key={index} className="flex flex-col justify-start items-start bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                     <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">Recent orders</p>
-           
 
                                     {bills.items.map((item:any,index:number) => {
                                         return (

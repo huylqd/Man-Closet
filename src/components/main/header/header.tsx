@@ -7,12 +7,23 @@ import Link from "next/link";
 import Modal from "@/components/modal/Modal";
 import SearchModal from "./SearchModal";
 import MenuModal from "../navigation/MenuModal";
-import { useUserInfo } from "@/hooks";
+import {  useUserInfo } from "@/hooks";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getProductsInCart } from "@/redux/reducer/cart.reducer";
-
+import Cookies from "js-cookie";
 const Header = () => {
-  const [isSearch, setIsSearch] = useState(false);
+  const accessToken = Cookies.get("accessToken")
+  const userInfo = Cookies.get("user") 
+ 
+  if(accessToken){
+  localStorage.setItem("accessToken", accessToken)
+  Cookies.remove("accessToken")
+  }
+  if(userInfo){
+    localStorage.setItem("user", userInfo)
+    Cookies.remove("user")
+  }
+    const [isSearch, setIsSearch] = useState(false);
   const cart = useAppSelector(state =>state.cart.products)
   const dispatchThunk = useAppDispatch()
   const user = useUserInfo()
@@ -30,13 +41,7 @@ const Header = () => {
   // const handleOpenMenuMobile = (value: boolean) => {
   //   setIsOpenMenuMb(value)
   // }
-  if(typeof window !== 'undefined'){
-    const url = new URL(window.location.href);
-    const accessToken = url.searchParams.get('accessToken');
-    if(accessToken !== null){
-      localStorage.setItem("accessToken",accessToken)
-    }
-  }
+ 
    let user_id = '';
    if(user){
     user_id = user._id

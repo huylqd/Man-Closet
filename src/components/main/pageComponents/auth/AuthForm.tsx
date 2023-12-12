@@ -108,10 +108,6 @@ const AuthForm = () => {
     setIsLoading(true);
     if(action === "google"){
        window.location.href = "http://localhost:8088/api/auth/google";  
-      
-    //  const loginGoogle =  await loginWithGoogle();
-    //  console.log(loginGoogle);
-     
     }
   };
   return (

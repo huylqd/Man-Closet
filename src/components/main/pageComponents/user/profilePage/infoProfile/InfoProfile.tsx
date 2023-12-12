@@ -23,7 +23,6 @@ const InfoProfile = () => {
   const router = useRouter();
   const {_id} = useUserInfo()
   const user = useAppSelector((state) => state.user.user);
-
   // modal state
   const [isEditName, setIsEditName] = useState(false);
   const [isEditEmail, setIsEditEmail] = useState(false);

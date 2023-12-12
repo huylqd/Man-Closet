@@ -2,14 +2,16 @@
 import { Button } from '@/components/ui/button'
 import { getAllCategory } from '@/services/categories/category'
 import { createPro } from '@/services/products/products'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 
 const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
     if (!isvisiblePro) return null
     const [indexes, setIndexes] = useState<number[]>([]);
     const [counter, setCounter] = useState(0);
-    const [cate, setCate] = useState([])
+    const [cate, setCate] = useState([]);
+    const reader = new FileReader();
+    const [selectImage,setSelectImage] = useState<FileList | null>(null);
     useEffect(() => {
         getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({ data }) => setCate(data))
     }, [])
@@ -21,34 +23,80 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
     } = useForm()
 
     const addFriend = () => {
-
         setIndexes(prevIndexes => [...prevIndexes, counter]);
         setCounter(counter + 1);
-
     };
     const removeFriend = (index: any) => () => {
         setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
         setCounter(prevCounter => prevCounter - 1);
     };
+  
+    const hanđleChanegFile = (e:ChangeEvent<HTMLInputElement>) => {
+        setSelectImage(e.target.files)     
+        console.log(e.target.files);
+         
+        // if (file !== undefined) {
+           
+        //     reader.onloadend = () => {
+        //         setSelectImage((curr:any) => [...curr, file])          
+        // };
+        // }
+       
+      };
     const onHandleSubmit = async (data: any) => {
-
-        const body = {
-            productName: data.productName,
-            price: data.price,
-            description: data.description,
-            properties: [{
-                imageUrl: data.imageUrl,
-                color: data.color,
-                variants: [{
-                    quantity: data.quantity,
-                    size: data.size,
-                }]
-
-            }],
-            categoryId: data.categoryId
+        try {
+            const formData = new FormData();
+                formData.append('productName', data.productName);
+                formData.append('price', data.price);
+                formData.append('description', data.description);   
+                formData.append('categoryId', data.categoryId);
+                console.log(formData);
+                if(selectImage !== null){
+                    for (let i = 0; i < selectImage.length; i++) {                                    
+                        formData.append('images', selectImage[i]);
+                      }
+                }
+               // Append properties array to the form data
+               for (let i = 0; i < data.properties.length; i++) {
+                
+                const property = data.properties[i];
+                formData.append(`properties[${i}][color]`, property.color);        
+                for (let j = 0; j < property.variants.length; j++) {
+                  const variant = property.variants[j];
+          
+                  formData.append(`properties[${i}][variants][${j}][size]`, variant.size);
+                  formData.append(`properties[${i}][variants][${j}][quantity]`, variant.quantity);
+                }
+              }
+             
+              
+                await add(formData)
+        } catch (error:any) {
+            console.error('Error creating product:', error.response.data);
         }
+            // data.images = selectImage[0]
+            // console.log(data);
+        
+            // const body:any = {
+            //     productName: data.productName,
+            //     price: data.price,
+            //     description: data.description,
+            //     properties: [{             
+                    
+            //         color: data.color,
+            //         variants: [{
+            //             quantity: data.quantity,
+            //             size: data.size,
+            //         }]
+        
+            //     }],
+            
+            //     categoryId: data.categoryId
+            // }
+        
+        
 
-        await add(data)
+            // await add(data)
 
 
 
@@ -57,7 +105,7 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
 
 
     return (
-        <div className="overflow-y-auto pt-[40px]  fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
+        <div className="overflow-y-auto pt-[40px] fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
             <div className=" overflow-y-auto relative p-4 w-full max-w-3xl h-full md:h-auto">
                 <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                     <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
@@ -69,8 +117,7 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <form action='' onSubmit={handleSubmit(onHandleSubmit)} >
-
+                    <form action='' onSubmit={handleSubmit(onHandleSubmit)} encType="multipart/form-data">
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
                             <div>
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
@@ -93,34 +140,31 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
                                 <input type="number"  {...register('price')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="$2999" required />
                             </div>
-                            <div className="grid gap-4 sm:col-span-2 md:gap-6 sm:grid-cols-4 ">
+                            <div className="grid gap-4 sm:col-span-2 md:gap-6  ">
                                 {indexes.map((item, index) => {
-                                    console.log('nhwcc', item);
                                     return (
-                                        <fieldset>
-                                            <div className="mb-4">
-                                                <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Images</span>
-                                                <div className="flex justify-center items-center w-full">
-
-                                                    <input type="text" {...register(`properties[${index}].imageUrl`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
-
-                                                </div>
+                                        <fieldset className='flex flex-row justify-between'>
+                                            <div className="mb-4 w-[15%]">
+                                                <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Images</span>
+                                                <div className="flex justify-center items-center w-full">                                                                                             
+                                                <input type="file"
+                                                 className="w-full text-black text-xs  bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:w-full  file:hover:bg-gray-700 file:text-white rounded" onChange={hanđleChanegFile} />
                                             </div>
-
-                                            <div>
+                                            </div>
+                                            <div className=' w-[15%]'>
                                                 <label htmlFor="breadth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color</label>
                                                 <input type="text" {...register(`properties[${index}].color`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="15" required />
                                             </div>
-                                            <div>
-                                                <div>
+                                            
+                                                <div className='w-[15%]'>
                                                     <label htmlFor="length" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size</label>
                                                     <input type="text" {...register(`properties[${index}].variants[0].size`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required />
                                                 </div>
-                                                <div>
+                                                <div className=' w-[15%]'>
                                                     <label htmlFor="width" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
                                                     <input type="number" {...register(`properties[${index}].variants[0].quantity`)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" required />
                                                 </div>
-                                            </div>
+                                          
                                             <Button variant={'primary'} type="button" className='mt-4' onClick={removeFriend(index)}>
                                                 Remove
                                             </Button>
@@ -128,14 +172,15 @@ const ModalPro = ({ isvisiblePro, add, product, onClosePro }: any) => {
                                     )
 
                                 })}
-                                <Button variant={'primary'} type="submit" onClick={addFriend} >
-                                    Add
-                                </Button>
+                                
 
 
 
 
                             </div>
+                            <Button className='w-[75px]' variant={'primary'} type="submit" onClick={addFriend} >
+                                    Add
+                            </Button>
                             <div className="sm:col-span-2"><label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label><textarea  {...register('description')} rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Write product description here"></textarea></div>
                         </div>
 

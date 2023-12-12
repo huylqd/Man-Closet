@@ -136,7 +136,7 @@ const MenuModal = ({ onClose, isOpen }: MenuModalProps) => {
                 >
                   <div className="relative w-[30px] h-[30px] md:w-[50px] md:h-[50px] rounded-full overflow-hidden border border-zinc-800">
                     <Image
-                      src={gc_4}
+                      src={user.avatar}
                       alt="avatar"
                       fill
                       style={{ objectFit: "cover" }}
