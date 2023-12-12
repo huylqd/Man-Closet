@@ -1,9 +1,19 @@
+'use client'
 import { useCurrency } from "@/hooks";
 import { getAllCategory } from "@/services/categories/category"
+import { useEffect, useState } from "react";
 
 
 
-
+const getAllCategories = () => {
+    const [categories, setCategories] = useState([])
+  
+    useEffect(() => {
+      
+    }, [])
+  
+    return categories;
+  };
 
 
 export const dataFake = [

@@ -12,6 +12,7 @@ const instance = axios.create({
       // Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       "Content-Type": "application/json",
     },
+    
 });
 
 instance.interceptors.request.use(

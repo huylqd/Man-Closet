@@ -6,7 +6,7 @@ export const signUp = (user: any) => {
     return res
 }
 export const signIn = (user: any) => {
-    const res = instance.post("/signIn", user);
+    const res = instance.post("/signIn", user, { withCredentials: true });
     return res
 }
 export const lockUser = (userId: any) => {

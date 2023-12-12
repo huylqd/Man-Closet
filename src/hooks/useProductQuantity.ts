@@ -14,7 +14,7 @@ type Params = {
 const useProductQuantity = ({ _id, color, size, iniTialQuantity }: Params) => {
   const product = useAppSelector((state) => state.product.product);
   const [inventory, setInventory] = useState(0);
-  const [amount, setAmount] = useState<string>(iniTialQuantity.toString());
+  const [amount, setAmount] = useState<string>(iniTialQuantity?.toString());
 
   const dispatch = useAppDispatch();
 

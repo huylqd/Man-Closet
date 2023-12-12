@@ -6,7 +6,6 @@ import React from 'react'
 
 const BreadcrumbAdmin = () => {
     const pathName = usePathname();
-    console.log(pathName);
     const currentBreadcrumb = pathName.split("/").slice(-2)[1];
     
   return (

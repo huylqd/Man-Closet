@@ -23,6 +23,7 @@ const CategoryContainer = ({ data }:ModalCate) => {
     const handleCategoryClick = (index:any) => {
       setOpenCategory((prevIndex) => (prevIndex === index ? null : index));
     };
+    
   
     return (
       <div className=" w-[120%] md:w-[80%]">

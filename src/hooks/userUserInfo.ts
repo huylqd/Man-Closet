@@ -7,6 +7,7 @@ type TUserInfo = {
   _id: string;
   isBlocked: boolean;
   name: string;
+  avatar:string,
   email: string;
   role: string;
   address: TAddress[];

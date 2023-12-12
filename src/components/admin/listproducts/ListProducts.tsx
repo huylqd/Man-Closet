@@ -23,6 +23,7 @@ const ListProducts = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [key, setKey] = useState<string>('');
+
     // useEffect(() => {
     //     getAll().then(({ data }: any) => setProducts(data))
     // }, [])
@@ -34,14 +35,10 @@ const ListProducts = () => {
             const response = await getAll(currentPage);
             if (response) {
                 const data: any = response;
-
-
                 setProducts(data.data)
                 setTotalPages(data.pagination.totalPages)
                 // console.log('page', data);
-
             } else {
-
             }
         } else {
             const response = await getAll(currentPage);
@@ -90,7 +87,7 @@ const ListProducts = () => {
     const handleChange = (e: any) => {
         setKey(e.target.value)
     }
-
+ 
     const onhandleRemove = (id: string) => {
         if (confirm('Are you sure you want to remove')) {
             deletePro(id)
@@ -128,14 +125,12 @@ const ListProducts = () => {
     };
 
     const handleAdd = async (prod: any) => {
+        console.log(prod);
+        
         createPro(prod)
             .then(({ data }: any) => {
-                // console.log(data);
-
-                // getAllCategory()?.then(({ data }) => setCategories(data.data));
                 const newCategories = [...products];
                 console.log(newCategories);
-
                 // Thêm sản phẩm mới vào danh sách
                 newCategories.push(data);
                 // Cập nhật state `categories` với danh sách mới
