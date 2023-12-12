@@ -1,38 +1,64 @@
-
 export interface IBill {
-  _id?: string,
+  _id: string;
   user_id: string;
   items: IOrderItem[];
   shipping_address: string;
   payment_method: string;
   total_price: number;
-  history_order_status: IHistoryStatus[];
+  history_order_status: IOrderStatus[];
   id_transaction: String;
   createdAt: Date;
   updatedAt: Date;
-  userName?: string
+  userName?: string;
+  payment_status: IPaymentStatus;
+  current_order_status: IOrderStatus;
 }
+
 export enum OrderStatus {
-  Processing = "Đang xử lý",
-  NotPaid = "Chưa thanh toán",
-  Paid = "Đã thanh toán",
-  Delivering = "Đang giao hàng",
-  Received = "Đã nhận",
-  Cancelled = "Đã hủy",
+  PENDING = "Chờ xác nhận",
+  CONFIRM = "Đã xác nhận",
+  DELIVERY = "Đang giao",
+  RECEIVER = "Đã giao",
+  CANCEL = "Đã huỷ",
+  EXCHANGE = "Đổi hàng",
 }
-export interface IHistoryStatus {
-  _id?: string,
+export interface IOrderStatus {
+  _id?: string;
   status: OrderStatus;
-  createdAt: Date;
+  updatedAt: Date;
 }
+export enum PaymentStatus {
+  UNPAID = "Chưa thanh toán",
+  PAID = "Đã thanh toán",
+}
+
+export interface IPaymentStatus {
+  _id?: string;
+  status: PaymentStatus;
+  updatedAt: Date;
+}
+
 export interface IOrderItem {
   product_id: string;
   property: {
     quantity: number;
     color: string;
     size: string;
-    imageUrl: string
+    imageUrl: string;
   };
   price: number;
   sub_total: number;
 }
+
+export type GetOrderHistoryResponse = {
+  data: {
+    message: string;
+    result: {
+      items: IBill[];
+      totalItem: number;
+      itemPerPage: number;
+      totalPage: number;
+      currentPage: number;
+    };
+  };
+};

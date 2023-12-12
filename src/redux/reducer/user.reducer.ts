@@ -1,3 +1,9 @@
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "@/interfaces/asyncThunk";
+import { GetOrderHistoryResponse, IBill } from "@/interfaces/bill";
 import { IUser } from "@/interfaces/user";
 import { User } from "@/interfaces/user.interface";
 import { TAddress, addNewAddress } from "@/services/address.services";
@@ -7,16 +13,29 @@ import {
   getAllUser,
   getUserAddress,
   getUserById,
+  getUserOrderHistory,
   updateUserAddress,
   updateUserInfo,
 } from "@/services/user/user";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+type OrderHistoryResult = {
+  items: IBill[];
+  totalItem: number;
+  itemPerPage: number;
+  totalPage: number;
+  currentPage: number;
+};
 
 interface UserState {
   user: IUser;
   users: User[];
   address: TAddress[];
   countUser: 0;
+  userOrdersHistory: OrderHistoryResult;
+  errorsMessage: string | undefined;
+  isLoading: boolean;
+  currentRequestId: undefined | string;
 }
 
 const initialState: UserState = {
@@ -24,6 +43,10 @@ const initialState: UserState = {
   users: [],
   address: [],
   countUser: 0,
+  userOrdersHistory: {} as OrderHistoryResult,
+  errorsMessage: undefined,
+  isLoading: false,
+  currentRequestId: undefined,
 };
 
 // asyncThunk
@@ -118,35 +141,106 @@ export const updateUserAddressState = createAsyncThunk(
   }
 );
 
+type GetUserOrdersHistory = {
+  user_id: string;
+  page: number;
+  limit: number;
+  caseStatus: string;
+};
+
+export const getUserOrdersHistory = createAsyncThunk(
+  "user/ordersHistory",
+  async (
+    { user_id, page, limit, caseStatus }: GetUserOrdersHistory,
+    { fulfillWithValue, rejectWithValue, signal }
+  ) => {
+    try {
+      const response = await getUserOrderHistory(
+        user_id,
+        page,
+        limit,
+        caseStatus,
+        signal
+      );
+
+      return fulfillWithValue(response.data.result);
+    } catch (error: any) {
+      if (error.name === "AxiosError" && error.response.status === 404) {
+        return rejectWithValue(error.response.data);
+      }
+      throw error;
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(getAllUserState.fulfilled, (state, action) => {
-      state.users = action.payload;
-    }),
-      builder.addCase(getUserByIdState.fulfilled, (state, action) => {
+    builder
+      .addCase(getAllUserState.fulfilled, (state, action) => {
+        state.users = action.payload;
+      })
+      .addCase(getUserByIdState.fulfilled, (state, action) => {
         state.user = action.payload;
-      }),
-      builder.addCase(updateUserInfoState.fulfilled, (state, action) => {
+      })
+      .addCase(updateUserInfoState.fulfilled, (state, action) => {
         state.user = action.payload;
-      }),
-      builder.addCase(addNewAddressState.fulfilled, (state, action) => {
+      })
+      .addCase(addNewAddressState.fulfilled, (state, action) => {
         state.address.push(action.payload);
-      }),
-      builder.addCase(getAddressByUserIdState.fulfilled, (state, action) => {
+      })
+      .addCase(getAddressByUserIdState.fulfilled, (state, action) => {
         state.address = action.payload;
-      }),
-      builder.addCase(deleteAddressState.fulfilled, (state, action) => {
+      })
+      .addCase(deleteAddressState.fulfilled, (state, action) => {
         state.address = action.payload;
-      }),
-      builder.addCase(updateUserAddressState.fulfilled, (state, action) => {
+      })
+      .addCase(updateUserAddressState.fulfilled, (state, action) => {
         state.address = action.payload;
-      }),
-      builder.addCase(getCountUserState.fulfilled, (state, action) => {
-        state.countUser = action.payload[0].totalNewUsers;
-      });
+      })
+      .addCase(
+        getUserOrdersHistory.fulfilled,
+        (state, action: PayloadAction<OrderHistoryResult>) => {
+          state.userOrdersHistory = action.payload;
+        }
+      ),
+      builder
+        .addCase(getCountUserState.fulfilled, (state, action) => {
+          state.countUser = action.payload[0].totalNewUsers;
+        })
+        .addMatcher<PendingAction>(
+          (action) => action.type.endsWith("/pending"),
+          (state, action) => {
+            state.isLoading = true;
+            state.currentRequestId = action.meta.requestId;
+          }
+        )
+        .addMatcher<FulfilledAction>(
+          (action) => action.type.endsWith("/fulfilled"),
+          (state, action) => {
+            if (
+              state.isLoading &&
+              action.meta.requestId === state.currentRequestId
+            ) {
+              state.isLoading = false;
+              state.currentRequestId = undefined;
+            }
+          }
+        )
+        .addMatcher<RejectedAction>(
+          (action) => action.type.endsWith("/rejected"),
+          (state, action) => {
+            if (
+              state.isLoading &&
+              action.meta.requestId === state.currentRequestId
+            ) {
+              state.isLoading = false;
+              state.currentRequestId = undefined;
+            }
+          }
+        );
   },
 });
 

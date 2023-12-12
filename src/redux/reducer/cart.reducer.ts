@@ -60,7 +60,7 @@ const cartSlice = createSlice({
       }
     )
     .addMatcher<RejectedAction>(
-      (action) => action.type.endsWith("/pending"),
+      (action) => action.type.endsWith("/rejected"),
       (state, action) => {
         if(state.loading && action.meta.requestId === state.currentRequestId){
           state.loading = false
@@ -69,7 +69,7 @@ const cartSlice = createSlice({
       }
     )
     .addMatcher<FulfilledAction>(
-      (action) => action.type.endsWith("/pending"),
+      (action) => action.type.endsWith("/fulfilled"),
       (state, action) => {
         if(state.loading && action.meta.requestId === state.currentRequestId){
           state.loading = false

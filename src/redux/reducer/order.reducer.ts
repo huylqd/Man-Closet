@@ -1,5 +1,4 @@
 import { IBill } from "@/interfaces/bill"
-import { OrderItem } from "@/interfaces/order.interface"
 import { ProductSold } from "@/interfaces/product"
 import { Thongkedoanhthu, Thongkedonhang } from "@/services/analyst/analyst"
 import { getAllOrderBill, getProductSold, updateBill } from "@/services/order/order"
@@ -7,7 +6,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 interface OrderState {
   productSold: ProductSold[]
-  orders: OrderItem[],
+  orders: IBill[],
   updateBill: IBill[],
   countBill: number,
   doanhthu: number,
@@ -54,11 +53,16 @@ export const getDoanhThuState = createAsyncThunk(
   }
 );
 
+type TUpdateParams = {
+  billId : string,
+  orderStatus: string,
+  paymentStatus: string
+}
 export const changeStatusBillState = createAsyncThunk(
   "order/updateStatusBillState",
-  async (data: IUpdateProps) => {
-    const { billId, status } = data
-    const response = await updateBill(billId, status)
+  async (data: TUpdateParams) => {
+    const { billId, orderStatus, paymentStatus } = data
+    const response = await updateBill(billId, orderStatus, paymentStatus)
     return response.data
   }
 )

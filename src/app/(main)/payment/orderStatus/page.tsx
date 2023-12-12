@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
-const PaymentStatusPage = () => {
+const OrderStatusPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -48,4 +48,4 @@ const PaymentStatusPage = () => {
   );
 };
 
-export default PaymentStatusPage;
+export default OrderStatusPage;

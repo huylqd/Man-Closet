@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useHash, useLocalStorage } from "@/hooks";
 import { ProductInCart } from "@/interfaces/product";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 
 const ControlBar_SC = ({
   totalBillPrice,
@@ -17,13 +17,30 @@ const ControlBar_SC = ({
   const {setItem} = useLocalStorage("checkoutData")
   const {encodeObjectBase64} = useHash()
 
+  const productWillThrough = useMemo(() => {
+      return productsSelected.map((product) => {
+        return {
+          product_id: product._id,
+          price: product.price,
+          product_name: product.name,
+          property: {
+            quantity: product.quantity,
+            color: product.color,
+            size: product.size,
+            imageUrl: product.imageUrl,
+          },
+          sub_total: product.totalPrice,
+        }
+      })
+  }, [productsSelected])
+
   const goToCheckout = () => {
     if(productsSelected.length === 0 ){
       return  
     }
 
     const data = {
-      products: productsSelected,
+      products: productWillThrough,
       total: totalBillPrice
     }
 

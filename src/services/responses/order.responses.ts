@@ -1,4 +1,4 @@
-import { OrderItem } from "@/interfaces/order.interface";
+import { IBill } from "@/interfaces/bill";
 import { ProductSold } from "@/interfaces/product";
 import { AxiosResponse } from "axios";
 
@@ -9,7 +9,7 @@ export interface GetProductSoldRes extends AxiosResponse {
 
 export interface GetAllOrderBillRes extends AxiosResponse {
   message: string;
-  data: OrderItem[];
+  data: IBill[];
   paginate: {
     currentPage: number,
     totalPages: number,
