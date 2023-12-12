@@ -26,15 +26,15 @@ const useProductQuantity = ({ _id, color, size, iniTialQuantity }: Params) => {
     setInventory(
       product.properties?.[
         product.properties?.findIndex(
-          (item) => item.color.toLowerCase() === color.toLowerCase()
+          (item) => item.color.toLowerCase() === color?.toLowerCase()
         )
       ]?.variants?.[
         product.properties?.[
           product.properties?.findIndex(
-            (item) => item.color.toLowerCase() === color.toLowerCase()
+            (item) => item.color.toLowerCase() === color?.toLowerCase()
           )
         ]?.variants.findIndex(
-          (item) => item.size.toLowerCase() === size.toLowerCase()
+          (item) => item.size.toLowerCase() === size?.toLowerCase()
         )
       ]?.quantity
     );

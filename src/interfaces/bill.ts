@@ -62,3 +62,16 @@ export type GetOrderHistoryResponse = {
     };
   };
 };
+export const ORDER_STATUS = {
+  PENDING: "Chờ xác nhận",
+  CONFIRM: "Đã xác nhận",
+  DELIVERY: "Đang giao",
+  RECEIVER: "Đã giao",
+  CANCEL: "Đã huỷ",
+  EXCHANGE: "Đổi hàng",
+};
+
+export const PAYMENT_STATUS = {
+  UNPAID: "Chưa thanh toán",
+  PAID: "Đã thanh toán",
+};
