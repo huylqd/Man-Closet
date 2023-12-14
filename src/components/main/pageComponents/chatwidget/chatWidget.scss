@@ -1,0 +1,64 @@
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 1000;
+  }
+  
+  .chat-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    display: none;
+    z-index: 9999;
+  }
+  
+  .chat-widget.open {
+    display: block;
+  }
+  
+  .chat-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  // .chat-headers {
+    
+  //   padding: 0 2rem;
+    
+  // }
+  .user-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .avatar {
+    img {
+      height: 3rem;
+      width: 3rem;
+      border-radius: 50%;
+    }
+  }
+  .username {
+    h3 {
+      color: white;
+    }
+  }
+  .chat-content {
+    max-height: 500px; /* Giới hạn chiều cao tối đa của phần nội dung chat và thêm thanh cuộn */
+    overflow-y: auto;
+  }
