@@ -5,13 +5,16 @@ import {
   parseCurrencyToNumber,
   parseNumberToCurrency,
 } from "@/helper/convertCurrency";
-import { useHash, useLocalStorage } from "@/hooks";
+import { useHash, useLocalStorage, useUserInfo } from "@/hooks";
 import { ProductInCart } from "@/interfaces/product";
-import { useAppSelector } from "@/redux/store";
+import { deleteProductInCartAsync } from "@/redux/reducer/cart.reducer";
+import { getAddressByUserIdState } from "@/redux/reducer/user.reducer";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { deleteProductInCart } from "@/services/cart.services";
 import instance from "@/services/instance";
 import { CircleDollarSign, ScrollText } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 type TCheckoutData = {
   products: ProductInCart[];
@@ -22,11 +25,19 @@ const CheckoutInfo = () => {
   const router = useRouter();
   const { getItemAndSetValue } = useLocalStorage("checkoutData");
   const { decodeObjectBase64 } = useHash();
-  const billAddress = useAppSelector((state) => state.bill.address);
+  const userAddressList = useAppSelector((state) => state.user.address);
+
+  const selectAddress = useMemo(() => userAddressList.find(item => item.isDefault === true), [userAddressList])
 
   const [state, setState] = useState<TCheckoutData>({} as TCheckoutData);
   const shipCode = 30000;
   const [totalBill, setTotalBill] = useState(0);
+  const {_id} = useUserInfo()
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(getAddressByUserIdState(_id))
+  }, [dispatch, _id])
 
   useEffect(() => {
     const item = decodeObjectBase64(getItemAndSetValue());
@@ -52,7 +63,7 @@ const CheckoutInfo = () => {
   const payment = async () => {
     if (localStorage.getItem("user")) {
       const body = {
-        shipping_address: billAddress,
+        shipping_address: `${selectAddress?.detailAddress}, ${selectAddress?.wards}, ${selectAddress?.district}, ${selectAddress?.city}`,
         payment_method: "vnpay",
         items: state.products,
         total_price: totalBill,
@@ -66,6 +77,7 @@ const CheckoutInfo = () => {
         let response: any;
         if (body.payment_method === "vnpay") {
           response = await instance.post("order/create_payment_url", data);
+          dispatch(deleteProductInCartAsync({user_id: _id, data: data.items}))
           router.push(response);
           // 
           // 

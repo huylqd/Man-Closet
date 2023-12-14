@@ -14,6 +14,7 @@ import Cookies from "js-cookie";
 const Header = () => {
   const accessToken = Cookies.get("accessToken")
   const userInfo = Cookies.get("user") 
+  const rfToken = Cookies.get("refreshToken") 
  
   if(accessToken){
   localStorage.setItem("accessToken", accessToken)
@@ -21,6 +22,10 @@ const Header = () => {
   }
   if(userInfo){
     localStorage.setItem("user", userInfo)
+    Cookies.remove("user")
+  }
+  if(rfToken){
+    localStorage.setItem("refreshToken", rfToken)
     Cookies.remove("user")
   }
     const [isSearch, setIsSearch] = useState(false);
@@ -78,7 +83,7 @@ const Header = () => {
               >
                 <Search className="w-5 h-5 transition group-hover:text-gray-600" />
               </div>
-              <div className="hidden md:block">
+              <div className="block">
                 <Link
                   href={"/shopping_cart"}
                   className="relative group w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"

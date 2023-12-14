@@ -40,6 +40,7 @@ export interface IPaymentStatus {
 
 export interface IOrderItem {
   product_id: string;
+  product_name: string;
   property: {
     quantity: number;
     color: string;

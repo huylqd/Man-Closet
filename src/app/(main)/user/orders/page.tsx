@@ -43,6 +43,7 @@ const OrdersPage = () => {
       <section>
         <Tabline changeCase={changeCase}/>
         <div className="pt-5">
+          <h5 className="pb-2 font-medium text-gray-800">Đơn hàng:</h5>
           <ProductList data={userOrdersHistory?.items} isLoading={isLoading}/>
         </div>
       </section>
