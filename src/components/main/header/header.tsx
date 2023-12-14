@@ -83,7 +83,7 @@ const Header = () => {
               >
                 <Search className="w-5 h-5 transition group-hover:text-gray-600" />
               </div>
-              <div className="hidden md:block">
+              <div className="block">
                 <Link
                   href={"/shopping_cart"}
                   className="relative group w-8 h-8 flex items-center justify-center overflow-hidden transition cursor-pointer p-1"

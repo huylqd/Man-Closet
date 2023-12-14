@@ -42,6 +42,7 @@ const MediumTable_SC = ({
   handleChangeSelect,
   handleUpdateQuantity,
 }: Props) => {
+
   return (
     <>
       <div className="w-full">

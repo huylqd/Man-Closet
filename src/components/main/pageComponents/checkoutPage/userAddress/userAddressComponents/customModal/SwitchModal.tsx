@@ -1,26 +1,33 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
-import { setBillAddress } from "@/redux/reducer/bill.reducer";
-import { useAppDispatch } from "@/redux/store";
+import { useUserInfo } from "@/hooks";
+import { getAddressByUserIdState, updateUserAddressState } from "@/redux/reducer/user.reducer";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { TAddress } from "@/services/address.services";
 import { ArrowLeft, Plus } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 
 const ListItem = ({
   address,
   onClose,
-  addressIdSelected,
 }: {
   address: TAddress;
   onClose: () => void;
-  addressIdSelected: string;
 }) => {
   const dispatch = useAppDispatch()
-
+  const {_id: user_id} = useUserInfo()
   const handleSelect = () => {
-    dispatch(setBillAddress(address))
-    onClose();
+    dispatch(updateUserAddressState({
+      user_id: user_id,
+      address_id: address?._id as string,
+      data: {
+        isDefault: true
+      }
+    }))
+    onClose()
   };
 
   return (
@@ -32,7 +39,7 @@ const ListItem = ({
         className={
           "flex items-center justify-center w-[16px] h-[16px] bg-transparent rounded-full border " +
           `${
-            address?._id === addressIdSelected
+            address.isDefault === true
               ? "border-[--secondary-color]"
               : "border-zinc-300"
           }`
@@ -42,7 +49,7 @@ const ListItem = ({
           className={
             "block w-[8px] h-[8px] rounded-full " +
             `${
-              address?._id === addressIdSelected
+              address.isDefault === true
                 ? "bg-[--secondary-color]"
                 : "bg-zinc-300"
             }`
@@ -60,16 +67,21 @@ const ListItem = ({
 };
 
 type Props = {
-  addressList: TAddress[];
   onClose: () => void;
-  addressIdSelected: string;
 };
 
 const SwitchModal = ({
-  addressList,
   onClose,
-  addressIdSelected,
 }: Props) => {
+  const { _id } = useUserInfo();
+  const userAddressList = useAppSelector((state) => state.user.address);
+
+
+  const dispatchThunk = useAppDispatch();
+
+  useEffect(() => {
+    dispatchThunk(getAddressByUserIdState(_id));
+  }, [dispatchThunk, _id]);
   return (
     <>
       <div className="bg-white w-[500px] p-6 rounded">
@@ -83,12 +95,11 @@ const SwitchModal = ({
 
         <div className="bg-zinc-100 rounded">
           <ul className="min-h-[300px] overflow-y-auto p-2">
-            {addressList.map((item) => (
+            {userAddressList.map((item) => (
               <ListItem
                 address={item}
                 key={uuidv4()}
                 onClose={onClose}
-                addressIdSelected={addressIdSelected}
               />
             ))}
           </ul>
