@@ -14,6 +14,7 @@ import Cookies from "js-cookie";
 const Header = () => {
   const accessToken = Cookies.get("accessToken")
   const userInfo = Cookies.get("user") 
+  const rfToken = Cookies.get("refreshToken") 
  
   if(accessToken){
   localStorage.setItem("accessToken", accessToken)
@@ -21,6 +22,10 @@ const Header = () => {
   }
   if(userInfo){
     localStorage.setItem("user", userInfo)
+    Cookies.remove("user")
+  }
+  if(rfToken){
+    localStorage.setItem("refreshToken", rfToken)
     Cookies.remove("user")
   }
     const [isSearch, setIsSearch] = useState(false);
