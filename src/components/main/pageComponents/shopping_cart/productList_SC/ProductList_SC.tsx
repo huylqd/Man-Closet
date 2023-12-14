@@ -28,8 +28,13 @@ const ProductList_SC = () => {
   const [productsSelected, setProductsSelected] = useState<ProductInCart[]>([]);
   const [billPrice, setBillPrice] = useState<number[]>([]);
 
+  console.log(productList)
+
   useEffect(() => {
-    dispatchThunk(getProductsInCart());
+    const promise = dispatchThunk(getProductsInCart());
+    return () => {
+      promise.abort()
+    }
   }, [dispatchThunk]);
 
   useEffect(() => {
