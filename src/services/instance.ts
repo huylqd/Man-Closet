@@ -1,16 +1,18 @@
 import { commonErrorToast, commonSuccessToast } from "@/utils/notify";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 
 interface MyResponseData {
   accessToken: string; // or the actual type of your accessToken
   // other properties if there are any
 }
+
 const instance = axios.create({
     baseURL: "http://localhost:8088/",
     headers: {
-      // Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      // "Content-Type": "application/json",
     },
     
 });
@@ -59,7 +61,8 @@ instance.interceptors.response.use(
       }
       if(err.response.status === 401 && err.response.data.message == 'Refresh Token hết hạn') {
         // const router = useRouter();
-        localStorage.clear()
+        localStorage.clear();
+        window.location.href = "/auth"
         commonErrorToast("Token hết hạn")
         // router.push("/auth")
       }

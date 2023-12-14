@@ -59,3 +59,7 @@ export const getUserOrderHistory = (
   );
   return response;
 };
+
+export const updateUserAvatar =  (userId:string | undefined,files:any) => {
+  return axios.patch(`http://localhost:8088/user/${userId}/avatar`,files)
+}

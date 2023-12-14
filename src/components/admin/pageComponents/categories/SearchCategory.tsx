@@ -16,7 +16,7 @@ const SearchCategory = ({onHandleChange,onSearch}:ISearchCategory) => {
                   className="flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                   type="button"
                 >
-                  All categories
+                  Tất cả danh mục
                   <svg
                     className="w-2.5 h-2.5 ml-2.5"
                     aria-hidden="true"
@@ -40,7 +40,7 @@ const SearchCategory = ({onHandleChange,onSearch}:ISearchCategory) => {
                     onChange={onHandleChange}
                     id="search-dropdown"
                     className="block outline-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-gray-500"
-                    placeholder="Search Categories  "
+                    placeholder="Tìm kiếm...  "
               
                   />
                   <button

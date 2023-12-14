@@ -185,7 +185,7 @@ const ManagementCategory = () => {
         <section>
           <div>
             <h1 className="font-bold text-xl pt-6 pb-6 dark:text-black">
-              Management Categories
+              Quản lý danh mục sản phẩm
             </h1>
           </div>
           <div className="font-bold text-xl pb-6">
@@ -210,7 +210,7 @@ const ManagementCategory = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              New Category
+              Thêm mới
             </button>
           </div>
         </section>
@@ -221,11 +221,11 @@ const ManagementCategory = () => {
                 STT
               </th>
               <th scope="col" className="px-6 py-3">
-                Category name
+                 Tên danh mục
               </th>
 
               <th scope="col" className="px-6 py-3 overflow-x-auto ">
-                Action
+                Chức năng
               </th>
             </tr>
           </thead>

@@ -1,6 +1,6 @@
 
 export const Messages = {
-    ADD_SUCCESS: 'Add successfully',
+    ADD_SUCCESS: 'Thêm thành công ',
     ADD_NOT_SUCCESS: 'Add failed',
     UPDATE_SUCCESS: 'Update successfully',
     UPDATE_NOT_SUCCESS: 'Update failed',

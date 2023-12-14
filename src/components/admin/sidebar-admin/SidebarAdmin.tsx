@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import SidebarAdminItemLink from "./SidebarAdminItemLink";
+import { useUserInfo } from "@/hooks";
 
 const data = [
   {
@@ -62,9 +63,9 @@ const data = [
 const SidebarAdmin = () => {
   const pathName = usePathname();
   const [activeLink, setActiveLink] = useState("");
-
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
-
+  const user = useUserInfo();
+  
   useEffect(() => {
     setActiveLink(pathName.split("/")[pathName.split("/").length - 1]);
   }, [pathName]);
@@ -146,12 +147,12 @@ const SidebarAdmin = () => {
                   layout="fill"
                   style={{ objectFit: "cover" }}
                   alt="avatar-img"
-                  src="https://images.unsplash.com/profile-fb-1697722741-189fcdfa0a62.jpg?bg=fff&crop=faces&dpr=2&h=32&w=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+                  src={user.avatar}
                 />
               </div>
             </div>
             <div className="profile_content">
-              <div className="name">Duong</div>
+              <div className="name">{user.name}</div>
               <div className="designation">Admin</div>
             </div>
           </div>

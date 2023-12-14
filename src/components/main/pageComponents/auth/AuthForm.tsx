@@ -3,8 +3,6 @@ import { BannerV2 } from '@/components/banner';
 import { Input } from '@/components/form';
 import React, { useState, useCallback, useRef } from 'react'
 import { useForm, FieldValues, SubmitHandler,FieldErrors } from "react-hook-form";
-import { BsGithub, BsGoogle } from "react-icons/bs";
-import AuthSocialButton from './AuthSocialButton';
 import Image from 'next/image';
 import style from './authform.module.scss'
 import { cn } from '@/lib/utils';
@@ -12,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import {loginWithGoogle, signIn, signUp } from '@/services/auth/auth';
 import Toaster from '@/components/Toaster/Toaster';
 import { useParams, useRouter } from 'next/navigation';
-import { validateInput } from '@/components/validation/ValidateForm';
+
 type Variant = "LOGIN" | "REGISTER" | "FORGOT_PASSWORD";
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>('LOGIN');
@@ -125,8 +123,8 @@ const AuthForm = () => {
 
   <div className="w-full h-100">
 
-
-    <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12 dark:text-gray-700">   {variant === 'LOGIN' ? 'Sign in to your account' : (variant === 'REGISTER' ? 'Register an account' : 'Forgot password')}</h1>
+   
+    <h1 className="text-xl flex items-center  md:text-2xl font-bold leading-tight mt-12 dark:text-gray-700">   {variant === 'LOGIN' ? 'Sign in to your account' : (variant === 'REGISTER' ? 'Register an account' : 'Forgot password')}</h1>
 
     <form className="mt-6" onSubmit={handleSubmit(onSubmit)} >
     <div className="mt-4">
