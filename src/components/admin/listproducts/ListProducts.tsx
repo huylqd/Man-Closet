@@ -82,31 +82,32 @@ const ListProducts = () => {
             // fetchData(currentPage)
         }
     }
-    console.log(products);
 
     const handleChange = (e: any) => {
         setKey(e.target.value)
     }
  
-    const onhandleRemove = (id: string) => {
+    const onhandleRemove =async (id: string) => {
         if (confirm('Are you sure you want to remove')) {
-            deletePro(id)
-                .then(({ data }: any) => {
-                    // alert("Xóa thành công!");
-                    setProducts(
-                        products.filter((item: any) => item._id !== data._id)
-                    );
-                })
-            alert("Xóa thành công!");
+            const remove = await  deletePro(id)
+           
+            if(remove){
+                setProducts(
+                    products.filter((item: any) => item._id !== remove.data._id)
+                );
+                toasterRef.current.showToast("success", "Xóa thành công");
+
+            }
+           
         }
 
         // await deletePro(id)
 
     }
-    const onhandleUpdate = async (category: any) => {
+    const onhandleUpdate = async (category: any,id:string) => {
         // console.log(category);
 
-        updatePro(category)
+        updatePro(category,id)
             .then(() => {
                 // console.log(cate);
                 // Gọi hàm showToast bên trong component Toaster
@@ -220,7 +221,7 @@ const ListProducts = () => {
                     <tbody>
                         {products.map((data: IProduct, index: number) => {
                             return (
-                                <tr key={uuidv4()} className="border-b bg-white dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <tr key={index} className="border-b bg-white dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td className="p-4 w-4">
 
                                         <div className="flex items-center">

@@ -1,6 +1,7 @@
 import { IProduct } from "@/interfaces/product";
 import instance from "../instance";
 import { GetAllProductResponse, GetProductResponse } from "../responses/product.responses";
+  
 
 export const getById = (id: string) => {
   const res = instance.get<any, GetProductResponse>(`api/products/${id}`);
@@ -34,11 +35,12 @@ export const filterProduct = (page:number,sort:string,order:string) => {
 
 
 export const createPro = (products: any) => {
+
   const res = instance.post(`api/products`, products);
   return res;
 };
-export const updatePro = (products: any) => {
-  const res = instance.patch(`api/products/${products._id}`, products);
+export const updatePro = (products: any,id:string) => {
+  const res = instance.patch(`api/products/${id}`, products);
   return res;
 };
 export const deletePro = (id: string) => {

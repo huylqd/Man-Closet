@@ -3,7 +3,7 @@
 import Modal from "@/components/modal/Modal";
 import { PenSquare } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   ModalEditAvatar,
   ModalEditEmail,
@@ -18,6 +18,7 @@ import {
 import { IUser } from "@/interfaces/user";
 import { useRouter } from "next/navigation";
 import { useUserInfo } from "@/hooks";
+import { updateUserAvatar } from "@/services/user/user";
 
 const InfoProfile = () => {
   const router = useRouter();
@@ -28,7 +29,6 @@ const InfoProfile = () => {
   const [isEditEmail, setIsEditEmail] = useState(false);
   const [isEditAvatar, setIsEditAvatar] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
-
   const dispatchThunk = useAppDispatch();
 
   useEffect(() => {
@@ -52,6 +52,25 @@ const InfoProfile = () => {
     setIsEditAvatar(false);
     setIsEditPassword(false);
   };
+  const onSelectedAvatar = async (event:ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      console.log(event.target.files); // Kiểm tra giá trị của event.target.files
+      const file = event.target.files[0];
+      const formData: any = new FormData();
+      formData.append('avatar', file);
+      try {
+        const editAvatar = await updateUserAvatar(user._id,formData);
+        if(editAvatar){
+        const users = await dispatchThunk(getUserByIdState(_id));
+        localStorage.setItem("user",JSON.stringify(users.payload))
+        }
+      } catch (error) {
+        console.error("Error updating avatar:", error);
+      }
+   
+    }   
+  }
+
   return (
     <>
       <div className="flex flex-col md:flex-row-reverse gap-2">
@@ -60,7 +79,7 @@ const InfoProfile = () => {
           <div className="relative md:w-[160px] md:h-[160px] w-[100px] h-[100px] rounded-full overflow-hidden border-2 border-zinc-800">
             <Image
               src={
-                "https://images.unsplash.com/profile-fb-1697722741-189fcdfa0a62.jpg?bg=fff&crop=faces&dpr=2&h=32&w=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+                user.avatar
               }
               alt="avatar"
               width={500}
@@ -78,7 +97,7 @@ const InfoProfile = () => {
               <p className="text-white text-center">Sửa</p>
             </label>
           </div>
-          <input type="file" id="changeAvatar" className="hidden" />
+          <input type="file" id="changeAvatar" className="hidden" onChange={onSelectedAvatar} />
         </div>
 
         <div className="flex-[1]">
