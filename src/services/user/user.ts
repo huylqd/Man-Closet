@@ -54,7 +54,7 @@ export const getUserOrderHistory = (
   signal?: AbortSignal
 ) => {
   const response = axios.get<any, GetOrderHistoryResponse>(
-    `http://localhost:8088/users/${user_id}/orders?page=${page}&&limit=${limit}&&case=${caseStatus}`,
+    `http://localhost:8088/users/${user_id}/orders?page=${page}&limit=${limit}&case=${caseStatus}`,
     { signal: signal }
   );
   return response;

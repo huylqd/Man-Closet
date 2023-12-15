@@ -219,6 +219,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
       dispatchThunk(addProductToCart(data));
       onClose();
       commonSuccessToast("Thêm sản phẩm thành công");
+
     } else {
       toast.error("Vui lòng xem lại dữ liệu đã lựa chọn");
       console.log("no");

@@ -1,18 +1,20 @@
 "use client";
 
+import ButtonsFunc from "@/components/main/pageComponents/user/ordersPage/productList/sub_components/ButtonsFunc";
 import { parseNumberToCurrency } from "@/helper/convertCurrency";
 import { customDate } from "@/helper/convertDate";
 import { getBillByIdAsync } from "@/redux/reducer/order.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { cloneDeep } from "lodash";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const OrderDetailPage = () => {
   const { id } = useParams();
-  const router = useRouter()
+  const router = useRouter();
   const { order, isLoading, errorMessage } = useAppSelector(
     (state) => state.order
   );
@@ -30,9 +32,11 @@ const OrderDetailPage = () => {
     return <NotFound />;
   }
 
-  if (isLoading ) {
+  if (isLoading) {
     return <Loading />;
   }
+
+  const orderHistoryArr = cloneDeep(order?.history_order_status);
   return (
     <>
       <div>
@@ -40,7 +44,10 @@ const OrderDetailPage = () => {
           <h5 className="font-medium text-gray-800 underline">
             Thông tin đơn hàng:
           </h5>
-          <button className="flex items-center text-gray-800 hover:text-gray-500 transition-all" onClick={() => router.push("/user/orders")}>
+          <button
+            className="flex items-center text-gray-800 hover:text-gray-500 transition-all"
+            onClick={() => router.push("/user/orders")}
+          >
             <ChevronLeft /> <span>Quay lại</span>
           </button>
         </div>
@@ -66,7 +73,8 @@ const OrderDetailPage = () => {
                     <div className="pl-2 flex flex-col">
                       <p className="flex-[1]">{item?.product_name}</p>
                       <p>
-                        Phân loại: {item?.property?.size}, {item?.property?.color}
+                        Phân loại: {item?.property?.size},{" "}
+                        {item?.property?.color}
                       </p>
                       <p>Số lượng: {item?.property?.quantity}</p>
                     </div>
@@ -94,7 +102,7 @@ const OrderDetailPage = () => {
           <div>
             <p className="font-medium text-gray-500">Lịch sử vận chuyển</p>
             <ul className="flex flex-col gap-3">
-              {order?.history_order_status?.reverse()?.map((item, index) => {
+              {orderHistoryArr?.reverse()?.map((item, index) => {
                 return (
                   <li key={uuidv4()}>
                     <div className="flex items-start gap-3">
@@ -113,6 +121,15 @@ const OrderDetailPage = () => {
               })}
             </ul>
           </div>
+        </div>
+        <div>
+          <ButtonsFunc
+            orderStatus={order.current_order_status?.status}
+            data={{
+              billId: order?._id,
+              payment_status: order?.payment_status?.status,
+            }}
+          />
         </div>
       </div>
     </>

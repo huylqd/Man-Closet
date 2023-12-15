@@ -58,6 +58,11 @@ module.exports = {
         hostname: "lh3.googleusercontent.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "inkythuatso.com",
+        port: "",
+      },
 
     ],
   },

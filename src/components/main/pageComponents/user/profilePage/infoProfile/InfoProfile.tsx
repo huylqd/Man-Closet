@@ -17,7 +17,8 @@ import {
 } from "@/redux/reducer/user.reducer";
 import { IUser } from "@/interfaces/user";
 import { useRouter } from "next/navigation";
-import { useUserInfo } from "@/hooks";
+import { useLocalStorage, useUserInfo } from "@/hooks";
+import ModalEditPhone from "./infoProductModals/ModalEditPhone";
 
 const InfoProfile = () => {
   const router = useRouter();
@@ -28,8 +29,12 @@ const InfoProfile = () => {
   const [isEditEmail, setIsEditEmail] = useState(false);
   const [isEditAvatar, setIsEditAvatar] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+  const [isEditPhone, setIsEditPhone] = useState(false)
 
+  const {setItem, getItemAndSetValue} = useLocalStorage("user")
   const dispatchThunk = useAppDispatch();
+
+  const userInfoInLocal = getItemAndSetValue()
 
   useEffect(() => {
     dispatchThunk(getUserByIdState(_id));
@@ -41,9 +46,11 @@ const InfoProfile = () => {
         id: user._id as string,
         data: data,
       };
-
+      setItem({...userInfoInLocal, ...data})
       dispatchThunk(updateUserInfoState(value));
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleCloseModal = () => {
@@ -51,6 +58,7 @@ const InfoProfile = () => {
     setIsEditEmail(false);
     setIsEditAvatar(false);
     setIsEditPassword(false);
+    setIsEditPhone(false)
   };
   return (
     <>
@@ -60,7 +68,7 @@ const InfoProfile = () => {
           <div className="relative md:w-[160px] md:h-[160px] w-[100px] h-[100px] rounded-full overflow-hidden border-2 border-zinc-800">
             <Image
               src={
-                "https://images.unsplash.com/profile-fb-1697722741-189fcdfa0a62.jpg?bg=fff&crop=faces&dpr=2&h=32&w=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+                user.avatar
               }
               alt="avatar"
               width={500}
@@ -133,6 +141,23 @@ const InfoProfile = () => {
               </span>
             </div>
           </div>
+          {/* phone */}
+          <div className="pb-4">
+            <label className="text-gray-600 uppercase text-sm font-normal pb-2">
+              Số điện thoại
+            </label>
+            <div
+              className="flex w-full md:w-fit"
+              onClick={() => setIsEditPhone(true)}
+            >
+              <h5 className="flex-[1] text-gray-800 border-b pr-4 md:pr-10">
+                {user.phone? user.phone : "Thêm số điện thoại"}
+              </h5>
+              <span className="text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
+                <PenSquare className="w-5 h-5" />
+              </span>
+            </div>
+          </div>
           {/* address */}
           <div className="pb-4">
             <p
@@ -173,6 +198,14 @@ const InfoProfile = () => {
           onUpdate={handleUpdateUserInfo}
           onClose={handleCloseModal}
           initialValue={user.password}
+        />
+      </Modal>
+      {/* modal edit phone */}
+      <Modal isOpen={isEditPhone} handleClose={handleCloseModal}>
+        <ModalEditPhone 
+          onUpdate={handleUpdateUserInfo}
+          onClose={handleCloseModal}
+          initialValue={user.phone || ""}
         />
       </Modal>
     </>

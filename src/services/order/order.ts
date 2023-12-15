@@ -25,15 +25,18 @@ export const exportBillById = (billId: string | undefined) => {
 };
 
 type TGetBillById = {
-  message: string,
-  data: IBill
-}
+  message: string;
+  data: IBill;
+};
 export const getBillById = (bill_id: string, signal?: AbortSignal) => {
-  const response = instance.get<any, TGetBillById>(`/order/orderId/${bill_id}`, {
-    signal: signal,
-  });
+  const response = instance.get<any, TGetBillById>(
+    `/order/orderId/${bill_id}`,
+    {
+      signal: signal,
+    }
+  );
 
-  return response
+  return response;
 };
 
 type UpdateBillResponse = {
@@ -54,5 +57,31 @@ export const updateBill = (
 
 export const getProductSold = () => {
   const response = instance.get<any, GetProductSoldRes>("/analyst/product");
+  return response;
+};
+
+type TGetOrders = {
+  message: string;
+  result: {
+    items: IBill[];
+    totalItem: number;
+    itemPerPage: number;
+    totalPage: number;
+    currentPage: number;
+  };
+};
+export const getOrders = (
+  page: number = 1,
+  limit: number = 10,
+  orderStatus: string = "",
+  paymentState: string = "",
+  signal: AbortSignal
+) => {
+  const response = instance.get<any, TGetOrders>(
+    `/orders?page=${page}&&limit=${limit}&&orderStatus=${orderStatus}&&paymentStatus=${paymentState}`,
+    {
+      signal: signal,
+    }
+  );
   return response;
 };

@@ -1,6 +1,12 @@
 import { parseNumberToCurrency } from "@/helper/convertCurrency";
 import { IBill, OrderStatus } from "@/interfaces/bill";
-import { Hash, Package, Receipt, ScatterChart, ShoppingBag } from "lucide-react";
+import {
+  Hash,
+  Package,
+  Receipt,
+  ScatterChart,
+  ShoppingBag,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useMemo } from "react";
@@ -11,9 +17,10 @@ type Props = {
 };
 
 const ProductListItem = ({ data }: Props) => {
-  const { _id, current_order_status, total_price, payment_status, items } = data;
+  const { _id, current_order_status, total_price, payment_status, items } =
+    data;
   const router = useRouter();
-  const itemsName = items.map(item => item.product_name).join(", ")
+  const itemsName = items.map((item) => item.product_name).join(", ");
   return (
     <>
       <li
@@ -48,7 +55,10 @@ const ProductListItem = ({ data }: Props) => {
           />
         </>
 
-        <ButtonsFunc orderStatus={current_order_status.status}/>
+        <ButtonsFunc
+          orderStatus={current_order_status.status}
+          data={{ billId: _id, payment_status: payment_status.status }}
+        />
       </li>
     </>
   );
@@ -74,5 +84,3 @@ const SubItem = ({ data, label, icon }: SubProps) => {
     </>
   );
 };
-
-

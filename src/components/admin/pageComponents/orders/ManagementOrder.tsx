@@ -34,6 +34,7 @@ const ManagementOrder = () => {
 
   const order = useAppSelector((state) => state.order.updateBill);
   const dispatchThunk = useAppDispatch();
+
   useEffect(() => {
     // fetchData(currentPage, limit)
     Promise.all([
@@ -88,7 +89,7 @@ const ManagementOrder = () => {
     fetchData(page, limit);
   };
 
-  // console.log("bill", billAll)
+
 
   const URL = "http://localhost:8088/order/export";
   const exportBill = (id: any) => {
