@@ -9,22 +9,18 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import instance from "@/services/instance";
-
-type MyEvents = {
-  exampleEvent: (data: string) => void;
-  addUser: (userId: string) => void;
-  sendMsg: (msg: string) => void
-};
+import { getAllMessage, sendMessage } from "@/services/message/message";
 
 const ChatWidget = ({ isOpen, onClose }: any) => {
   const router = useRouter();
-  const scrollRef = useRef<Socket<MyEvents> | any>(null);
+  const scrollRef = useRef<any>(null);
   const [dataAdmin, setDataAdmin] = useState<any>()
   const [messages, setMessages] = useState<any>([]);
   const [currentUser, setCurrentUser] = useState<any>(undefined);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
 
-  const socket = useRef<Socket<MyEvents> | any>(null);
+
+  const socket = useRef<any>(null);
   useEffect(() => {
     if (!localStorage.getItem('user')) {
       router.push("/auth");
@@ -47,46 +43,54 @@ const ChatWidget = ({ isOpen, onClose }: any) => {
 
 
   useEffect(() => {
-    const getAllMessage = async () => {
-      const data = await instance.post('api/message/getAllMessage', {
-        to: "656772fa0437e8234a8c6f43",
-        from: currentUser?._id
-      })
-      console.log("all message", data); 
-      setMessages(data)
+    const getMessage = async () => {
+      const dataGetAllMessage = {
+        from: currentUser?._id,
+        to: dataAdmin?._id,
+      }
+      const response = await getAllMessage(dataGetAllMessage)
+      console.log('message,', response);
+      setMessages(response);
     }
-    getAllMessage()
-  }, [currentUser])
+    getMessage()
+  }, [dataAdmin])
 
   const handleSendMsg = async (msg: string) => {
     const user = JSON.parse(localStorage.getItem("user") as string)
+    console.log('socket', socket);
+
     socket.current.emit("sendMsg", {
       to: dataAdmin?._id,
       from: user._id,
       msg,
     });
-   
-    await instance.post('api/message/addMessage', {
+
+    const dataSendMessage = {
       from: user._id,
       to: dataAdmin?._id,
       message: msg,
-    })
+    }
+
+    await sendMessage(dataSendMessage)
 
     const msgs: any = [...messages];
     msgs.push({ fromSelf: true, message: msg });
     setMessages(msgs);
   };
-  
+
+  console.log('message', messages);
+
+
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve", (msg: string) => {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
-  }, []);
+  }, [socket.current]);
 
   useEffect(() => {
-    arrivalMessage && setMessages((prev:any ) => [...prev, arrivalMessage]);
+    arrivalMessage && setMessages((prev: any) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
   useEffect(() => {
@@ -114,14 +118,13 @@ const ChatWidget = ({ isOpen, onClose }: any) => {
 
       </div>
       <div className="chat-messages">
-      {messages.map((message:any ) => {
-       
+        {messages.map((message: any) => {
+
           return (
             <div ref={scrollRef} key={uuidv4()}>
               <div
-                className={`message ${
-                  message.fromSelf ? "sended" : "recieved"
-                }`}
+                className={`message ${message.fromSelf ? "sended" : "recieved"
+                  }`}
               >
                 <div className="content ">
                   <p>{message.message}</p>
