@@ -12,6 +12,7 @@ module.exports = {
         hostname: "images.unsplash.com",
         port: "",
       },
+      
       {
         protocol: "https",
         hostname: "scontent.fhan3-3.fna.fbcdn.net",
