@@ -1,7 +1,33 @@
 import TitleGap from "@/components/titleGap";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { FaRegMessage } from "react-icons/fa6";
+import instance from "@/services/instance";
+import { getUserById } from "@/services/user/user";
+import ChatWidget from "../../chatwidget/ChatWidget";
 
 const Welcome = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const openChat = () => {
+    setIsChatOpen(true);
+  };
+
+  const closeChat = () => {
+    setIsChatOpen(false);
+  };
+
+  const FloatingButton = () => {
+    const toggleChat = () => {
+      setIsChatOpen(!isChatOpen);
+    };
+  
+    return (
+      <div className="floating-button" onClick={toggleChat}>
+        <FaRegMessage className="w-8 h-8"/>
+      </div>
+    );
+  };
+  
   return (
     <>
       <div>
@@ -13,6 +39,8 @@ const Welcome = () => {
           gu thời trang của bạn.
         </p>
       </div>
+      <FloatingButton />
+      <ChatWidget isOpen={isChatOpen} onClose={closeChat} />
     </>
   );
 };

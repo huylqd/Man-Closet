@@ -10,6 +10,7 @@ import {
   LogOut,
   X,
   Home,
+  MessageSquare
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,6 +33,11 @@ const data = [
     href: "orders",
     icon: <Package className="w-6 h-6" />,
     name: "Đơn hàng",
+  },
+  {
+    href: "chats",
+    icon: <MessageSquare />,
+    name: "Chats",
   },
   {
     href: "products",

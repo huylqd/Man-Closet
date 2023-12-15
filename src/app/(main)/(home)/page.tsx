@@ -50,7 +50,6 @@ const Home = () => {
       <section className="py-4 md:py-8 section_container">
         <GridProduct />
       </section>
-   
     </div>
   );
 };
