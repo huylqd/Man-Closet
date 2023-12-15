@@ -11,7 +11,7 @@ export const addProductToCartAxios = (
   user_id: string,
   product_data: IProductInCart
 ) => {
-  const res = instance.post(`api/cart/add-to-cart`, {
+  const res = instance.patch(`api/cart/add-to-cart`, {
     user_id,
     product: product_data,
   });

@@ -12,6 +12,7 @@ type TUserInfo = {
   role: string;
   address: TAddress[];
   updatedAt: Date;
+  phone: string
 };
 
 const useUserInfo = () => {

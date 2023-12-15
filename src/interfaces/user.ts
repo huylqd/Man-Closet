@@ -15,9 +15,10 @@ export interface IUser {
   avatar:string;
   confirmPassword: string;
   address?: Address[];
-  phone?: number | undefined;
+  phone?: string;
   isBlocked: boolean;
   role: string;
+  avatar: string
 }
 
 export interface ILoginRegister {
