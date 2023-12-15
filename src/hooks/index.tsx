@@ -5,6 +5,7 @@ import useAddress from "./useAddress";
 import useProductQuantity from "./useProductQuantity";
 import useLocalStorage from "./useLocalStorage";
 import useHash from "./useHash";
+import useChangeDate from './useChangeDate';
 
 
 
@@ -17,6 +18,6 @@ export {
   useProductQuantity,
   useLocalStorage,
   useHash,
-  
-  
+  useChangeDate
+
 };

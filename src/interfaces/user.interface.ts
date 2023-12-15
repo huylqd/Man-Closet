@@ -10,4 +10,5 @@ export interface User {
     wards: string;
     detailAdress: string;
   }[];
+  avatar?: string
 }

@@ -18,6 +18,7 @@ import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import { commonErrorToast, commonInfoToast, commonSuccessToast } from "@/utils/notify";
 import { addRemoveWishList } from "@/services/auth/auth";
+import { Comment } from "../../home";
 
 const ImageItem = ({ src }: { src: string }) => {
   return (
@@ -37,7 +38,7 @@ const Detail = () => {
   const { productId } = useParams();
   // state
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const product= useAppSelector((state) => state.product.product);
+  const product = useAppSelector((state) => state.product.product);
   const user = useUserInfo()
 
   const dispatchThunk = useAppDispatch();
@@ -53,28 +54,28 @@ const Detail = () => {
   };
   const handleWishlist = async () => {
     try {
-      if(!user){
+      if (!user) {
         commonErrorToast("Bạn cần đăng nhập để thực hiện chức năng")
-      }else{
+      } else {
         const data = {
-          name:product.productName,
-          imageUrl:product.properties[0].imageUrl,
-          price:product.price,
+          name: product.productName,
+          imageUrl: product.properties[0].imageUrl,
+          price: product.price,
         }
-       const addWishList =  await addRemoveWishList(data)
-        if(addWishList){
+        const addWishList = await addRemoveWishList(data)
+        if (addWishList) {
           commonSuccessToast("Thêm sản phẩm yêu thích thành công")
         }
-  
+
       }
-    } catch (error:any) {
+    } catch (error: any) {
       // console.log(error);
-      
+
       commonErrorToast(`${error.response.data.message}`)
-      
+
     }
-  
-  
+
+
   }
 
   return (
@@ -174,6 +175,7 @@ const Detail = () => {
           </button>
         </div>
       </div>
+      <Comment productId={productId} />
 
       {/* modal */}
       <AddToCardModal
@@ -181,6 +183,7 @@ const Detail = () => {
         onClose={handleCloseModal}
         product={product}
       />
+
     </>
   );
 };
