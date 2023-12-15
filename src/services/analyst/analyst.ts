@@ -1,19 +1,23 @@
 import instance from "../instance";
 import { GetProductSoldRes } from "../responses/order.responses";
 
-export const getProductSold = () => {
-  const response = instance.get<any, GetProductSoldRes>("/analyst/product");
+export const getProductSold = (filter: any) => {
+  const response = instance.post<any>("/analyst/product", filter);
   return response;
 };
-export const Thongkedonhang = () => {
-  const response = instance.get<any>("/analyst/bill");
+export const Thongkedonhang = (filter: any) => {
+  const response = instance.post<any>("/analyst/bill", filter);
   return response;
 };
-export const Thongkedoanhthu = () => {
-  const response = instance.get<any>("/analyst/doanhthu");
+export const Thongkedoanhthu = (filter: any) => {
+  const response = instance.post<any>("/analyst/doanhthu", filter);
   return response;
 };
-export const Thongketaikhoanmoi = () => {
-  const response = instance.get<any>("/analyst/user");
+export const Thongketaikhoanmoi = (filter: any) => {
+  const response = instance.post<any>("/analyst/user", filter);
+  return response;
+};
+export const Top5UserMuaHang = (filter: any) => {
+  const response = instance.post<any>("/analyst/top5User", filter);
   return response;
 };

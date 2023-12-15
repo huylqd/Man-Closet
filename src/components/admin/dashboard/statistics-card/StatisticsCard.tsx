@@ -14,7 +14,7 @@ import {
 import { getCountUserState } from "@/redux/reducer/user.reducer";
 import { User } from "@/interfaces/user.interface";
 
-const StatisticsCard = () => {
+const StatisticsCard = ({ filter }: any) => {
   const ordersState = useAppSelector((state) => state.order.orders);
   const countBillState = useAppSelector((state) => state.order.countBill);
   const usersState = useAppSelector((state) => state.user.countUser);
@@ -24,14 +24,14 @@ const StatisticsCard = () => {
   const [users, setUsers] = useState(0);
   const [countBill, setCountBill] = useState(0);
   const [doanhthu, setDoanhThu] = useState(0);
-  const dispatchThunk = useAppDispatch();
+  // const dispatchThunk = useAppDispatch();
 
-  useEffect(() => {
-    dispatchThunk(getAllOrderBillState());
-    dispatchThunk(getCountUserState());
-    dispatchThunk(getCountBillState());
-    dispatchThunk(getDoanhThuState());
-  }, [dispatchThunk]);
+  // useEffect(() => {
+  //   dispatchThunk(getAllOrderBillState());
+  //   dispatchThunk(getCountUserState());
+  //   dispatchThunk(getCountBillState());
+  //   dispatchThunk(getDoanhThuState());
+  // }, [dispatchThunk]);
 
   useEffect(() => {
     setOrders(ordersState?.length);
@@ -42,27 +42,27 @@ const StatisticsCard = () => {
 
   const statisticsData2 = [
     {
-      title: "Số lượng đơn hàng đã bán trong tháng",
+      title: `Số lượng đơn hàng đã bán trong ${filter}`,
       data: {
         complete: countBill,
-        kpi: 10,
-        percentage: usePercentage(countBill, 10),
+        kpi: 30,
+        percentage: usePercentage(countBill, 30),
       },
     },
     {
-      title: "Khách hàng mới trong tháng",
+      title: `Khách hàng mới trong ${filter}`,
       data: {
         complete: users,
-        kpi: 50,
-        percentage: usePercentage(users, 50),
+        kpi: 30,
+        percentage: usePercentage(users, 30),
       },
     },
     {
-      title: "Doanh thu trong tháng",
+      title: `Doanh thu trong ${filter}`,
       data: {
         complete: useCurrency(doanhthu),
-        kpi: useCurrency(2000000),
-        percentage: usePercentage(doanhthu, 2000000),
+        kpi: useCurrency(100000000),
+        percentage: usePercentage(doanhthu, 100000000),
       },
     },
   ];

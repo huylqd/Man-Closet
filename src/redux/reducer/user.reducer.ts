@@ -59,8 +59,8 @@ export const getAllUserState = createAsyncThunk(
 );
 export const getCountUserState = createAsyncThunk(
   "user/getCountUser",
-  async (_, thunkAPI) => {
-    const response = await Thongketaikhoanmoi();
+  async (data: any) => {
+    const response = await Thongketaikhoanmoi(data);
     return response.data;
   }
 );
@@ -208,7 +208,11 @@ const userSlice = createSlice({
       ),
       builder
         .addCase(getCountUserState.fulfilled, (state, action) => {
-          state.countUser = action.payload[0].totalNewUsers;
+          if (!action.payload[0]) {
+            state.countUser = 0;
+          } else {
+            state.countUser = action.payload[0]?.totalNewUsers;
+          }
         })
         .addMatcher<PendingAction>(
           (action) => action.type.endsWith("/pending"),

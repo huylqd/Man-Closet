@@ -5,12 +5,16 @@ import {
 } from "@/interfaces/asyncThunk";
 import { IBill } from "@/interfaces/bill";
 import { ProductSold } from "@/interfaces/product";
-import { Thongkedoanhthu, Thongkedonhang } from "@/services/analyst/analyst";
+import {
+  Thongkedoanhthu,
+  Thongkedonhang,
+  Top5UserMuaHang,
+  getProductSold,
+} from "@/services/analyst/analyst";
 import {
   getAllOrderBill,
   getBillById,
   getOrders,
-  getProductSold,
   updateBill,
 } from "@/services/order/order";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -30,6 +34,7 @@ interface OrderState {
   isLoading: boolean;
   currentRequestId: string | undefined;
   errorMessage: string | undefined;
+  users: any; //mảng chứa các user đã chi tiêu trong tháng
 }
 interface IUpdateProps {
   billId: string;
@@ -47,15 +52,16 @@ const initialState: OrderState = {
   order: {} as IBill,
   countBill: 0,
   doanhthu: 0,
+  users: [],
   isLoading: false,
   currentRequestId: undefined,
   errorMessage: undefined,
 };
-
+//THống kê
 export const getProductSoldState = createAsyncThunk(
   "order/getProductSold",
-  async (_, thunkAPI) => {
-    const response = await getProductSold();
+  async (data: any) => {
+    const response = await getProductSold(data);
     return response.data;
   }
 );
@@ -69,19 +75,25 @@ export const getAllOrderBillState = createAsyncThunk(
 );
 export const getCountBillState = createAsyncThunk(
   "order/getCountBill",
-  async (_, thunkAPI) => {
-    const response = await Thongkedonhang();
+  async (data: any) => {
+    const response = await Thongkedonhang(data);
     return response.data;
   }
 );
 export const getDoanhThuState = createAsyncThunk(
   "order/getDoanhThu",
-  async (_, thunkAPI) => {
-    const response = await Thongkedoanhthu();
+  async (data: any) => {
+    const response = await Thongkedoanhthu(data);
     return response.data;
   }
 );
-
+export const topUserChiTieu = createAsyncThunk(
+  "order/getUserChiTieu",
+  async (data: any) => {
+    const response = await Top5UserMuaHang(data);
+    return response.data;
+  }
+);
 type TUpdateParams = {
   billId: string;
   orderStatus: string;
@@ -157,6 +169,9 @@ const orderSlice = createSlice({
       });
     builder.addCase(getDoanhThuState.fulfilled, (state, action) => {
       state.doanhthu = action.payload[0].totalAmountSold;
+    });
+    builder.addCase(topUserChiTieu.fulfilled, (state, action) => {
+      state.users = action.payload;
     });
     builder
       .addCase(changeStatusBillState.fulfilled, (state, action) => {

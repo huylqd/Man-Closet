@@ -8,31 +8,29 @@ interface StatisticsTableProps {
   data: ProductSold[];
 }
 
-const StatisticsTable = ({ data }: StatisticsTableProps) => {
+const StatisticsTableUser = ({ data }: any) => {
   return (
     <>
       <div className="bg-white  px-6 py-3 ">
         <h2 className="pb-6 text-lg font-medium text-center">
-          Sản phẩm bán chạy
+          Top 5 Khách hàng chi tiêu nhiều
         </h2>
         <div className="overflow-x-auto flex flex-col gap-2">
           <div className="flex py-2 bg-slate-50 rounded">
-            <div className="flex-[1] flex justify-center items-center">Stt</div>
-            <div className="flex-[2] flex justify-center items-center">Ảnh</div>
-            <div className="flex-[6] flex justify-center items-center">Tên</div>
+            <div className="flex-[1] flex justify-center items-center">STT</div>
             <div className="flex-[3] flex justify-center items-center">
-              Doanh thu
+              Họ tên
             </div>
             <div className="flex-[3] flex justify-center items-center">
-              Đã bán
+              Email
             </div>
             <div className="flex-[2] flex justify-center items-center">
-              Chi tiết
+              Tổng tiền
             </div>
           </div>
 
           <ul className="flex flex-col gap-2 py-1">
-            {data.map((item, index) => {
+            {data?.map((item: any, index: any) => {
               return (
                 <StatisticsTableItem key={uuidv4()} index={index} data={item} />
               );
@@ -44,4 +42,4 @@ const StatisticsTable = ({ data }: StatisticsTableProps) => {
   );
 };
 
-export default StatisticsTable;
+export default StatisticsTableUser;
