@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { createPro, deletePro, getAll, updatePro } from "@/services/products/products";
+import { createPro, deletePro, getAll, removeProduct, updatePro } from "@/services/products/products";
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import { Fragment_Mono } from "next/font/google";
@@ -86,20 +86,21 @@ const ListProducts = () => {
     const handleChange = (e: any) => {
         setKey(e.target.value)
     }
- 
-    const onhandleRemove =async (id: string) => {
-        if (confirm('Are you sure you want to remove')) {
-            const remove = await  deletePro(id)
-           
-            if(remove){
-                setProducts(
-                    products.filter((item: any) => item._id !== remove.data._id)
+        const onhandleRemove = async (id: string) => {
+            if (confirm('Are you sure you want to remove')) {
+                const remove = await  removeProduct(id) ;                
+                if(remove){
+                    const updatedProducts = products.map((item) =>
+                    item._id === id ? { ...item, deleted: true } : item
                 );
-                toasterRef.current.showToast("success", "Xóa thành công");
+                    setProducts(
+                        updatedProducts
+                    );
+                    toasterRef.current.showToast("success", "Xóa thành công");
 
+                }
+            
             }
-           
-        }
 
         // await deletePro(id)
 
@@ -219,7 +220,7 @@ const ListProducts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((data: IProduct, index: number) => {
+                        {products.filter((data: IProduct) => data.deleted !== true).map((data: IProduct, index: number) => {
                             return (
                                 <tr key={index} className="border-b bg-white dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td className="p-4 w-4">

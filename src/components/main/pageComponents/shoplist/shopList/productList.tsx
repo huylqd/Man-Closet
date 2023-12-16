@@ -4,14 +4,17 @@ import { BasicCarousel } from '@/components/carousel';
 import { GridView } from '@/components/dataViews';
 import TitleDivide from '@/components/titleDivide';
 import { v4 as uuidv4 } from "uuid";
-import React from 'react'
+import React, { useContext } from 'react'
 import { SwiperSlide } from 'swiper/react';
 import { IProduct, IProductResponse } from '@/interfaces/product';
 import { useState, useEffect } from 'react'
 import Pagination from '@/components/pagination/Pagination';
 import TitleGap from '@/components/titleGap';
-import { filterProduct, getAll } from '@/services/products/products';
+import { filterProduct } from '@/services/products/products';
 
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { getsProduct, setPage } from '@/redux/reducer/product.reducer';
+import { useDispatch } from 'react-redux';
 interface ShopListProp {
   sort:string,
   sortOrder:string
@@ -20,17 +23,43 @@ interface ShopListProp {
 
 const ShopList = ({sort, sortOrder}:ShopListProp) => {
 
-  
+
+  const filteredProduct:any = useAppSelector((state) => state.product.productList);
+ console.log(filteredProduct);
+ 
+  const dispatch = useDispatch();
   const [product,setProduct] = useState<IProduct[]>([])
   const [productAll,setProductAll] = useState<IProduct[]>([])
   const [currentPage,setCurrentPage] = useState(1)
   const [totalPages,setTotalPages] = useState(1)
   const [totalItems,setTotalItems] = useState(1)
+  
+  useEffect(()=>{
+    if(filteredProduct.data){
+     
+      setProduct(filteredProduct.data)
+      setCurrentPage(filteredProduct.pagination?.currentPage)
+      setTotalItems(filteredProduct.pagination?.totalItem)
+      setTotalPages(filteredProduct.pagination?.totalsPages)
+    }else{
+      fetchData(currentPage)
+    }
+  },[filteredProduct,currentPage,sort,sortOrder])
+
+
+
+
+
+  // useEffect(() => {
+  //   setData() 
+  // },[sort,sortOrder]);
+  // const setData = () => {
+  //   setProduct(filteredProduct.data); 
+  //   setCurrentPage(filteredProduct.pagination?.currentPage)
+  //   setTotalItems(filteredProduct.pagination?.totalItem)
+  //   setTotalPages(filteredProduct.pagination?.totalsPages)
+  // }
  
-  useEffect(() =>{
-    fetchData(currentPage)
-    fetchDataAll(0)
-  },[sort,sortOrder])
   const fetchData = async (page:number) => {
     const response:any = await filterProduct(page,sort,sortOrder)
     setProduct(response.data)
@@ -38,15 +67,12 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
     setTotalItems(response.pagination.totalItems)
     setTotalPages(response.pagination.totalPages)
   }
-  const fetchDataAll = async (page:number) => {
-    const response:any = await filterProduct(page,sort,sortOrder)
-    setProductAll(response.data)
-  }
 
 
   const handleChangePage = (page:number) => {
     setCurrentPage(page)
-    fetchData(page)
+    // fetchData(page)
+    dispatch(setPage(page))
   }
 
   return (
@@ -60,7 +86,7 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
           wrap
           className="gap-y-4 hidden sm:flex"
         >
-          {product.map((item:IProduct) => {
+          {product?.map((item:IProduct) => {
             const data = {
               _id: item._id,
               name: item.productName,
@@ -75,7 +101,7 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
         
         <div className="block sm:hidden">
           <BasicCarousel previews={1}>
-            {product.map((item:IProduct) => {
+            {product?.map((item:IProduct) => {
               const data = {
                 _id: item._id,
                 name: item.productName,
@@ -92,7 +118,7 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
         </div>
       </div>
     </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages} limit={1} totalItems={totalItems} onPageChange={handleChangePage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages} limit={8} totalItems={totalItems} onPageChange={handleChangePage}/>
     </div>
   );
 }

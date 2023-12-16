@@ -7,7 +7,7 @@ import { categoryCarouselData } from '@/app/(main)/(home)/demo.data'
 import {  ShopList } from '..'
 import ModalFilter from './ModalFilter'
 import CategoryContainer from '../category/Category'
-import { dataFake } from '../category/dataFake'
+
 
 
 
@@ -82,16 +82,16 @@ const Shop = () => {
         </div>
         <div className="flex flex-col items-start	md:flex-row">
 
-          <div className="flex-auto hidden w-full md:w-1/6  md:block mr-2">
-            <div className="flex flex-row align-center justify-between md:flex-col  ">
-              <CategoryContainer data={dataFake}/>
+            <div className="flex-auto hidden w-full md:w-1/6  md:block mr-2">
+              <div className="flex flex-row align-center justify-between md:flex-col  ">
+                <CategoryContainer />
+              </div>
+            </div>
+          
+            <div className='flex-auto w-full md:w-3/6 ml-2'>
+              <ShopList sort={sort} sortOrder={sortOrder}/>
             </div>
           </div>
-        
-          <div className='flex-auto w-full md:w-3/6 ml-2'>
-            <ShopList sort={sort} sortOrder={sortOrder}/>
-          </div>
-        </div>
 
 
       </section>
