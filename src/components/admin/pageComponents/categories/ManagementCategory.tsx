@@ -69,7 +69,7 @@ console.log(categories);
       if(deleteCate){
         toasterRef.current.showToast("success", "Delete successfully");
         const updateCategories = categories.filter((c) => c._id !== id)
-    setCategories(
+          setCategories(
             updateCategories
           );
           setTotalItems(categories.length)

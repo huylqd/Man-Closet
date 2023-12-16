@@ -22,16 +22,14 @@ const ChatWidget = ({ isOpen, onClose }: any) => {
 
   const socket = useRef<any>(null);
   useEffect(() => {
-    if (!localStorage.getItem('user')) {
-      router.push("/auth");
-    } else {
+  
       setCurrentUser(JSON.parse(localStorage.getItem('user') as string));
       const getInfAdmin = async () => {
         const data = await getUserById('656772fa0437e8234a8c6f43')
         setDataAdmin(data.data)
       }
       getInfAdmin()
-    }
+    
   }, []);
 
   useEffect(() => {
