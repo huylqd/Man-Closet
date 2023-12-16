@@ -10,6 +10,7 @@ import {
   LogOut,
   X,
   Home,
+  MessageSquare
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,6 +33,11 @@ const data = [
     href: "orders",
     icon: <Package className="w-6 h-6" />,
     name: "Đơn hàng",
+  },
+  {
+    href: "chats",
+    icon: <MessageSquare />,
+    name: "Chats",
   },
   {
     href: "products",
@@ -63,6 +69,7 @@ const data = [
 const SidebarAdmin = () => {
   const pathName = usePathname();
   const [activeLink, setActiveLink] = useState("");
+  const {name, avatar} = useUserInfo()
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const user = useUserInfo();
   
@@ -147,12 +154,12 @@ const SidebarAdmin = () => {
                   layout="fill"
                   style={{ objectFit: "cover" }}
                   alt="avatar-img"
-                  src={user.avatar}
+                  src={avatar}
                 />
               </div>
             </div>
             <div className="profile_content">
-              <div className="name">{user.name}</div>
+              <div className="name">{name}</div>
               <div className="designation">Admin</div>
             </div>
           </div>

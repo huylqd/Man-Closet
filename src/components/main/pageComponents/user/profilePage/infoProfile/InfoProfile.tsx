@@ -17,7 +17,8 @@ import {
 } from "@/redux/reducer/user.reducer";
 import { IUser } from "@/interfaces/user";
 import { useRouter } from "next/navigation";
-import { useUserInfo } from "@/hooks";
+import { useLocalStorage, useUserInfo } from "@/hooks";
+import ModalEditPhone from "./infoProductModals/ModalEditPhone";
 import { updateUserAvatar } from "@/services/user/user";
 
 const InfoProfile = () => {
@@ -29,7 +30,12 @@ const InfoProfile = () => {
   const [isEditEmail, setIsEditEmail] = useState(false);
   const [isEditAvatar, setIsEditAvatar] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+  const [isEditPhone, setIsEditPhone] = useState(false)
+
+  const {setItem, getItemAndSetValue} = useLocalStorage("user")
   const dispatchThunk = useAppDispatch();
+
+  const userInfoInLocal = getItemAndSetValue()
 
   useEffect(() => {
     dispatchThunk(getUserByIdState(_id));
@@ -41,9 +47,11 @@ const InfoProfile = () => {
         id: user._id as string,
         data: data,
       };
-
+      setItem({...userInfoInLocal, ...data})
       dispatchThunk(updateUserInfoState(value));
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleCloseModal = () => {
@@ -51,6 +59,7 @@ const InfoProfile = () => {
     setIsEditEmail(false);
     setIsEditAvatar(false);
     setIsEditPassword(false);
+    setIsEditPhone(false)
   };
   const onSelectedAvatar = async (event:ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -152,6 +161,23 @@ const InfoProfile = () => {
               </span>
             </div>
           </div>
+          {/* phone */}
+          <div className="pb-4">
+            <label className="text-gray-600 uppercase text-sm font-normal pb-2">
+              Số điện thoại
+            </label>
+            <div
+              className="flex w-full md:w-fit"
+              onClick={() => setIsEditPhone(true)}
+            >
+              <h5 className="flex-[1] text-gray-800 border-b pr-4 md:pr-10">
+                {user.phone? user.phone : "Thêm số điện thoại"}
+              </h5>
+              <span className="text-blue-500 hover:text-blue-300 transition-all cursor-pointer">
+                <PenSquare className="w-5 h-5" />
+              </span>
+            </div>
+          </div>
           {/* address */}
           <div className="pb-4">
             <p
@@ -192,6 +218,14 @@ const InfoProfile = () => {
           onUpdate={handleUpdateUserInfo}
           onClose={handleCloseModal}
           initialValue={user.password}
+        />
+      </Modal>
+      {/* modal edit phone */}
+      <Modal isOpen={isEditPhone} handleClose={handleCloseModal}>
+        <ModalEditPhone 
+          onUpdate={handleUpdateUserInfo}
+          onClose={handleCloseModal}
+          initialValue={user.phone || ""}
         />
       </Modal>
     </>

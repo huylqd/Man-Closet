@@ -5,11 +5,16 @@ import {
 } from "@/interfaces/asyncThunk";
 import { IBill } from "@/interfaces/bill";
 import { ProductSold } from "@/interfaces/product";
-import { Thongkedoanhthu, Thongkedonhang } from "@/services/analyst/analyst";
+import {
+  Thongkedoanhthu,
+  Thongkedonhang,
+  Top5UserMuaHang,
+  getProductSold,
+} from "@/services/analyst/analyst";
 import {
   getAllOrderBill,
   getBillById,
-  getProductSold,
+  getOrders,
   updateBill,
 } from "@/services/order/order";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -18,11 +23,18 @@ interface OrderState {
   productSold: ProductSold[];
   orders: IBill[];
   order: IBill;
+  paginate: {
+    totalItem: number | undefined;
+    itemPerPage: number | undefined;
+    totalPage: number | undefined;
+    currentPage: number | undefined;
+  };
   countBill: number;
   doanhthu: number;
   isLoading: boolean;
   currentRequestId: string | undefined;
-  errorMessage: string | undefined
+  errorMessage: string | undefined;
+  users: any; //mảng chứa các user đã chi tiêu trong tháng
 }
 interface IUpdateProps {
   billId: string;
@@ -31,18 +43,25 @@ interface IUpdateProps {
 const initialState: OrderState = {
   productSold: [],
   orders: [],
+  paginate: {
+    totalItem: undefined,
+    itemPerPage: undefined,
+    totalPage: undefined,
+    currentPage: undefined,
+  },
   order: {} as IBill,
   countBill: 0,
   doanhthu: 0,
+  users: [],
   isLoading: false,
   currentRequestId: undefined,
-  errorMessage: undefined
+  errorMessage: undefined,
 };
-
+//THống kê
 export const getProductSoldState = createAsyncThunk(
   "order/getProductSold",
-  async (_, thunkAPI) => {
-    const response = await getProductSold();
+  async (data: any) => {
+    const response = await getProductSold(data);
     return response.data;
   }
 );
@@ -56,19 +75,25 @@ export const getAllOrderBillState = createAsyncThunk(
 );
 export const getCountBillState = createAsyncThunk(
   "order/getCountBill",
-  async (_, thunkAPI) => {
-    const response = await Thongkedonhang();
+  async (data: any) => {
+    const response = await Thongkedonhang(data);
     return response.data;
   }
 );
 export const getDoanhThuState = createAsyncThunk(
   "order/getDoanhThu",
-  async (_, thunkAPI) => {
-    const response = await Thongkedoanhthu();
+  async (data: any) => {
+    const response = await Thongkedoanhthu(data);
     return response.data;
   }
 );
-
+export const topUserChiTieu = createAsyncThunk(
+  "order/getUserChiTieu",
+  async (data: any) => {
+    const response = await Top5UserMuaHang(data);
+    return response.data;
+  }
+);
 type TUpdateParams = {
   billId: string;
   orderStatus: string;
@@ -98,6 +123,36 @@ export const getBillByIdAsync = createAsyncThunk(
   }
 );
 
+type TGetOrderParams = {
+  page?: number;
+  limit?: number;
+  orderStatus?: string;
+  paymentStatus?: string;
+};
+export const getOrdersAsync = createAsyncThunk(
+  "order/getOrders",
+  async (
+    { limit, page, orderStatus, paymentStatus }: TGetOrderParams,
+    { rejectWithValue, fulfillWithValue, signal }
+  ) => {
+    try {
+      const response = await getOrders(
+        page,
+        limit,
+        orderStatus,
+        paymentStatus,
+        signal
+      );
+      return fulfillWithValue(response.result);
+    } catch (error: any) {
+      if (error.name === "AxiosError" && error.status === 404) {
+        return rejectWithValue(error.response.data);
+      }
+      throw error;
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -115,8 +170,12 @@ const orderSlice = createSlice({
     builder.addCase(getDoanhThuState.fulfilled, (state, action) => {
       state.doanhthu = action.payload[0].totalAmountSold;
     });
+    builder.addCase(topUserChiTieu.fulfilled, (state, action) => {
+      state.users = action.payload;
+    });
     builder
       .addCase(changeStatusBillState.fulfilled, (state, action) => {
+        state.order = action.payload;
         state.orders.find((item, index) => {
           if (item._id === action.payload._id) {
             state.orders[index] = action.payload;
@@ -126,7 +185,16 @@ const orderSlice = createSlice({
         });
       })
       .addCase(getBillByIdAsync.fulfilled, (state, action) => {
-        state.order = action.payload
+        state.order = action.payload;
+      })
+      .addCase(getOrdersAsync.fulfilled, (state, action) => {
+        state.orders = action.payload.items;
+        state.paginate = {
+          totalItem: action.payload.totalItem,
+          itemPerPage: action.payload.itemPerPage,
+          currentPage: action.payload.currentPage,
+          totalPage: action.payload.totalPage,
+        };
       })
       .addMatcher<PendingAction>(
         (action) => action.type.endsWith("/pending"),
@@ -157,7 +225,7 @@ const orderSlice = createSlice({
             state.isLoading = false;
             state.currentRequestId = undefined;
           }
-          state.errorMessage = action.payload as string
+          state.errorMessage = action.payload as string;
         }
       );
   },

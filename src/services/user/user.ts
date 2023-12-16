@@ -10,9 +10,15 @@ export const getAllUser = (page: number, limit: number) => {
   );
   return response;
 };
+export const getAllContact = (id: string) => {
+  const response = instance.get<any, GetAllUserRes>(
+    `/user/contacts/${id}`
+  );
+  return response;
+};
 
-export const getUserById = (id: string) => {
-  const response = instance.get(`/user/${id}`);
+export const getUserById = async (id: string) => {
+  const response = await instance.get(`/user/${id}`);
   return response;
 };
 
@@ -54,7 +60,7 @@ export const getUserOrderHistory = (
   signal?: AbortSignal
 ) => {
   const response = axios.get<any, GetOrderHistoryResponse>(
-    `http://localhost:8088/users/${user_id}/orders?page=${page}&&limit=${limit}&&case=${caseStatus}`,
+    `http://localhost:8088/users/${user_id}/orders?page=${page}&limit=${limit}&case=${caseStatus}`,
     { signal: signal }
   );
   return response;

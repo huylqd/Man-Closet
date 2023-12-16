@@ -44,11 +44,6 @@ const Pagination = ({totalPages, currentPage,totalItems, onPageChange,limit}:Pag
             pageNumbers.push(renderPageButton(totalPages));
           }
         }
-  
-     
-  
-  
-        
       }
   
       return pageNumbers;
@@ -72,13 +67,13 @@ const Pagination = ({totalPages, currentPage,totalItems, onPageChange,limit}:Pag
     
   return (
     <div className="flex items-center w-full justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-    <div className=" sm:flex sm:flex-1 sm:items-center sm:justify-between">
-      <div>
+    <div className=" sm:flex sm:flex-1 sm:items-center sm:justify-center">
+      {/* <div>
         <p className="text-sm text-gray-700">
           Showing <span className="font-medium">1</span> to <span className="font-medium">{limit}</span> of{' '}
           <span className="font-medium">{totalItems}</span> results
         </p>
-      </div>
+      </div> */}
       <div>
         <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
         <button

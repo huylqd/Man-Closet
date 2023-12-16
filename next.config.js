@@ -12,6 +12,7 @@ module.exports = {
         hostname: "images.unsplash.com",
         port: "",
       },
+      
       {
         protocol: "https",
         hostname: "scontent.fhan3-3.fna.fbcdn.net",
@@ -58,6 +59,16 @@ module.exports = {
         hostname: "lh3.googleusercontent.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "inkythuatso.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "flowbite.com",
+        port: ""
+      }
 
     ],
   },

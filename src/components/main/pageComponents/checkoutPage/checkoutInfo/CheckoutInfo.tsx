@@ -15,6 +15,7 @@ import instance from "@/services/instance";
 import { CircleDollarSign, ScrollText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 type TCheckoutData = {
   products: ProductInCart[];
@@ -28,7 +29,7 @@ const CheckoutInfo = () => {
   const userAddressList = useAppSelector((state) => state.user.address);
 
   const selectAddress = useMemo(() => userAddressList.find(item => item.isDefault === true), [userAddressList])
-
+  const user = useUserInfo()
   const [state, setState] = useState<TCheckoutData>({} as TCheckoutData);
   const shipCode = 30000;
   const [totalBill, setTotalBill] = useState(0);
@@ -61,6 +62,16 @@ const CheckoutInfo = () => {
 
   // payment =========================
   const payment = async () => {
+    if(user){
+      if(!user.phone){
+        toast.error("Vui lòng thêm số điện thoại mua hàng")
+        return
+      }
+      if(!user.address){
+        toast.error("Vui lòng thêm địa chỉ mua hàng")
+        return
+      }
+    }
     if (localStorage.getItem("user")) {
       const body = {
         shipping_address: `${selectAddress?.detailAddress}, ${selectAddress?.wards}, ${selectAddress?.district}, ${selectAddress?.city}`,

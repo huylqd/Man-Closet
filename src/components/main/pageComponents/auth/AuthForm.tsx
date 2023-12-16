@@ -96,7 +96,7 @@ const AuthForm = () => {
         }
        
       } catch (error: any) {
-        toasterRef.current.showToast('error', `${error.response.data.message!}`);
+        toasterRef.current?.showToast('error', `${error.response.data.message!}`);
       }
       //  Login
     }
