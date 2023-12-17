@@ -24,12 +24,10 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState<any>(undefined);
   const [currentUser, setCurrentUser] = useState<any>(undefined);
   useEffect(() => {
-    if (!localStorage.getItem('user')) {
-      router.push("/auth");
-    } else {
+ 
       setCurrentUser(JSON.parse(localStorage.getItem('user') as string)
       );
-    }
+    
   }, []);
 
   useEffect(() => {

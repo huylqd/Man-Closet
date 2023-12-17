@@ -7,9 +7,14 @@ import ChatWidget from "../../chatwidget/ChatWidget";
 
 const Welcome = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [notification, setNotification] = useState<number>();
 
   const openChat = () => {
     setIsChatOpen(true);
+  };
+
+  const showNotification = (message: number) => {
+    setNotification(message);
   };
 
   const closeChat = () => {
@@ -19,19 +24,25 @@ const Welcome = () => {
   const FloatingButton = () => {
     const toggleChat = () => {
       setIsChatOpen(!isChatOpen);
+      setNotification(0)
     };
-  
+
     return (
       <div className="floating-button" onClick={toggleChat}>
-        <FaRegMessage className="w-8 h-8"/>
+        {Number(notification) > 0 && (
+          <div className="absolute top-[-6px] right-0 bg-red-600 rounded-3xl w-[20px] h-[20px] leading-5 text-[10px] text-center">
+            {notification}
+          </div>
+        )}
+        <FaRegMessage className="w-8 h-8" />
       </div>
     );
   };
-  
+
   return (
     <>
       <div>
-        <TitleGap title="MANCLOSET XIN CHÀO"/>
+        <TitleGap title="MANCLOSET XIN CHÀO" />
 
         <p className="text-center max-w-[1000px] mx-auto font-medium text-gray-600">
           Chào mừng bạn đến với shop thời trang MANCLOSET. Chúng tôi rất vui khi
@@ -40,7 +51,7 @@ const Welcome = () => {
         </p>
       </div>
       <FloatingButton />
-      <ChatWidget isOpen={isChatOpen} onClose={closeChat} />
+      <ChatWidget isOpen={isChatOpen} onClose={closeChat} showNotification={showNotification} />
     </>
   );
 };

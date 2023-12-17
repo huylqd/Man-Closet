@@ -15,7 +15,7 @@ const initialState: CommentState = {
     comment: [],
     currentRequestId: undefined,
     loading: false,
-    message: undefined
+    message: ""
 };
 interface IData {
     productId: string | string[]
@@ -25,12 +25,12 @@ export const getAllCommentByProductId = createAsyncThunk(
     async (data: IData, thunkAPI) => {
         const { productId } = data
         const response = await getCommentByProductId(productId);
-
         return response;
     }
 );
 export const postComment = createAsyncThunk("comment/postComment", async (data: DataComment, thunkAPI) => {
-    const response = await createComment(data);
+    const response = await createComment(data)
+    console.log(response);
     return response
 })
 
@@ -43,9 +43,17 @@ const commentSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(getAllCommentByProductId.fulfilled, (state, action) => {
             state.comment = action.payload
+            
         })
         builder.addCase(postComment.fulfilled, (state, action) => {
-            state.comment.unshift(action.payload)
+            if(action.payload.data){
+                state.comment.unshift(action.payload.data)
+                state.message = action.payload.message
+            }else{
+                state.message = action.payload.message
+            }
+           
+
         })
     },
 });

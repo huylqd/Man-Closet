@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Package, UserCog } from "lucide-react";
+import { FolderHeart, LayoutDashboard, Package, UserCog } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -18,7 +18,14 @@ const navData = [
     icon: <UserCog className="w-5 h-5" />,
     href: "profile",
   },
-  { title: "Đơn hàng", icon: <Package className="w-5 h-5" />, href: "orders" },
+  { title: "Đơn hàng",
+   icon: <Package className="w-5 h-5" />,
+    href: "orders"
+   },
+  { title: "Danh sách yêu thích",
+   icon: <FolderHeart className="w-5 h-5" />,
+    href: "wishlist"
+   },
 ];
 
 const UserPageNavigation = () => {

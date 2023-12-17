@@ -12,5 +12,6 @@ export const getCommentByProductId = async (productId: string | string[]) => {
 }
 export const createComment = async (data: DataComment) => {
     const response = await instance.post(`/api/comment`, data);
-    return response.data
+ 
+    return response
 }
