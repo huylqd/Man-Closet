@@ -4,6 +4,7 @@ import {
   addCategory,
   deleteCategory,
   getAllCategory,
+  removeCategory,
   updateCategory,
 } from "@/services/categories/category";
 import React, { useEffect, useRef, useState } from "react";
@@ -30,8 +31,9 @@ const ManagementCategory = () => {
   const [key, setKey] = useState<string>('');
   const toasterRef = useRef<any>(null);
   useEffect(() => {
-    fetchData(currentPage, limit)
     fetchDataAll(0, Number.MAX_SAFE_INTEGER)
+    fetchData(currentPage, limit)
+  
   }, []);
   const fetchDataAll = async (currentPage: number, limit: number) => {
     const response = await getAllCategory(currentPage, limit);
@@ -44,43 +46,50 @@ const ManagementCategory = () => {
   }
   const fetchData = async (currentPage: number, limit: number) => {
     if (currentPage !== 0) {
-      const response = await getAllCategory(currentPage, limit);
+      const response:any = await getAllCategory(currentPage, limit);
       if (response) {
-        const data: any = response;
-
-
-        setCategories(data.data)
-        setTotalPages(data.paginate.totalPages)
-        setTotalItems(data.paginate.totalItems)
+       
+        
+        setCategories(response.data)
+        setTotalPages(response.paginate.totalPages)
+        setTotalItems(response.paginate.totalItems)
 
       } else {
 
       }
     }
-
-
-
-
   };
+console.log(categories);
 
 
-  const handleDelete = (id: string | undefined) => {
+  const handleDelete =async (id: string | undefined) => {
     setIsOpen(true);
     if (isOpen) {
-      deleteCategory(id)
-        .then(({ data }: any) => {
-          toasterRef.current.showToast("success", "Delete successfully");
+      const deleteCate = await deleteCategory(id);
+      if(deleteCate){
+        toasterRef.current.showToast("success", "Delete successfully");
+        const updateCategories = categories.filter((c) => c._id !== id)
           setCategories(
-            categoriesAll.filter((item) => item._id !== data._id)
+            updateCategories
           );
           setTotalItems(categories.length)
-          fetchData(currentPage, limit)
+          // setTotalPages(categories.length)
           setIsOpen(false)
-
-        })
-        .catch((err) => {
-          toasterRef.current.showToast("error", "Delete Fail!");
-        });
+      }
+    //   const removeCate = await removeCategory(id)
+    //   if(removeCate){
+    //     toasterRef.current.showToast("success", "Delete successfully");
+    //     const updateCategories = categories.map((item) =>
+    //     item._id === id ? { ...item, deleted: true } : item
+    // );
+    //     setCategories(
+    //       updateCategories
+    //     );
+    //     setTotalItems(categories.length)
+    //     // setTotalPages(categories.length)
+    //     setIsOpen(false)
+    //   }
+       
 
     }
 

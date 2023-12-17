@@ -5,7 +5,6 @@ import { commonErrorToast } from "@/utils/notify";
 
 const getAllCategory = (page:number,limit:number) => {
     try {
-   
         const res = instance.get(`api/category?_page=${page}&_limit=${limit}`)
         return res
     } catch (error) {
@@ -52,7 +51,16 @@ const deleteCategory = async (id: any) => {
 
     }
 }
+const removeCategory = async (id: any) => {
+    try {
+        const res = await instance.patch(`api/category/remove/${id}`)
+        return res
+    } catch (error) {
+        console.log(error);
 
-export { getAllCategory, getCategoryById, addCategory, updateCategory, deleteCategory }
+    }
+}
+
+export { getAllCategory, getCategoryById, addCategory, updateCategory, deleteCategory,removeCategory }
 
 

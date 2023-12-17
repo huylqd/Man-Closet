@@ -10,10 +10,10 @@ interface MyResponseData {
 
 const instance = axios.create({
     baseURL: "http://localhost:8088/",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      // "Content-Type": "application/json",
-    },
+    // headers: {
+    //   // Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    //   // "Content-Type": "application/json",
+    // },
     
 });
 
