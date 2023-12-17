@@ -46,7 +46,7 @@ export const addProductToCart = createAsyncThunk(
       const response = await addProductToCartAxios(user_id, product)
       return fulfillWithValue(response.result)
     } catch (error : any) {
-      if(error.name === "AxiosError" && error.status === 404){
+      if(error.name === "AxiosError" && error.response.status === 400){
         return rejectWithValue(error.response.data)
       }
       throw error
