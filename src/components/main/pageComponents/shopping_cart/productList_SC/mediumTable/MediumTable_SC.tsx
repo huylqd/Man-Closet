@@ -29,9 +29,11 @@ interface ProductInCart extends IProductInCart {
 
 type Props = {
   data: ProductInCart[];
-  handleChangeSelect: (product_id: string, isChecked: boolean) => void;
+  handleChangeSelect: (product_id: string, color: string, size: string, isChecked: boolean) => void;
   handleUpdateQuantity: (
     product_id: string,
+    color: string,
+    size: string,
     quantity: number,
     totalPrice: number
   ) => void;
