@@ -47,3 +47,11 @@ export const deletePro = (id: string) => {
   const res = instance.delete(`api/products/${id}`);
   return res;
 };
+
+type TGetInventoryOfProduct = {
+  result: number
+}
+export const getInventoryOfProduct = (id: string, color:string, size: string) : Promise<TGetInventoryOfProduct> => {
+  const response = instance.get<any, TGetInventoryOfProduct>(`api/products/${id}/inventory?color=${color}&&size=${size}`)
+  return response
+}

@@ -2,6 +2,7 @@
 
 import { getProductState } from "@/redux/reducer/product.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { getInventoryOfProduct } from "@/services/products/products";
 import { useEffect, useState } from "react";
 
 type Params = {
@@ -12,33 +13,16 @@ type Params = {
 };
 
 const useProductQuantity = ({ _id, color, size, iniTialQuantity }: Params) => {
-  const product = useAppSelector((state) => state.product.product);
   const [inventory, setInventory] = useState(0);
   const [amount, setAmount] = useState<string>(iniTialQuantity?.toString());
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
-    dispatch(getProductState(_id));
-  }, [dispatch, _id]);
-
-  useEffect(() => {
-    setInventory(
-      product.properties?.[
-        product.properties?.findIndex(
-          (item) => item.color.toLowerCase() === color?.toLowerCase()
-        )
-      ]?.variants?.[
-        product.properties?.[
-          product.properties?.findIndex(
-            (item) => item.color.toLowerCase() === color?.toLowerCase()
-          )
-        ]?.variants.findIndex(
-          (item) => item.size.toLowerCase() === size?.toLowerCase()
-        )
-      ]?.quantity
-    );
-  }, [product, size, color]);
+    const getInventory = async() => {
+      const data = await getInventoryOfProduct(_id, color, size)
+      setInventory(data.result)
+    }
+    getInventory()
+  }, [_id, size, color]);
 
   //  logic
   const incrementAmount = () => {
