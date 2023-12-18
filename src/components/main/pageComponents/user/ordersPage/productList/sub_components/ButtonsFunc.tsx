@@ -71,7 +71,7 @@ const ButtonsFunc = ({ orderStatus, data }: ButtonsFucProps) => {
             }
             className="flex-[1] sm:w-[180px] bg-zinc-800 text-white hover:bg-zinc-600 rounded transition-all"
           >
-            <p>{typeNextCase.label}</p>
+            <p>{typeNextCase?.label}</p>
           </button>
         )}
       </div>

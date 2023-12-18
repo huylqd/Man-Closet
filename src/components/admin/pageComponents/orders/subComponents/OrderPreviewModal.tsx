@@ -156,7 +156,7 @@ const OrderPreviewModal = ({ order, onClose }: Props) => {
             className="py-2 px-3 text-white bg-zinc-800 hover:bg-zinc-600 cursor-pointer transition-all rounded" 
             onClick={() => handleChangeBillStatus(typeNextCase.caseStatus, "")}
           >
-            {typeNextCase.label}
+            {typeNextCase?.label}
           </button>
         </div>
       </div>
