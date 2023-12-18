@@ -75,7 +75,7 @@ const MediumTableItem_SC = ({
   const handleDelete = () => {
     const product = data;
     try {
-      dispatch(deleteProductInCartAsync({ user_id: user_id, data: product }));
+      dispatch(deleteProductInCartAsync({ user_id: user_id, data: [product] }));
       handleCloseDeleteModal();
     } catch (error: any) {
       throw error;
