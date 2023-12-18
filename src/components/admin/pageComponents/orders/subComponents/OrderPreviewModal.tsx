@@ -7,7 +7,7 @@ import { changeStatusBillState } from "@/redux/reducer/order.reducer";
 import { useAppDispatch } from "@/redux/store";
 import { X } from "lucide-react";
 import Image from "next/image";
-import React , {useRef} from "react";
+import React , {useMemo, useRef} from "react";
 import { v4 as uuidv4 } from "uuid";
 import { io, Socket } from "socket.io-client";
 
@@ -17,6 +17,7 @@ type Props = {
 };
 const OrderPreviewModal = ({ order, onClose }: Props) => {
   const socket = io("http://localhost:8088")
+  const { _id, payment_method, current_order_status, payment_status } = order;
   const dispatch = useAppDispatch();
   const handleChangeBillStatus = (orderS: string, paymentS: string) => {
     dispatch(
@@ -31,10 +32,40 @@ const OrderPreviewModal = ({ order, onClose }: Props) => {
     onClose()
   };
 
+  type TNextCase = {
+    caseStatus: string;
+    label: string;
+  };
+
+  const typeNextCase = useMemo(() => {
+    switch (order?.current_order_status?.status) {
+      case ORDER_STATUS.PENDING:
+        return {
+          caseStatus: ORDER_STATUS.CONFIRM,
+          label: "Xác nhận đơn",
+        };
+      case ORDER_STATUS.CONFIRM:
+        return {
+          caseStatus: ORDER_STATUS.DELIVERY,
+          label: "Đã giao cho vận chuyển",
+        };
+      case ORDER_STATUS.DELIVERY:
+        return {
+          caseStatus: ORDER_STATUS.DELIVERED,
+          label: "Đã giao tới khách hàng",
+        };
+      case ORDER_STATUS.EXCHANGE:
+        return {
+          caseStatus: ORDER_STATUS.CONFIRM,
+          label: "Xác nhận đổi hàng",
+        };
+    }
+  }, [order?.current_order_status?.status]) as TNextCase;
+
   return (
     <>
       <div className="w-[500px] rounded p-3 bg-white">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pb-2">
           <h5 className="font-medium text-gray-800 underline">
             Thông tin đơn hàng:
           </h5>
@@ -45,7 +76,7 @@ const OrderPreviewModal = ({ order, onClose }: Props) => {
             <X />
           </button>
         </div>
-        <div className="pt-4 flex flex-col gap-4">
+        <div className="pt-4 flex flex-col gap-4 h-[60vh] max-h-[70vh] overflow-y-scroll">
           <div>
             <p className="font-medium text-gray-500">Mã số đơn hàng</p>
             <p>{order?._id}</p>
@@ -119,23 +150,14 @@ const OrderPreviewModal = ({ order, onClose }: Props) => {
             </ul>
           </div>
         </div>
-        <div>
-          {order?.current_order_status?.status === ORDER_STATUS.PENDING && (
-            <div className=" pt-2 flex w-full md:w-fit h-[50px] gap-1 sm:gap-2 sm:ml-auto">
-              <button
-                className="bg-rose-500 rounded h-full px-2 py-1"
-                onClick={() => handleChangeBillStatus(ORDER_STATUS.CANCEL, "")}
-              >
-                Huỷ đơn hàng
-              </button>
-              <button
-                onClick={() => handleChangeBillStatus(ORDER_STATUS.CONFIRM, "")}
-                className="bg-zinc-800 rounded h-full px-2 py-1"
-              >
-                Xác nhận đơn hàng
-              </button>
-            </div>
-          )}
+
+        <div className="pt-2 text-right">
+          <button 
+            className="py-2 px-3 text-white bg-zinc-800 hover:bg-zinc-600 cursor-pointer transition-all rounded" 
+            onClick={() => handleChangeBillStatus(typeNextCase.caseStatus, "")}
+          >
+            {typeNextCase.label}
+          </button>
         </div>
       </div>
     </>
