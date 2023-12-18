@@ -21,11 +21,11 @@ export default function Contacts({ contacts, changeChat }: any) {
   return (
     <>
       {currentUserImage && currentUserImage && (
-        <Container>
-          <div className="brand">
+        <Container className="border-r-2 ">
+          <div className="brand ">
             <h3>MAN CLOSET</h3>
           </div>
-          <div className="contacts">
+          <div className="contacts ">
             {contacts?.map((contact: any, index: number) => {
               return (
                 <div
@@ -103,13 +103,14 @@ const Container = styled.div`
       transition: 0.5s ease-in-out;
       .avatar {
         img {
-          height: 4rem;
+          height: 3rem;
           border-radius: 50%
         }
       }
       .username {
         h3 {
           color: black;
+          font-size: 1rem;
         }
       }
     }
