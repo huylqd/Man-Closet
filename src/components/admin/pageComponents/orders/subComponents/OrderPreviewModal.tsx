@@ -7,14 +7,16 @@ import { changeStatusBillState } from "@/redux/reducer/order.reducer";
 import { useAppDispatch } from "@/redux/store";
 import { X } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React , {useRef} from "react";
 import { v4 as uuidv4 } from "uuid";
+import { io, Socket } from "socket.io-client";
 
 type Props = {
   order: IBill;
   onClose: () => void;
 };
 const OrderPreviewModal = ({ order, onClose }: Props) => {
+  const socket = io("http://localhost:8088")
   const dispatch = useAppDispatch();
   const handleChangeBillStatus = (orderS: string, paymentS: string) => {
     dispatch(
@@ -24,6 +26,8 @@ const OrderPreviewModal = ({ order, onClose }: Props) => {
         paymentStatus: paymentS || order?.payment_status?.status,
       })
     );
+
+    socket.emit('updateOrderStatus', { orderId: order?._id, newStatus: orderS });
     onClose()
   };
 
