@@ -76,7 +76,7 @@ export default function ChatContainer({ currentChat, socket }: any) {
 
     return (
         <Container>
-            <div className="chat-header">
+            <div className="chat-header border-b-2 ">
                 <div className="user-details">
                     <div className="avatar">
                         <img
@@ -120,11 +120,15 @@ const Container = styled.div`
     grid-template-rows: 15% 70% 15%;
   }
   .chat-header {
+    border-bottom: 1px solid balck;
+    border-bottom-style: inset;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+    
     .user-details {
+    
       display: flex;
       align-items: center;
       gap: 1rem;
