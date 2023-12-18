@@ -89,9 +89,11 @@ const CheckoutInfo = () => {
         if (body.payment_method === "vnpay") {
           response = await instance.post("order/create_payment_url", data);
           dispatch(deleteProductInCartAsync({user_id: _id, data: data.items}))
+          dispatch(deleteProductInCartAsync({
+            user_id: _id,
+            data: data.items
+          }))
           router.push(response);
-          // 
-          // 
         }
       } catch (error) {
         console.error("Error", error);

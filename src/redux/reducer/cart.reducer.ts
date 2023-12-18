@@ -59,7 +59,7 @@ export const addProductToCart = createAsyncThunk(
 
 type DeleteProductInCartParams = {
   user_id: string;
-  data: ProductInCart;
+  data: ProductInCart[];
 };
 export const deleteProductInCartAsync = createAsyncThunk(
   "cart/deleteProduct",
