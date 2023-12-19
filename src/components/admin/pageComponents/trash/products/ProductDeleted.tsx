@@ -116,7 +116,7 @@ const ProductDeleted = () => {
           const updateCategories = products.filter((c) => c._id !== id)
           console.log(updateCategories);
           
-          setProduct(
+          setProducts(
             updateCategories
           );
           const totalPage = Number((+products.length / limit).toFixed(0))

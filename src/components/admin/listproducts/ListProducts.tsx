@@ -13,6 +13,7 @@ import Toaster from "@/components/Toaster/Toaster";
 import Pagination from "@/components/pagination/Pagination";
 import ModalShow from "./Modal";
 import Modal from "@/components/modal/Modal";
+import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
 const ListProducts = () => {
     const [products, setProducts] = useState<IProduct[]>([])
     const [productsAll, setProductsAll] = useState<IProduct[]>([])
@@ -24,17 +25,8 @@ const ListProducts = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [key, setKey] = useState<string>('');
-
-    const handleUploadFile = async (e:ChangeEvent<HTMLInputElement>) => {
-    const formData = new FormData();
-        const selectedFile = e.target.files
-        if(selectedFile !== null){
-            for (let i = 0; i < selectedFile.length; i++) {                        
-                  formData.append('file', selectedFile[i]);
-                }                
-              }
-             await uploadFileExcel(formData);
-        }
+    const [isOpen, setIsOpen] = useState(false)
+   
     
     // useEffect(() => {
     //     getAll().then(({ data }: any) => setProducts(data))
@@ -94,25 +86,66 @@ const ListProducts = () => {
             // fetchData(currentPage)
         }
     }
-
+    const handleUploadFile = async (e:ChangeEvent<HTMLInputElement>) => {
+        try {
+            const formData = new FormData();
+            const selectedFile: FileList | any = e.target.files
+            const fileName = selectedFile[0].name?.toLowerCase();
+            console.log(fileName);
+            
+            if(selectedFile !== null){
+                for (let i = 0; i < selectedFile.length; i++) {     
+                    if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
+                        formData.append('file', selectedFile[i]);
+                
+                        // Thực hiện công việc tải lên hoặc xử lý tệp Excel ở đây
+                      } else {
+                        // Nếu không phải là tệp Excel, bạn có thể thông báo hoặc xử lý theo cách khác
+                        toasterRef.current.showToast("error", `Tệp ${fileName} không phải là tệp Excel.`);
+                        
+                      }                   
+                    
+                    }                
+                  }
+              const uploadFile = await uploadFileExcel(formData);
+              console.log(uploadFile);
+              if(uploadFile){
+                toasterRef.current.showToast("success", "Thêm sản phẩm thành công!");
+                fetchData(currentPage)
+              }
+              
+        } catch (error) {
+            console.log(error);
+            
+        }
+       
+            }
     const handleChange = (e: any) => {
         setKey(e.target.value)
     }
         const onhandleRemove = async (id: string) => {
-            if (confirm('Are you sure you want to remove')) {
-                const moveToTrash = await moveToTrashProduct(id) ;                
-                if(moveToTrash){
-                    const updatedProducts = products.filter((item) =>
-                    item._id !== id 
-                );
-                    setProducts(
-                        updatedProducts
+            setIsOpen(true);
+            try {
+                if(isOpen){
+                    const moveToTrash = await moveToTrashProduct(id) ;                
+                    if(moveToTrash){
+                        const updatedProducts = products.filter((item) =>
+                        item._id !== id 
                     );
-                    toasterRef.current.showToast("success", "Xóa thành công");
+                        setProducts(
+                            updatedProducts
+                        );
+                        toasterRef.current.showToast("success", "Xóa thành công");
+                    }
                 }
-            
+                    
+                
+                
+    
+            } catch (error) {
+                
             }
-
+            
         // await deletePro(id)
 
     }
@@ -145,9 +178,7 @@ const ListProducts = () => {
         if(addProduct){
             const newProducts = [...products];
             console.log(newProducts);
-   
             newProducts.push(addProduct.data);
-          
             setProducts(newProducts);
             toasterRef.current.showToast("success", "Thêm sản phẩm thành công!");
             setshowModalPro(false);
@@ -179,7 +210,7 @@ const ListProducts = () => {
                                     </svg>
                                 </button>
                             </div>
-                            <button onClick={() => search()} type="button" className="inline-flex w-[20%] items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <button onClick={() => search()} type="button" className="flex w-[30%] items-center py-2.5 justify-center px-3 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>Tìm kiếm
@@ -195,32 +226,11 @@ const ListProducts = () => {
                             Thêm sản phẩm
                         </button>
                         <div className="flex items-center space-x-3 w-full md:w-auto">
-                            <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                                <svg className="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clipRule="evenodd" fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                                Chức năng
-                            </button>
-                            <div id="actionsDropdown" className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
-                                    <li>
-                                        <a href="#" className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass Edit</a>
-                                    </li>
-                                </ul>
-                                <div className="py-1">
-                                    <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete all</a>
-                                </div>
-                            </div>
-                            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-                                </svg>
-                                Lọc
-                                <svg className="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clipRule="evenodd" fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </button>
-                            <input type="file" onChange={handleUploadFile}/>
+                        <input type="file"
+                     className="w-full  text-black text-xs   bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-2.5 file:px-4 file:mr-4 file:bg-gray-800  file:hover:bg-gray-700 file:text-white rounded-lg " onChange={handleUploadFile} />
+                          
+                     
+
 
                         </div>
                     </div>
@@ -262,14 +272,14 @@ const ListProducts = () => {
                                                 </svg>
                                                 Sửa
                                             </button>
-                                            <button onClick={() => { setshowModal(true); setProduct(data._id) }} type="button" data-drawer-target="drawer-read-product-advanced" data-drawer-show="drawer-read-product-advanced" aria-controls="drawer-read-product-advanced" className="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                            <button onClick={() => { setshowModal(true); setProduct(data) }} type="button" data-drawer-target="drawer-read-product-advanced" data-drawer-show="drawer-read-product-advanced" aria-controls="drawer-read-product-advanced" className="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2 -ml-0.5">
                                                     <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
                                                     <path fillRule="evenodd" clipRule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" />
                                                 </svg>
                                                 Chi tiết
                                             </button>
-                                            <button onClick={() => onhandleRemove(data._id)} type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal" className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                            <button onClick={() => {onhandleRemove(data._id),setProduct(data._id)}} type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal" className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                                                 </svg>
@@ -300,6 +310,19 @@ const ListProducts = () => {
                     </Modal>
                 )
             }
+             {isOpen && (
+        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+          <ConfirmModal titleSubmit="Xóa" title="Xóa sản phẩm" text="Bạn có chắc muốn xóa?" onClose={() => setIsOpen(false)} onHandle={onhandleRemove} id={product._id} >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 flex items-center text-red-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+          </ConfirmModal>
+        </Modal>
+
+      )}
           
             <ModalUpdate isvisibleUpdate={showModalUpdate} update={onhandleUpdate} products={product} onClosePro={() => setshowModalUpdate(false)} />
 
