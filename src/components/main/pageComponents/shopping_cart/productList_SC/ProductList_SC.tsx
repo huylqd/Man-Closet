@@ -2,12 +2,11 @@
 
 import { getProductsInCart } from "@/redux/reducer/cart.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MediumTable_SC from "./mediumTable/MediumTable_SC";
 import { ControlBar_SC } from "..";
-import { IProductInCart, ProductInCart } from "@/interfaces/product";
 import { useCurrency } from "@/hooks";
-
+import { ProductInCart } from "@/interfaces/product";
 
 interface ProductInPayment {
   product_id: string;
@@ -28,13 +27,11 @@ const ProductList_SC = () => {
   const [productsSelected, setProductsSelected] = useState<ProductInCart[]>([]);
   const [billPrice, setBillPrice] = useState<number[]>([]);
 
-  console.log(productList)
-
   useEffect(() => {
     const promise = dispatchThunk(getProductsInCart());
     return () => {
-      promise.abort()
-    }
+      promise.abort();
+    };
   }, [dispatchThunk]);
 
   useEffect(() => {
@@ -88,16 +85,27 @@ const ProductList_SC = () => {
       : 0
   );
 
-
   const handleUpdateQuantity = (
     product_id: string,
+    color: string,
+    size: string,
     quantity: number,
     totalPrice: number
   ) => {
     const updateProducts = products.map((product) => {
-      if (product._id === product_id && quantity > 0) {
+      if (
+        product._id === product_id &&
+        product.color === color &&
+        product.size === size &&
+        quantity > 0
+      ) {
         return { ...product, quantity, totalPrice };
-      } else if (product._id === product_id && quantity === 0) {
+      } else if (
+        product._id === product_id &&
+        product.color === color &&
+        product.size === size &&
+        quantity === 0
+      ) {
         return { ...product, quantity, totalPrice, selected: false };
       }
       return product;
@@ -105,9 +113,18 @@ const ProductList_SC = () => {
     setProducts(updateProducts);
   };
 
-  const handleProductSelect = (product_id: string, isChecked: boolean) => {
+  const handleProductSelect = (
+    product_id: string,
+    color: string,
+    size: string,
+    isChecked: boolean
+  ) => {
     const updateProducts = products.map((product) => {
-      if (product._id === product_id) {
+      if (
+        product._id === product_id &&
+        product.color === color &&
+        product.size === size
+      ) {
         return { ...product, selected: isChecked };
       }
       return product;
@@ -163,7 +180,10 @@ const ProductList_SC = () => {
           />
         </div>
 
-        <ControlBar_SC totalBillPrice={totalBillPrice} productsSelected={productsSelected}/>
+        <ControlBar_SC
+          totalBillPrice={totalBillPrice}
+          productsSelected={productsSelected}
+        />
       </div>
     </>
   );

@@ -11,25 +11,27 @@ import { v4 as uuidv4 } from "uuid";
 import instance from "@/services/instance";
 import { getAllMessage, sendMessage } from "@/services/message/message";
 
-const ChatWidget = ({ isOpen, onClose }: any) => {
+const ChatWidget = ({ isOpen, onClose, showNotification }: any) => {
   const router = useRouter();
   const scrollRef = useRef<any>(null);
   const [dataAdmin, setDataAdmin] = useState<any>()
   const [messages, setMessages] = useState<any>([]);
   const [currentUser, setCurrentUser] = useState<any>(undefined);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
-
+  let newMessageCount = 0 
 
   const socket = useRef<any>(null);
   useEffect(() => {
-  
+    // if (!localStorage.getItem('user')) {
+    //   router.push("/auth");
+    // } else {
       setCurrentUser(JSON.parse(localStorage.getItem('user') as string));
       const getInfAdmin = async () => {
         const data = await getUserById('656772fa0437e8234a8c6f43')
         setDataAdmin(data.data)
       }
       getInfAdmin()
-    
+    // }
   }, []);
 
   useEffect(() => {
@@ -83,6 +85,10 @@ const ChatWidget = ({ isOpen, onClose }: any) => {
     if (socket.current) {
       socket.current.on("msg-recieve", (msg: string) => {
         setArrivalMessage({ fromSelf: false, message: msg });
+        newMessageCount ++
+        if (typeof showNotification === 'function') {
+          showNotification(newMessageCount);
+      }
       });
     }
   }, [socket.current]);

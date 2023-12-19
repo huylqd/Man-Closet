@@ -78,3 +78,11 @@ export const filterProductBySize = (page=1,size:string) => {
   const res = instance.get(`api/products/size/filter?_page=${page}&_size=${size}`);
   return res;
 }
+
+type TGetInventoryOfProduct = {
+  result: number
+}
+export const getInventoryOfProduct = (id: string, color:string, size: string) : Promise<TGetInventoryOfProduct> => {
+  const response = instance.get<any, TGetInventoryOfProduct>(`api/products/${id}/inventory?color=${color}&&size=${size}`)
+  return response
+}

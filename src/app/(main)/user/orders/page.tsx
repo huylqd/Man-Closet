@@ -6,8 +6,10 @@ import { useUserInfo } from "@/hooks";
 import { getUserOrdersHistory } from "@/redux/reducer/user.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import {io} from 'socket.io-client'
 
 const OrdersPage = () => {
+  const socket = io("http://localhost:8088")
   const { _id } = useUserInfo();
   const { userOrdersHistory, isLoading, errorsMessage } = useAppSelector(
     (state) => state.user
@@ -37,6 +39,12 @@ const OrdersPage = () => {
   const changeCase = useCallback((value: string) => {
     setCaseStatus(value)
   }, [])
+
+  socket.on('orderStatusUpdated', (data) => {
+    console.log('Order status updated on the client side:', data);
+    setCaseStatus(data?.newStatus)
+  });
+
 
   return (
     <>

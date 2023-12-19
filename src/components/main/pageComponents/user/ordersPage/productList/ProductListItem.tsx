@@ -17,7 +17,7 @@ type Props = {
 };
 
 const ProductListItem = ({ data }: Props) => {
-  const { _id, current_order_status, total_price, payment_status, items } =
+  const { _id, current_order_status, total_price, payment_status, items, payment_method } =
     data;
   const router = useRouter();
   const itemsName = items.map((item) => item.product_name).join(", ");
@@ -57,7 +57,7 @@ const ProductListItem = ({ data }: Props) => {
 
         <ButtonsFunc
           orderStatus={current_order_status.status}
-          data={{ billId: _id, payment_status: payment_status.status }}
+          data={{ billId: _id, payment_status: payment_status.status, payment_method: payment_method }}
         />
       </li>
     </>

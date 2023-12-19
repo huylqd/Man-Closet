@@ -29,9 +29,11 @@ interface ProductInCart extends IProductInCart {
 
 type Props = {
   data: ProductInCart[];
-  handleChangeSelect: (product_id: string, isChecked: boolean) => void;
+  handleChangeSelect: (product_id: string, color: string, size: string, isChecked: boolean) => void;
   handleUpdateQuantity: (
     product_id: string,
+    color: string,
+    size: string,
     quantity: number,
     totalPrice: number
   ) => void;
@@ -60,7 +62,7 @@ const MediumTable_SC = ({
         {/* table content */}
         <div className="bg-zinc-50 h-[70vh] rounded overflow-hidden">
           <ul className="overflow-y-auto ">
-            {data?.map((item) => (
+            {data?.slice()?.reverse()?.map((item) => (
               <MediumTableItem_SC
                 key={uuidv4()}
                 data={item}

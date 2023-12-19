@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useCurrency, useUserInfo } from "@/hooks";
 import { IProduct, Variant } from "@/interfaces/product";
@@ -20,9 +20,13 @@ interface AddToCardModalProps {
   product: IProduct;
 }
 
+interface ErrorMessage {
+  message: string
+}
+
 const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
   const router = useRouter();
-  const user = useUserInfo()
+  const user = useUserInfo();
 
   const [sizeSelected, setSizeSelected] = useState("");
   const [colorSelected, setColorSelected] = useState("");
@@ -136,8 +140,8 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
   const checkAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valueInput = e.target.value;
     if (valueInput.match(/^[0-9]*$/)) {
-      if(+valueInput > inventoryQuantity){
-        setAmount(inventoryQuantity.toString())
+      if (+valueInput > inventoryQuantity) {
+        setAmount(inventoryQuantity.toString());
       } else {
         setAmount(valueInput);
       }
@@ -157,10 +161,10 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
   };
 
   const setAmountEqualInventoryWhenHigher = () => {
-    if(+amount > inventoryQuantity && inventoryQuantity > 0 && amount !== ""){
-      setAmount(inventoryQuantity.toString())
+    if (+amount > inventoryQuantity && inventoryQuantity > 0 && amount !== "") {
+      setAmount(inventoryQuantity.toString());
     }
-  }
+  };
 
   const checkAmountInputBlur = () => {
     if (amount.match(/^0+/) || amount === "") {
@@ -188,44 +192,46 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
     const userId = user?._id;
     if (!userId) {
       router.push("/auth");
-      commonErrorToast('Bạn cần đăng nhập để thực hiện hành động này')
-    }
-    else {
-      
-    let validData = false;
-    if (
-      inventoryQuantity > 0 &&
-      +amount > 0 &&
-      !isNaN(+amount) &&
-      inventoryQuantity >= +amount
-    ) {
-      validData = true;
-    }
-
-    const data = {
-      user_id: userId,
-      product: {
-        _id: product._id,
-        name: product.productName,
-        quantity: +amount,
-        imageUrl: imageSelected,
-        color: colorSelected,
-        size: sizeSelected,
-        price: product.price,
-      },
-    };
-
-    if (validData) {
-      dispatchThunk(addProductToCart(data));
-      onClose();
-      commonSuccessToast("Thêm sản phẩm thành công");
-
+      commonErrorToast("Bạn cần đăng nhập để thực hiện hành động này");
     } else {
-      toast.error("Vui lòng xem lại dữ liệu đã lựa chọn");
-      console.log("no");
-    }
-    }
+      let validData = false;
+      if (
+        inventoryQuantity > 0 &&
+        +amount > 0 &&
+        !isNaN(+amount) &&
+        inventoryQuantity >= +amount
+      ) {
+        validData = true;
+      }
 
+      const data = {
+        user_id: userId,
+        product: {
+          _id: product._id,
+          name: product.productName,
+          quantity: +amount,
+          imageUrl: imageSelected,
+          color: colorSelected,
+          size: sizeSelected,
+          price: product.price,
+        },
+      };
+
+      if (validData) {
+        dispatchThunk(addProductToCart(data))
+          .unwrap()
+          .then(() => {
+            commonSuccessToast("Thêm sản phẩm thành công");
+            onClose();
+          })
+          .catch((error: ErrorMessage) => {
+            toast.error(error.message)
+          });
+      } else {
+        toast.error("Vui lòng xem lại dữ liệu đã lựa chọn");
+        console.log("no");
+      }
+    }
   };
 
   return (
@@ -257,12 +263,8 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
                 />
               </div>
               <div className="flex flex-col h-[60px] md:h-[100px]">
-                <h4 className="font-medium">
-                  {useCurrency(product.price)}
-                </h4>
-                <h5 className="py-1  font-medium text-gray-800">
-                  {property}
-                </h5>
+                <h4 className="font-medium">{useCurrency(product.price)}</h4>
+                <h5 className="py-1  font-medium text-gray-800">{property}</h5>
                 <h5 className=" mt-auto">
                   <span className=" font-medium text-gray-600">
                     Trong kho:{" "}
@@ -290,9 +292,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
 
           <div className="py-4 flex-[1]">
             <div className="py-2 md:py-4">
-              <h4 className="pb-2  text-gray-600 font-medium">
-                Kích cỡ
-              </h4>
+              <h4 className="pb-2  text-gray-600 font-medium">Kích cỡ</h4>
               <ul className="flex flex-wrap gap-2 gap-y-2">
                 {sizeArray?.map((size) => (
                   <li key={uuidv4()}>
@@ -312,9 +312,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
               </ul>
             </div>
             <div className="py-2 md:py-4">
-              <h4 className="pb-2  text-gray-600 font-medium">
-                Màu sắc
-              </h4>
+              <h4 className="pb-2  text-gray-600 font-medium">Màu sắc</h4>
               <ul className="flex flex-wrap gap-2 gap-y-2">
                 {colorArray?.map((color) => (
                   <li key={uuidv4()}>
@@ -335,9 +333,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
             </div>
             <div className="py-2 md:py-4">
               <div className="flex items-center justify-between">
-                <h4 className=" text-gray-600 font-medium">
-                  Số lượng
-                </h4>
+                <h4 className=" text-gray-600 font-medium">Số lượng</h4>
                 <div className="flex items-center gap-x-2">
                   <button onClick={() => decrementAmount()} className="p-[6px]">
                     <Minus

@@ -18,7 +18,8 @@ export enum OrderStatus {
   PENDING = "Chờ xác nhận",
   CONFIRM = "Đã xác nhận",
   DELIVERY = "Đang giao",
-  RECEIVER = "Đã giao",
+  DELIVERED= "Đã giao",
+  RECEIVER = "Đã nhận",
   CANCEL = "Đã huỷ",
   EXCHANGE = "Đổi hàng",
 }
@@ -67,7 +68,8 @@ export const ORDER_STATUS = {
   PENDING: "Chờ xác nhận",
   CONFIRM: "Đã xác nhận",
   DELIVERY: "Đang giao",
-  RECEIVER: "Đã giao",
+  DELIVERED: "Đã giao",
+  RECEIVER: "Đã nhận",
   CANCEL: "Đã huỷ",
   EXCHANGE: "Đổi hàng",
 };

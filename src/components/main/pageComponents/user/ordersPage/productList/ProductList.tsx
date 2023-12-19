@@ -16,7 +16,7 @@ const ProductList = ({ data, isLoading }: Props) => {
       {isLoading && <LineSkeleton />}
       {!isLoading && (
         <ul className={style.product_list}>
-          {data?.map((item) => <ProductListItem data={item} key={uuidv4()} />)}
+          {data?.slice()?.reverse()?.map((item) => <ProductListItem data={item} key={uuidv4()} />)}
         </ul>
       )}
     </>

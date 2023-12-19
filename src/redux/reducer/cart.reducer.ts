@@ -8,6 +8,7 @@ import {
   addProductToCartAxios,
   deleteProductInCart,
   getAllProductInCart,
+  updateProductInCart,
 } from "@/services/cart.services";
 import { commonErrorToast } from "@/utils/notify";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -38,31 +39,75 @@ interface AddProductToCartBody {
   user_id: string;
   product: IProductInCart;
 }
-
 export const addProductToCart = createAsyncThunk(
   "cart/addProductToCart",
-  async (data: AddProductToCartBody, thunkAPI) => {
-    const { user_id, product } = data;
-    const response = await addProductToCartAxios(user_id, product);
-    return response.data;
+  async (
+    { user_id, product }: AddProductToCartBody,
+    { rejectWithValue, fulfillWithValue }
+  ) => {
+    try {
+      const response = await addProductToCartAxios(user_id, product);
+      return fulfillWithValue(response.result);
+    } catch (error: any) {
+      if (error.name === "AxiosError" && error.response.status === 400) {
+        return rejectWithValue(error.response.data);
+      }
+      throw error;
+    }
   }
 );
 
 type DeleteProductInCartParams = {
   user_id: string;
-  data: ProductInCart[];
+  data: ProductInCart;
 };
 export const deleteProductInCartAsync = createAsyncThunk(
   "cart/deleteProduct",
-  async ({ user_id, data }: DeleteProductInCartParams, {rejectWithValue, fulfillWithValue}) => {
+  async (
+    { user_id, data }: DeleteProductInCartParams,
+    { rejectWithValue, fulfillWithValue }
+  ) => {
     try {
-      const response = await deleteProductInCart(user_id, data)
-      return fulfillWithValue(response.data)
+      const response = await deleteProductInCart(user_id, data);
+      return fulfillWithValue(response.result);
     } catch (error: any) {
-      if(error.name === "AxiosError" && error.status === 404){
-        return rejectWithValue(error.response.data)
+      if (error.name === "AxiosError" && error.response.status === 404) {
+        return rejectWithValue(error.response.data);
       }
-      throw error
+      throw error;
+    }
+  }
+);
+
+type TUpdateProductInCartParams = {
+  user_id: string;
+  product_id: string;
+  color: string;
+  size: string;
+  data: {
+    [key: string]: string | number;
+  };
+};
+export const updateProductInCartAsync = createAsyncThunk(
+  "cart/updateProduct",
+  async (
+    { user_id, product_id, color, size, data }: TUpdateProductInCartParams,
+    { rejectWithValue, fulfillWithValue }
+  ) => {
+    try {
+      const response = await updateProductInCart(
+        user_id,
+        product_id,
+        color,
+        size,
+        data
+      );
+      return fulfillWithValue(response.result);
+    } catch (error: any) {
+      if (error.name === "AxiosError" && error.status === 404) {
+        return rejectWithValue(error.response.data);
+      }
+      throw error;
     }
   }
 );
@@ -77,10 +122,22 @@ const cartSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(addProductToCart.fulfilled, (state, action) => {
-        state.products.push(action.payload);
+        state.products = action.payload;
       })
       .addCase(deleteProductInCartAsync.fulfilled, (state, action) => {
-        state.products = action.payload
+        state.products = action.payload;
+      })
+      .addCase(updateProductInCartAsync.fulfilled, (state, action) => {
+        state.products.map((item) => {
+          if (
+            item._id.toString() === action.payload?._id.toString() &&
+            item.color === action.payload?.color &&
+            item.size === action.payload?.size
+          ) {
+            return action.payload;
+          }
+          return item;
+        });
       })
       .addMatcher<PendingAction>(
         (action) => action.type.endsWith("/pending"),
