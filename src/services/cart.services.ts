@@ -28,7 +28,7 @@ type TDeleteProductResponse = {
   message: string;
   result: IProductInCart[];
 };
-export const deleteProductInCart = (user_id: string, data: ProductInCart) => {
+export const deleteProductInCart = (user_id: string, data: ProductInCart[]) => {
   const response = instance.put<any, TDeleteProductResponse>(
     `/api/cart/${user_id}`,
     data
