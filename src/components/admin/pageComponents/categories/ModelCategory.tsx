@@ -23,9 +23,6 @@ const ModelCategory = ({
   add,
   onClose,
 }: ModelProp) => {
-
-  console.log(category);
-
   const { register, handleSubmit, formState : { errors }, reset } = useForm<FieldValues>({
     defaultValues :{
       name:""

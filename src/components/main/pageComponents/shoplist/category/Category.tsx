@@ -14,7 +14,7 @@ import { getProductByPrice, getProductBySize, getProductsByCategoryId, setPage, 
 import { useSelector } from 'react-redux';
 interface CategoryProp {
     title: string;
-    data: ICategory[];
+    data: Array<any>;
     isOpen:boolean;
     onCategoryClick:(index:any) => void
   
@@ -140,7 +140,8 @@ const Category = ({ title, data, isOpen, onCategoryClick }:CategoryProp) => {
           <div  className="flex flex-col items-start rounded-lg p-2 ">
             {data?.map((item, i) => (
               <div className="flex  justify-start cursor-pointer rounded-r-lg border-l-transparent" key={i}>
-                <input type="checkbox" className="accent-zinc-800" onChange={(e) => handleChangeData(e,item)}/>
+                 <input id="default-radio-1" type="radio" value="" name="default-radio" className="accent-zinc-800" onChange={(e) => handleChangeData(e,item)}></input>
+              
                 <h3 className="p-4 text-xs">{item.name}</h3>
               </div>
             ))}

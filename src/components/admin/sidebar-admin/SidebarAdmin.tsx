@@ -10,7 +10,8 @@ import {
   LogOut,
   X,
   Home,
-  MessageSquare
+  MessageSquare,
+  Trash2
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,6 +54,11 @@ const data = [
     href: "users",
     icon: <UserCircle className="w-6 h-6" />,
     name: "Người dùng",
+  },
+  {
+    href: "trash",
+    icon:<Trash2  className="w-6 h-6"/>,
+    name: "Thùng rác",
   },
   {
     href: "settings",

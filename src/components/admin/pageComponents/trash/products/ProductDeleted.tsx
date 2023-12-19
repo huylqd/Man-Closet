@@ -1,52 +1,51 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { createPro, deletePro, getAll, moveToTrashProduct, updatePro } from "@/services/products/products";
+import { createPro, deletePro, getAll, getAllProductDeleted, moveToTrashProduct, restoreProduct, updatePro } from "@/services/products/products";
 import React, { useEffect, useRef, useState } from "react";
 import { Fragment_Mono } from "next/font/google";
 import Link from "next/link";
-import ModalPro from "./ModalPro";
 // import ModalUpdate from './ModalUpdate'
 import { IProduct } from '@/interfaces/product'
 import { v4 as uuidv4 } from 'uuid'
-import ModalUpdate from './ModalUpdate'
 import Toaster from "@/components/Toaster/Toaster";
 import Pagination from "@/components/pagination/Pagination";
-import ModalShow from "./Modal";
 import Modal from "@/components/modal/Modal";
-const ListProducts = () => {
+import ModalDetail from "./ModalDetail";
+import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
+const ProductDeleted = () => {
     const [products, setProducts] = useState<IProduct[]>([])
     const [productsAll, setProductsAll] = useState<IProduct[]>([])
     const [showModal, setshowModal] = useState(false)
-    const [showModalPro, setshowModalPro] = useState(false)
-    const [showModalUpdate, setshowModalUpdate] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
     const [product, setProduct] = useState<any>({})
     const toasterRef = useRef<any>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [key, setKey] = useState<string>('');
-
+    const [action,setAction] = useState("");
+    const [limit,setLimit] = useState<number>(10);
     // useEffect(() => {
     //     getAll().then(({ data }: any) => setProducts(data))
     // }, [])
     useEffect(() => {
         fetchData(currentPage)
+        fetchData(0)
     }, []);
     const fetchData = async (currentPage: number) => {
         if (currentPage !== 0) {
-            const response = await getAll(currentPage);
-            if (response) {
-                const data: any = response;
-                setProducts(data.data)
-                setTotalPages(data.pagination.totalPages)
+            const response:any = await getAllProductDeleted(currentPage);
+            if (response) {              
+                setProducts(response.data.items)
+                setTotalPages(response.data.totalPage)
                 // console.log('page', data);
             } else {
             }
         } else {
-            const response = await getAll(currentPage);
+            const response :any= await getAllProductDeleted(currentPage);
             if (response) {
-                const data: any = response;
-                setProductsAll(data.data)
-                setTotalPages(data.pagination.totalPages)
+               
+              setProductsAll(response.data.items)
+           
             } else {
 
             }
@@ -87,70 +86,55 @@ const ListProducts = () => {
     const handleChange = (e: any) => {
         setKey(e.target.value)
     }
-        const onhandleRemove = async (id: string) => {
-            if (confirm('Are you sure you want to remove')) {
-                const moveToTrash = await moveToTrashProduct(id) ;                
-                if(moveToTrash){
-                    const updatedProducts = products.filter((item) =>
-                    item._id !== id 
-                );
-                    setProducts(
-                        updatedProducts
-                    );
-                    toasterRef.current.showToast("success", "Xóa thành công");
-                }
-            
-            }
+    const onhandleRemove = async (id: string) => {
+      setIsOpen(true);
+      setAction("delete")
+      if (isOpen) {
+        const remove = await deletePro(id);
+        if(remove){
+          toasterRef.current.showToast("success", "Xóa vĩnh viễn thành công");
+          const updateProducts = products.filter((c) => c._id !== id)
+            setProducts(
+              updateProducts
+            );
+            const totalPage = Number((+products.length / limit).toFixed(0))
+            setTotalPages(totalPage)
+            setIsOpen(false)
+        }
+      }
 
         // await deletePro(id)
 
     }
-    const onhandleUpdate = async (product: any,id:string) => {
-        // console.log(category);
-        try {
-            const updateProduct = await updatePro(product,id)
-            if(updateProduct){
-                toasterRef.current.showToast("success", "Update successfully!");
-                // toast.success('Cập nhật thành công');
-                setProducts(
-                    products.map((item: any) =>
-                        item._id === id ? updateProduct.data : item
-                    )
-                );
-                setshowModalUpdate(false);
-            }
-        } catch (error:any) {
-            toasterRef.current.showToast("error", `${error.response.data.message}`);
-        }
-       
-       
-        
-    };
-
-    const handleAdd = async (prod: any) => {
-        try {
-            
-        const addProduct = await createPro(prod)
-        if(addProduct){
-            const newProducts = [...products];
-            console.log(newProducts);
-   
-            newProducts.push(addProduct.data);
+    const handleRestore = async (id:string) => {
+      setIsOpen(true);
+      setAction("restore")
+      if(isOpen) {
+        const restore = await restoreProduct(id);
+        if(restore){
+          toasterRef.current.showToast("success", "Phục hổi thành công");
+          const updateCategories = products.filter((c) => c._id !== id)
+          console.log(updateCategories);
           
-            setProducts(newProducts);
-            toasterRef.current.showToast("success", "Thêm sản phẩm thành công!");
-            setshowModalPro(false);
+          setProduct(
+            updateCategories
+          );
+          const totalPage = Number((+products.length / limit).toFixed(0))
+          setTotalPages(totalPage)
+          setIsOpen(false)
         }
-        } catch (error:any) {
-            toasterRef.current.showToast("error", `${error.response.data.message}`);
-        }
-    
-           
-    };
+      }
+    } 
+
+
+   
     return (
         <div>
             <div className="overflow-x-auto">
-                <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+            <h1 className="font-bold text-xl pt-6 pb-6 dark:text-black">
+             Sản phẩm  
+            </h1>
+                <div className="font-bold text-xl pb-6">
                     <div className="w-full md:w-1/2">
 
                         <div className="flex items-center">
@@ -176,42 +160,7 @@ const ListProducts = () => {
                         </div>
 
                     </div>
-                    <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                        <button onClick={() => setshowModalPro(true)} type="button" id="createProductModalButton" data-modal-target="createProductModal" data-modal-toggle="createProductModal" className="border flex items-center justify-center  bg-primary-700 hover:bg-blue-800 hover:text-white focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                            <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path clipRule="evenodd" fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
-                            Thêm sản phẩm
-                        </button>
-                        <div className="flex items-center space-x-3 w-full md:w-auto">
-                            <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                                <svg className="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clipRule="evenodd" fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                                Chức năng
-                            </button>
-                            <div id="actionsDropdown" className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
-                                    <li>
-                                        <a href="#" className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass Edit</a>
-                                    </li>
-                                </ul>
-                                <div className="py-1">
-                                    <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete all</a>
-                                </div>
-                            </div>
-                            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-                                </svg>
-                                Lọc
-                                <svg className="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clipRule="evenodd" fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </button>
-
-                        </div>
-                    </div>
+                   
                 </div>
                 <table className="w-full text-sm text-left table-auto text-gray-500 dark:text-gray-400">
                     <thead className="text-xs  text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -223,7 +172,7 @@ const ListProducts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((data: IProduct, index: number) => {
+                        {products.length !== 0 ? products.map((data: IProduct, index: number) => {
                             return (
                                 <tr key={index} className="border-b bg-white dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td className="p-4 w-4">
@@ -243,13 +192,16 @@ const ListProducts = () => {
                                     </td>
                                     <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div className="flex items-center space-x-4">
-                                            <button onClick={() => { setshowModalUpdate(true); setProduct(data) }} type="button" data-drawer-target="drawer-update-product" data-drawer-show="drawer-update-product" aria-controls="drawer-update-product" className="border border-yellow-300 dark:border-yellow-300 py-2 px-3 flex items-center text-sm font-medium text-center text-yellow-300 hover:text-white  rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                    <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
-                                                </svg>
-                                                Sửa
-                                            </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => { handleRestore(data._id), setProduct(data._id); }}
+                                          data-drawer-show="drawer-update-product"
+                                          aria-controls="drawer-update-product"
+                                          className="py-2 px-3 flex items-center text-sm font-medium text-center bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                        >
+                                        <svg   className="h-4 w-4 mr-2 -ml-0.5" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+                                          Khôi phục
+                                       </button>
                                             <button onClick={() => { setshowModal(true); setProduct(data._id) }} type="button" data-drawer-target="drawer-read-product-advanced" data-drawer-show="drawer-read-product-advanced" aria-controls="drawer-read-product-advanced" className="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2 -ml-0.5">
                                                     <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
@@ -257,18 +209,26 @@ const ListProducts = () => {
                                                 </svg>
                                                 Chi tiết
                                             </button>
-                                            <button onClick={() => onhandleRemove(data._id)} type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal" className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                            <button onClick={() => {onhandleRemove(data._id), setProduct(data._id)}} type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal" className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                                                 </svg>
-                                                Xóa mềm
+                                                Xóa 
                                             </button>
                                         </div>
                                     </td>
 
                                 </tr>
                             )
-                        })}
+                        }):(<tr>
+                          <td colSpan={4} className=" p-4  text-center bg-white  ">
+                            <div className="flex align-center justify-center ">
+                              Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
+                                <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
+                              </svg>
+                            </div>
+                          </td>
+                        </tr>)}
                     </tbody>
 
                 </table>
@@ -277,22 +237,42 @@ const ListProducts = () => {
             <Toaster ref={toasterRef} />
             {showModal &&  (
               <Modal isOpen={showModal} handleClose={() => setshowModal(false)}>
-              <ModalShow id={product} onClose={() => setshowModal(false)} />
+              <ModalDetail id={product} onClose={() => setshowModal(false)} />
               </Modal>
             )}
+             {isOpen && action == "delete" && (
+        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+          <ConfirmModal titleSubmit="Xóa" title="Xóa sản phẩm" text="Bạn có chắc muốn xóa?" onClose={() => setIsOpen(false)} onHandle={onhandleRemove} id={product} >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 flex items-center text-red-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+          </ConfirmModal>
+        </Modal>
 
-            {
-                showModalPro && (
-                    <Modal isOpen={showModalPro} handleClose={() => setshowModalPro(false)}>
-                        <ModalPro add={handleAdd} product={product} onClosePro={() => setshowModalPro(false)} />
-                    </Modal>
-                )
-            }
+      )}
+            {isOpen && action == "restore" && (
+        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+          <ConfirmModal titleSubmit="Phục hổi" title="Phục hồi sản phẩm" text="Bạn có chắc muốn phục hổi?" onClose={() => setIsOpen(false)} onHandle={handleRestore} id={product} >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                <svg  className="w-12 h-16 flex items-center text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+
+          </ConfirmModal>
+        </Modal>
+
+      )}
+           
+
+           
           
-            <ModalUpdate isvisibleUpdate={showModalUpdate} update={onhandleUpdate} products={product} onClosePro={() => setshowModalUpdate(false)} />
+           
 
         </div>
     )
 }
 
-export default ListProducts;
+export default ProductDeleted;

@@ -3,13 +3,12 @@ import React from 'react'
 
 
 interface Pagination{
-    totalPages:number,
-    limit?:number,
-    currentPage:number,
-    totalItems?:number,
+    totalPages:number,   
+    currentPage:number, 
     onPageChange: (page:number) => void
 }
-const Pagination = ({totalPages, currentPage,totalItems, onPageChange,limit}:Pagination) => {
+const Pagination = ({totalPages, currentPage, onPageChange,}:Pagination) => {
+
 
     const handle = (page:number) => {
         onPageChange(page)

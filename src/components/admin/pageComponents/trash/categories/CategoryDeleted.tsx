@@ -2,59 +2,57 @@
 import { ICategory } from "@/interfaces/category";
 import {
   addCategory,
+  deleteCategory,
   getAllCategory,
+  getAllDeletedCategory,
   moveToTrashCategory,
+  restoreCategory,
   updateCategory,
 } from "@/services/categories/category";
 import React, { useEffect, useRef, useState } from "react";
-import ModelCategory from "./ModelCategory";
+
 import Toaster from "@/components/Toaster/Toaster";
 import Pagination from "@/components/pagination/Pagination";
-import SearchCategory from "./SearchCategory";
+
 import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
 import Modal from "@/components/modal/Modal";
+import SearchCategory from "../../categories/SearchCategory";
+import ModelCategory from "../../categories/ModelCategory";
 
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 
-const ManagementCategory = () => {
+const CategoryDeleted = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [categoriesAll, setCategoriesAll] = useState<ICategory[]>([]);
-  const [modal, setModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [action,setAction] = useState("");
+  const [limit,setLimit] = useState<number>(8);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [totalItems, setTotalItems] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [category, setCategory] = useState<any>();
   const [key, setKey] = useState<string>('');
   const toasterRef = useRef<any>(null);
   useEffect(() => {
-    fetchDataAll(0, Number.MAX_SAFE_INTEGER)
-    fetchData(currentPage, limit)
+    fetchDataAll(0)
+    fetchData(currentPage)
   
   }, []);
-  const fetchDataAll = async (currentPage: number, limit: number) => {
-    const response = await getAllCategory(currentPage, limit);
+  const fetchDataAll = async (currentPage: number) => {
+    const response = await getAllDeletedCategory(currentPage);
     if (response) {
-      const data: any = response;
-      setCategoriesAll(data.data)
-    } else {
-
+    
+      setCategoriesAll(response.data.items)
     }
   }
-  const fetchData = async (currentPage: number, limit: number) => {
+  const fetchData = async (currentPage: number) => {
     if (currentPage !== 0) {
-      const response:any = await getAllCategory(currentPage, limit);
-      if (response) {
+      const response = await getAllDeletedCategory(currentPage);
+      if (response) { 
+        setCategories(response.data.items)
+        setTotalPages(response.data.totalPage)
        
-        
-        setCategories(response.data)
-        setTotalPages(response.paginate.totalPages)
-        setTotalItems(response.paginate.totalItems)
-
-      } else {
-
+     
       }
     }
   };
@@ -62,75 +60,58 @@ const ManagementCategory = () => {
 
 
   const handleDelete =async (id: string | undefined) => {
+
     setIsOpen(true);
+    setAction("delete")
     if (isOpen) {
       try {
-        const moveToTrash = await moveToTrashCategory(id);
-        if(moveToTrash){
-          toasterRef.current.showToast("success", "Chuyển danh mục vào thùng rác thành công");
+        const remove = await deleteCategory(id);
+        if(remove){
+          toasterRef.current.showToast("success", "Xóa vĩnh viễn thành công");
           const updateCategories = categories.filter((c) => c._id !== id)
             setCategories(
               updateCategories
             );
-            setTotalItems(categories.length)
-            // setTotalPages(categories.length)
+            const totalPage = Number((+categories.length / limit).toFixed(0))
+            setTotalPages(totalPage)
             setIsOpen(false)
         }
       } catch (error:any) {
+        console.log(error);
+        
         toasterRef.current.showToast("error", error.response.data.message);
       }
-    
+   
     }
-
   };
-  const handleUpdate = async (category: ICategory) => {
-    try {
-      const updateCate = await updateCategory(category)
-      // console.log(updateCate);
-      
-      if(updateCate){
-        toasterRef.current.showToast("success", "Cập nhật danh mục thành công");
+  const handleRestore = async (id: string | undefined) => {
+    setIsOpen(true);
+    setAction("restore")
+    if(isOpen) {
+      const restore = await restoreCategory(id);
+      if(restore){
+        toasterRef.current.showToast("success", "Phục hổi thành công");
+        const updateCategories = categories.filter((c) => c._id !== id)
         setCategories(
-          categories.map((item) =>
-            item._id === category._id ? category : item
-          )
+          updateCategories
         );
-        setModal(false);
+        const totalPage = Number((+categories.length / limit).toFixed(0))
+        setTotalPages(totalPage)
+        setIsOpen(false)
       }
-    } catch (error : any) {
-      toasterRef.current.showToast("error", `${error.response.data.message}`);      
     }
-   
-  };
-  const handleAdd = async (category: ICategory) => {
-    try {
-      const addCate = await addCategory(category)
-      // console.log(addCate);
-      if(addCate){
-        const newCategories = [...categories];
-        // Thêm sản phẩm mới vào danh sách
-        newCategories.push(addCate.data);
-        // Cập nhật state `categories` với danh sách mới
-        setCategories(newCategories);
-        toasterRef.current.showToast("success", "Thêm sản phẩm thành công!");
-        setModal(false);
-        fetchData(currentPage, limit)
-      }
-    } catch (error : any) {
-      toasterRef.current.showToast("error", `${error.response.data.message}`);
-    }
-   
-  };
+  }
+
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
-    fetchData(page, limit)
+    fetchData(page)
   }
 
 
 
   const search = async () => {
     if (!key) {
-      await fetchData(currentPage, limit)
+      await fetchData(currentPage)
 
     } else {
 
@@ -164,33 +145,11 @@ const ManagementCategory = () => {
         <section>
           <div>
             <h1 className="font-bold text-xl pt-6 pb-6 dark:text-black">
-              Quản lý danh mục sản phẩm
+             Danh mục 
             </h1>
           </div>
           <div className="font-bold text-xl pb-6">
             <SearchCategory onHandleChange={handleChange} onSearch={search} />
-            <button
-              type="submit"
-              onClick={() => {
-                setModal(true);
-                setCategory(false);
-              }}
-              className="text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            >
-              <svg
-                className="mr-1 -ml-1 w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Thêm mới
-            </button>
           </div>
         </section>
         <table className="w-full  table text-sm text-left table-auto text-gray-500 dark:text-gray-400">
@@ -225,33 +184,17 @@ const ManagementCategory = () => {
                   <td className="px-6 py-4">{cate.name}</td>
                   <td className="px-6 py-4 ">
                     <div className="flex items-center space-x-4">
-                      <button
+                    
+                    <button
                         type="button"
-                        onClick={() => {
-                          setModal(true);
-                          setCategory(cate);
-                        }}
+                        onClick={() => { handleRestore(cate._id), setCategory(cate); }}
                         data-drawer-show="drawer-update-product"
                         aria-controls="drawer-update-product"
                         className="py-2 px-3 flex items-center text-sm font-medium text-center bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-2 -ml-0.5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                          <path
-                            fillRule="evenodd"
-                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        Edit
+                       <svg   className="h-4 w-4 mr-2 -ml-0.5" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+                        Khôi phục
                       </button>
-
                       <button
                         type="button"
                         onClick={() => { handleDelete(cate._id), setCategory(cate); }}
@@ -272,7 +215,7 @@ const ManagementCategory = () => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        Delete
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -291,23 +234,15 @@ const ManagementCategory = () => {
             )}
           </tbody>
         </table>
-        <Pagination currentPage={currentPage}  totalPages={totalPages} onPageChange={handleChangePage} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
       </div>
       <Toaster ref={toasterRef} />
-      <Modal isOpen={modal} handleClose={() => setModal(false)}>
-        <ModelCategory
+     
 
-          add={handleAdd}
-          update={handleUpdate}
-          category={category}
-          onClose={() => setModal(false)}
-        />
-      </Modal>
-
-      {isOpen && (
+      {isOpen && action == "delete" && (
         <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
-          <ConfirmModal onClose={() => setIsOpen(false)} onHandle={handleDelete} id={category._id} titleSubmit="Xóa" text="Bạn có chắc muốn xóa?" title="Xóa danh mục">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <ConfirmModal titleSubmit="Xóa" title="Xóa danh mục" text="Bạn có chắc muốn xóa?" onClose={() => setIsOpen(false)} onHandle={handleDelete} id={category._id} >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 flex items-center text-red-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">
@@ -317,9 +252,21 @@ const ManagementCategory = () => {
         </Modal>
 
       )}
+      {isOpen && action == "restore" && (
+        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+          <ConfirmModal titleSubmit="Phục hổi" title="Phục hồi danh mục" text="Bạn có chắc muốn phục hổi?" onClose={() => setIsOpen(false)} onHandle={handleRestore} id={category._id} >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                <svg  className="w-12 h-16 flex items-center text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+
+          </ConfirmModal>
+        </Modal>
+
+      )}
 
     </div>
   );
 };
 
-export default ManagementCategory;
+export default CategoryDeleted;

@@ -10,46 +10,48 @@ import Pagination from "@/components/pagination/Pagination";
 import ConfirmModal from "@/components/modal/confirmModal/ConfirmModal";
 import Modal from "@/components/modal/Modal";
 import { IUser } from "@/interfaces/user";
-import { getAllUser, moveUserToTrash } from "@/services/user/user";
+import { getAllUser, getAllUserDeleted, moveUserToTrash, restoreUser } from "@/services/user/user";
 import { lockUser } from "@/services/auth/auth";
-import SearchUser from "./SearchUser";
+
 import { commonErrorToast, commonSuccessToast } from "@/utils/notify";
+import SearchUser from "../../users/SearchUser";
 
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 
-const ManagementUser = () => {
+const UserDeleted = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [userAll, setUserAll] = useState<IUser[]>([]);
   const [user,setUser] = useState<any>();
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
-  const [totalItems, setTotalItems] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
+
+
   const [key,setKey] = useState<string>("")
   const [isOpen,setIsOpen] = useState(false);
   useEffect(() => {
-    fetchData(currentPage, limit)
-    fetchDataAll(0, Number.MAX_SAFE_INTEGER)
+    fetchData(currentPage)
+    fetchDataAll(0)
   }, [])
-  const fetchDataAll = async (currentPage: number, limit: number) => {
-    const response = await getAllUser(currentPage, limit);
+  const fetchDataAll = async (currentPage: number) => {
+    const response = await getAllUserDeleted(currentPage);
     if (response) {
-      const data: any = response;
-      setUserAll(data.data)
+
+      setUserAll(response.data.items)
     } else {
 
     }
   }
-  const fetchData = async (currentPage: number, limit: number) => {
+  const fetchData = async (currentPage: number) => {
     if (currentPage !== 0) {
-      const response = await getAllUser(currentPage, limit);
+      const response = await getAllUserDeleted(currentPage);
       if (response) {
-        const data: any = response;
+       
         // const user = data.data.filter((u:IUser) => u.role !== "admin");
-        setUsers(data.data)
-        setTotalPages(data.paginate.totalPages)
-        setTotalItems(data.paginate.totalItems)
+        setUsers(response.data.items)
+        setTotalPages(response.data.totalPage)
+       
 
       } else {
 
@@ -60,18 +62,18 @@ const ManagementUser = () => {
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
-    fetchData(page, limit)
+    fetchData(page)
   }
   const handleLock = async (userId: string | undefined) => {
     const user = await lockUser(userId)
-    fetchData(currentPage, limit)
+    fetchData(currentPage)
   }
     const search = async () => {
 
     if (!key) {
      
       
-      await fetchData(currentPage, limit)
+      await fetchData(currentPage)
 
     } else {
 
@@ -97,28 +99,23 @@ const ManagementUser = () => {
   const handleChange = (e: any) => {
     setKey(e.target.value)
   }
-  const handleDelete =async (id: string | undefined) => {
+  const handleRestore = async (id: string | undefined) => {
     setIsOpen(true);
-    if (isOpen) {
-      try {
-        const moveToTrash = await moveUserToTrash(id);
-        if(moveToTrash){
-        commonSuccessToast("Chuyển người dùng vào trong bộ nhớ tạm")
-          const updateUsers = users.filter((c) => c._id !== id)
-            setUsers(
-              updateUsers
-            );
-            setTotalItems(updateUsers.length)
-            // setTotalPages(categories.length)
-            setIsOpen(false)
-        }
-      } catch (error:any) {
-        commonErrorToast(`${error.response.data.message}`)
+   
+    if(isOpen) {
+      const restore = await restoreUser(id);
+      if(restore){
+       commonSuccessToast("Phục hồi thành công")
+        const updateUsers = users.filter((c) => c._id !== id)
+        setUsers(
+          updateUsers
+        );
+        const totalPage = Number((+users.length / limit).toFixed(0))
+        setTotalPages(totalPage)
+        setIsOpen(false)
       }
-    
     }
-
-  };
+  }
 
   return (
     <div>
@@ -127,7 +124,7 @@ const ManagementUser = () => {
         <section>
           <div>
             <h1 className="font-bold text-xl pt-6 pb-6 dark:text-black">
-              Quản lý người dùng
+              Người dùng
             </h1>
           </div>
           <div className="font-bold text-xl pb-6">
@@ -193,25 +190,13 @@ const ManagementUser = () => {
 
                       <button
                         type="button"
-                        onClick={() => { handleDelete(user._id), setUser(user); }}
-                        data-modal-target="delete-modal"
-                        data-modal-toggle="delete-modal"
-                        className="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+                        onClick={() => { handleRestore(user._id), setUser(user); }}
+                        data-drawer-show="drawer-update-product"
+                        aria-controls="drawer-update-product"
+                        className="py-2 px-3 flex items-center text-sm font-medium text-center bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-2 -ml-0.5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        Xóa
+                       <svg   className="h-4 w-4 mr-2 -ml-0.5" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+                        Khôi phục
                       </button>
                     </div>
                   </td>
@@ -219,7 +204,7 @@ const ManagementUser = () => {
               );
             }) : (
               <tr>
-                <td colSpan={3} className=" p-4  text-center bg-white  ">
+                <td colSpan={6} className=" p-4  text-center bg-white  ">
                   <div className="flex align-center justify-center ">
                     Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
                       <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>
@@ -233,14 +218,13 @@ const ManagementUser = () => {
         <Pagination currentPage={currentPage}   totalPages={totalPages} onPageChange={handleChangePage} />
       </div>
       {isOpen && (
-        <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
-          <ConfirmModal onClose={() => setIsOpen(false)} onHandle={handleDelete} id={user._id} titleSubmit="Xóa" text="Bạn có chắc?" title="Xóa tạm người dùng">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 flex items-center text-red-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
+          <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+          <ConfirmModal titleSubmit="Phục hổi" title="Phục hồi người dùng" text="Bạn có chắc muốn phục hổi?" onClose={() => setIsOpen(false)} onHandle={handleRestore} id={user._id} >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                <svg  className="w-12 h-16 flex items-center text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+
           </ConfirmModal>
         </Modal>
 
@@ -250,4 +234,4 @@ const ManagementUser = () => {
   );
 };
 
-export default ManagementUser;
+export default UserDeleted;
