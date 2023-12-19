@@ -1,7 +1,7 @@
 import { FulfilledAction, PendingAction, RejectedAction } from "@/interfaces/asyncThunk";
 import { IComment } from "@/interfaces/comment";
 
-import { DataComment, createComment, getCommentByProductId } from "@/services/comment/comment";
+import { DataComment, createComment, deleteCommentById, getCommentByProductId } from "@/services/comment/comment";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface CommentState {
@@ -33,6 +33,10 @@ export const postComment = createAsyncThunk("comment/postComment", async (data: 
     console.log(response);
     return response
 })
+export const deleteCommentState = createAsyncThunk("comment/deleteCommentState", async (commentId: string, thunkAPI) => {
+    const response = await deleteCommentById(commentId);
+    return response
+})
 
 
 
@@ -55,6 +59,11 @@ const commentSlice = createSlice({
 
 
         })
+            .addCase(deleteCommentState.fulfilled, (state, action) => {
+                console.log(action.payload)
+                const comment = state.comment.filter((comment) => comment._id !== action.payload._id);
+                state.comment = comment
+            })
     },
 });
 
