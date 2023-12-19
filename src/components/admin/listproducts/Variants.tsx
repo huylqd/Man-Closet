@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 interface IVariants {
     register: UseFormRegister<FieldValues>;
     errors: FieldErrors;
-
+    i:number
 }
-const Variants = ({register, errors}:IVariants) =>{
+const Variants = ({register, errors,i}:IVariants) =>{
     const [arrIndex, setArrIndex] = useState<number[]>([]);
       const [variantCounter, setVariantCounter] = useState(0);
       const addNewVariant = () => {
@@ -25,20 +25,20 @@ const Variants = ({register, errors}:IVariants) =>{
                 Thêm variant
         </Button>
 <div  className='  flex flex-row flex-wrap items-center justify-around '>      
-        {arrIndex.map((item1,index1:any) => {   
+        {arrIndex.map((item,index:any) => {   
         return (<><div className='w-[30%]' key={uuidv4()} >
         <label htmlFor="length" className="block text-sm font-medium text-gray-900 dark:text-white">Size</label>
-        <input type="text" {...register(`properties[0].variants[${index1}].size`,{
+        <input type="text" {...register(`properties[${i}].variants[${index}].size`,{
             required:"Size bắt buộc nhập"
         })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="M..."  />
           <span className="text-red-600 text-sm">
-            {(errors?.properties?.[0]?.variants?.[index1]?.size as any) && (errors?.properties?.[0]?.variants?.[index1]?.size as any).message}
+            {(errors?.properties?.[i]?.variants?.[index]?.size as any) && (errors?.properties?.[i]?.variants?.[index]?.size as any).message}
 
 </span>     
     </div>
     <div className='w-[30%]'>
         <label htmlFor="width" className="block text-sm font-medium text-gray-900 dark:text-white">Số lượng</label>
-        <input type="number" {...register(`properties[0].variants[${index1}].quantity`,{
+        <input type="number" {...register(`properties[${i}].variants[${index}].quantity`,{
             required:"Số lượng bắt buộc nhập",
             validate: (val) => {
                 if (isNaN(val)) {
@@ -47,11 +47,11 @@ const Variants = ({register, errors}:IVariants) =>{
             }
         })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" />
         <span className="text-red-600 text-sm">
-{(errors?.properties?.[0]?.variants?.[index1]?.quantity as any) && (errors?.properties?.[0]?.variants?.[index1]?.quantity as any).message}
+{(errors?.properties?.[i]?.variants?.[index]?.quantity as any) && (errors?.properties?.[i]?.variants?.[index]?.quantity as any).message}
 
 </span>    
     </div>
-    <Button variant={'primary'} type="button" className='mt-7' onClick={removeVariant(item1)}>
+    <Button variant={'primary'} type="button" className='mt-7' onClick={removeVariant(item)}>
     Xóa variant
 </Button>
     

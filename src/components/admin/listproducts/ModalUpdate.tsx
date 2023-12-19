@@ -14,14 +14,14 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
     if (!isvisibleUpdate) return null
     // const [product, setProduct] = useState({})
     const [cate, setCate] = useState<ICategory[]>([])
-    const [selectImage,setSelectImage] = useState<FileList | null>(null);
+    const [selectImage,setSelectImage] = useState<FileList | any>([]);
     const [indexes, setIndexes] = useState<number[]>([]);
     const [counter, setCounter] = useState(0);
     useEffect(() => {
         getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({ data }) => setCate(data))
     }, [])
     const handleChangeFile = (e:ChangeEvent<HTMLInputElement>) => {
-        setSelectImage(e.target.files)     
+        setSelectImage([...selectImage,e.target.files])     
         console.log(e.target.files);    
       };
       const addFriend = () => {
@@ -48,13 +48,15 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
         console.log(data);
         
         const formData = new FormData()
-       
         formData.append("productName",data.productName)
         formData.append("categoryId",data.categoryId) 
         formData.append("price",data.price) 
         if(selectImage !== null){
-            for (let i = 0; i < selectImage.length; i++) {                                       
-                formData.append('images', selectImage[i]);
+            for (let i = 0; i < selectImage.length; i++) {                  
+                for(let j = 0; j < selectImage[i].length; j++){
+                    formData.append('images', selectImage[i][j]);
+                }                  
+             
               }
         }
         for (let i = 0; i < data.properties.length; i++) {

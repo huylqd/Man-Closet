@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Properties from './Properties'
 const ModalPro = ({  add, product, onClosePro }: any) => {
     const [cate, setCate] = useState([]);
-    const [selectImage,setSelectImage] = useState<FileList | null>(null);
+    const [selectImage,setSelectImage] = useState<FileList | any>([]);
     useEffect(() => {
         getAllCategory(0,Number.MAX_SAFE_INTEGER)?.then(({ data }) => setCate(data))
     }, [])
@@ -31,9 +31,11 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
     
   
     const handleChangeFile = (e:ChangeEvent<HTMLInputElement>) => {
-        setSelectImage(e.target.files)     
-        console.log(e.target.files);
+        setSelectImage([...selectImage,e.target.files])     
+  
       };
+     
+      
     const onHandleSubmit = async (data: any) => {
         try {
                 const formData = new FormData();
@@ -45,9 +47,7 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                console.log(data);
                if(data.properties.length > 0) {
                 for (let i = 0; i < data.properties.length; i++) {
-                
                     const property = data.properties[i];
-               
                     formData.append(`properties[${i}][color]`, property.color);     
                     if(property.variants) {
                         for (let j = 0; j < property.variants.length; j++) {
@@ -57,7 +57,6 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                             formData.append(`properties[${i}][variants][${j}][quantity]`, variant.quantity);
                           }
                     }  
-                   
                   }
          
                   
@@ -66,8 +65,11 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                }
              
               if(selectImage !== null){
-                for (let i = 0; i < selectImage.length; i++) {                                    
-                    formData.append('images', selectImage[i]);
+                for (let i = 0; i < selectImage.length; i++) {                  
+                    for(let j = 0; j < selectImage[i].length; j++){
+                        formData.append('images', selectImage[i][j]);
+                    }                  
+                 
                   }
             }
           

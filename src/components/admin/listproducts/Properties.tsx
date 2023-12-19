@@ -24,8 +24,11 @@ const Properties = ({register,errors,handleChangeFile}:IProperties) => {
   
   return (
     <div className="grid gap-4 sm:col-span-2 md:gap-6  ">
-
-        
+            <Button className='w-[30%]' variant={'primary'} type="button" onClick={addFriend} >
+                Thêm thuộc tính
+        </Button>
+        {indexes.map((item,index) => {
+            return (
             <fieldset className='flex flex-row justify-between items-center' >
                 <div className=" w-[15%]">
                     <span className="block text-sm font-medium text-gray-900 dark:text-white"> Images</span>
@@ -34,27 +37,33 @@ const Properties = ({register,errors,handleChangeFile}:IProperties) => {
                      className="w-full  text-black text-xs   bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800  file:hover:bg-gray-700 file:text-white rounded-lg " onChange={handleChangeFile} />
                     
                     <input type="text" hidden
-                     className="w-full  text-black text-xs   bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800  file:hover:bg-gray-700 file:text-white rounded-lg " {...register(`properties[0].imageUrl`)} />
+                     className="w-full  text-black text-xs   bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800  file:hover:bg-gray-700 file:text-white rounded-lg " {...register(`properties[${index}].imageUrl`)} />
                 </div>
                 </div>
                 <div className='w-[15%]'>
                     <label htmlFor="breadth" className="block  text-sm font-medium text-gray-900 dark:text-white">Color</label>
-                    <input type="text" {...register(`properties[0].color`,{
+                    <input type="text" {...register(`properties[${index}].color`,{
                         required:"Màu sắc bắt buộc nhập"
                     })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-[80%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="red..."  />
                        <span className="text-red-600 text-sm">
                        
-                         {(errors?.properties?.[0]?.color as any) && (errors?.properties?.[0]?.color as any).message}
+                         {(errors?.properties?.[index]?.color as any) && (errors?.properties?.[index]?.color as any).message}
 
 </span>                  
                    
                        
                 </div>
-                <Variants register={register} errors={errors} />
-                
+                <Variants register={register} errors={errors} i={index}/>
+                <Button className='w-[15%]' variant={'primary'} type="button" onClick={removeFriend(item)} >
+              Xóa thuộc tính
+        </Button>
               
             </fieldset>
         
+            )
+        })}
+        
+            
 
    
     
