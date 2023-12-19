@@ -69,3 +69,15 @@ export const getUserOrderHistory = (
 export const updateUserAvatar =  (userId:string | undefined,files:any) => {
   return axios.patch(`http://localhost:8088/user/${userId}/avatar`,files)
 }
+export const getAllUserDeleted = (page:number) => {
+  const res = instance.get(`/user/moveToTrash/delete?page=${page}`);
+  return res
+}
+export const restoreUser = (id:string | undefined) => {
+  const res = instance.patch(`/user/restore/${id}`)
+  return res
+}
+export const moveUserToTrash = (id:string | undefined) => {
+  const res = instance.delete(`/user/remove/${id}`)
+  return res
+}

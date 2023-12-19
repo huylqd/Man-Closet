@@ -30,12 +30,12 @@ const Input: React.FC<IputProp> = ({
     // password
     if ( id === "confirmPassword") {
       if (watch('password') != val) {
-        return "Your passwords do no match";
+        return "Mật khẩu không trùng khớp";
       }
     }
     // email
     if (id === "email") {
-      return !emailPattern.test(val) ? "Invalid email format" : undefined;
+      return !emailPattern.test(val) ? "Email không đúng định dạng" : undefined;
     }
     return undefined;
   };
@@ -56,8 +56,8 @@ const Input: React.FC<IputProp> = ({
           type={type}
           autoComplete={id}
           {...register(id, {
-            required: `${id} is required`,
-            minLength: id === 'password' || id === "confirmPassword" ? { value: 6, message: `${id} must be at least 6 characters long` } : undefined,
+            required: `${id} bắt buộc nhập`,
+            minLength: id === 'password' || id === "confirmPassword" ? { value: 6, message: `${id} phải lớn hơn 6 kí tự` } : undefined,
             validate: commonValidate            
           })}
           className={clsx(

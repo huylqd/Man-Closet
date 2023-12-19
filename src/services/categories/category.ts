@@ -23,44 +23,44 @@ const getCategoryById = async (id: string) => {
     }
 }
 const addCategory = async (category: any) => {
-    try {
+
         const res = await instance.post(`api/category`, category)
         return res
-    } catch (error:any) {
-        console.log(error);
-        
-        commonErrorToast(`${error.response.data.message}`)
-
-    }
+ 
 }
 const updateCategory = async (category: ICategory) => {
-    try {
+ 
         const res = await instance.patch(`api/category/${category._id}`, category)
         return res
-    } catch (error) {
-        console.log(error);
-
-    }
+   
 }
-const deleteCategory = async (id: any) => {
-    try {
+// Xoas hẳn trong db
+const deleteCategory = async (id: string | undefined) => {
+  
         const res = await instance.delete(`api/category/${id}`)
         return res
-    } catch (error) {
-        console.log(error);
-
-    }
+   
 }
-const removeCategory = async (id: any) => {
-    try {
-        const res = await instance.patch(`api/category/remove/${id}`)
+// Chuyển vào trong thùng rác
+const moveToTrashCategory = async (id: string | undefined) => {
+ 
+        const res = await instance.delete(`api/category/remove/${id}`)
         return res
-    } catch (error) {
-        console.log(error);
+  
+}
+const getAllDeletedCategory = async (page:number) => {
 
-    }
+        const res = await instance.get(`api/category/moveToTrash/delete?page=${page}`)
+        return res
+  
+}
+const restoreCategory = async (id:string | undefined) => {
+ 
+        const res = await instance.patch(`api/category/restore/${id}`)
+        return res
+
 }
 
-export { getAllCategory, getCategoryById, addCategory, updateCategory, deleteCategory,removeCategory }
+export { getAllCategory, getCategoryById, addCategory, updateCategory, deleteCategory, moveToTrashCategory,getAllDeletedCategory,restoreCategory}
 
 

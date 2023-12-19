@@ -10,7 +10,8 @@ import {
   X,
   Home,
   MessageSquare,
-  MessageSquareDashed
+  MessageSquareDashed,
+  Trash2
 } from "lucide-react";
 import Image from "next/image";
 // import Link from "next/link";
@@ -58,6 +59,11 @@ const data = [
     href: "comments",
     icon: <MessageSquareDashed className="w-6 h-6" />,
     name: "Bình Luận",
+  },
+  {
+    href: "trash",
+    icon:<Trash2  className="w-6 h-6"/>,
+    name: "Thùng rác",
   },
   {
     href: "settings",
