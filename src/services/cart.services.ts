@@ -26,7 +26,7 @@ export const addProductToCartAxios = (
 
 type TDeleteProductResponse = {
   message: string;
-  data: IProductInCart[];
+  result: IProductInCart[];
 };
 export const deleteProductInCart = (user_id: string, data: ProductInCart[]) => {
   const response = instance.put<any, TDeleteProductResponse>(

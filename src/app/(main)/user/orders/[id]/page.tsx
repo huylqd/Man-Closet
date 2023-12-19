@@ -128,6 +128,7 @@ const OrderDetailPage = () => {
             data={{
               billId: order?._id,
               payment_status: order?.payment_status?.status,
+              payment_method: order?.payment_method
             }}
           />
         </div>

@@ -8,20 +8,36 @@ type ButtonsFucProps = {
   data: {
     billId: string;
     payment_status: string;
+    payment_method: string;
   };
+};
+type TNextCase = {
+  caseStatus: string;
+  label: string;
 };
 const ButtonsFunc = ({ orderStatus, data }: ButtonsFucProps) => {
   const dispatch = useAppDispatch();
-  const { billId, payment_status } = data;
+  const { billId, payment_status, payment_method } = data;
 
   const typeNextCase = useMemo(() => {
     switch (orderStatus) {
-      case ORDER_STATUS.DELIVERY:
-        return ORDER_STATUS.RECEIVER;
+      case ORDER_STATUS.PENDING:
+        return {
+          caseStatus: ORDER_STATUS.CANCEL,
+          label: "Huỷ đơn",
+        };
+      case ORDER_STATUS.DELIVERED:
+        return {
+          caseStatus: ORDER_STATUS.RECEIVER,
+          label: "Đã nhận hàng"
+        };
       case ORDER_STATUS.RECEIVER:
-        return ORDER_STATUS.EXCHANGE;
+        return {
+          caseStatus: ORDER_STATUS.EXCHANGE,
+          label: "Đổi hàng"
+        };
     }
-  }, [orderStatus]);
+  }, [orderStatus]) as TNextCase;
 
   const handleChangeBillStatus = (orderS: string, paymentS: string) => {
     dispatch(
@@ -35,31 +51,27 @@ const ButtonsFunc = ({ orderStatus, data }: ButtonsFucProps) => {
   return (
     <>
       <div className=" pt-2 flex w-full md:w-fit h-[50px] gap-1 sm:gap-2 sm:ml-auto">
-        {payment_status === PAYMENT_STATUS.UNPAID && (
-          <button
-            onClick={() => handleChangeBillStatus("", PAYMENT_STATUS.PAID)}
-            className="flex-[1] sm:w-[180px] text-gray-800 hover:text-gray600-500 transition-all border rounded border-gray-800 hover:border-rose-500"
-          >
-            <p>Thanh toán</p>
-          </button>
-        )}
-        {(orderStatus === ORDER_STATUS.PENDING ||
-          orderStatus === ORDER_STATUS.CONFIRM) && (
-          <button
-            onClick={() =>
-              handleChangeBillStatus(ORDER_STATUS.CANCEL, payment_status)
-            }
-            className="flex-[1] sm:w-[180px] text-gray-800 hover:text-rose-500 transition-all border rounded border-gray-800 hover:border-rose-500"
-          >
-            <p>Huỷ đơn</p>
-          </button>
-        )}
+        {/* payment btn */}
+        {payment_status === PAYMENT_STATUS.UNPAID &&
+          orderStatus === ORDER_STATUS.PENDING &&
+          payment_method === "vnpay" && (
+            <button
+              onClick={() => handleChangeBillStatus("", PAYMENT_STATUS.PAID)}
+              className="flex-[1] sm:w-[180px] text-gray-800 hover:text-gray600-500 transition-all border rounded border-gray-800 hover:border-rose-500"
+            >
+              <p>Thanh toán</p>
+            </button>
+          )}
+
+        {/* primary */}
         {typeNextCase && (
           <button
-            onClick={() => handleChangeBillStatus(typeNextCase, payment_status)}
+            onClick={() =>
+              handleChangeBillStatus(typeNextCase.caseStatus, payment_status)
+            }
             className="flex-[1] sm:w-[180px] bg-zinc-800 text-white hover:bg-zinc-600 rounded transition-all"
           >
-            <p>{typeNextCase}</p>
+            <p>{typeNextCase?.label}</p>
           </button>
         )}
       </div>
