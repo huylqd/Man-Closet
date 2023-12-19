@@ -158,7 +158,7 @@ const Comment = ({ productId }: props) => {
                     <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
                       <Image
                         src={
-                          userComment.avatar
+                          userComment?.avatar
                         }
                         alt="banner"
                         width={36}
