@@ -7,13 +7,13 @@ import {
   Settings,
   Shirt,
   UserCircle,
-  LogOut,
   X,
   Home,
-  MessageSquare
+  MessageSquare,
+  MessageSquareDashed
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Logo } from "@/components/Logo";
@@ -55,6 +55,11 @@ const data = [
     name: "Người dùng",
   },
   {
+    href: "comments",
+    icon: <MessageSquareDashed className="w-6 h-6" />,
+    name: "Bình Luận",
+  },
+  {
     href: "settings",
     icon: <Settings className="w-6 h-6" />,
     name: "Cài đặt",
@@ -69,10 +74,10 @@ const data = [
 const SidebarAdmin = () => {
   const pathName = usePathname();
   const [activeLink, setActiveLink] = useState("");
-  const {name, avatar} = useUserInfo()
+  const { name, avatar } = useUserInfo()
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const user = useUserInfo();
-  
+
   useEffect(() => {
     setActiveLink(pathName.split("/")[pathName.split("/").length - 1]);
   }, [pathName]);
