@@ -57,6 +57,10 @@ export const getAllUserState = createAsyncThunk(
     return response.data;
   }
 );
+export const getAllUserByPage = createAsyncThunk("user/getAll", async (_, thunkAPI) => {
+  const response = await getAllUser(0, 999);
+  return response.data;
+})
 export const getCountUserState = createAsyncThunk(
   "user/getCountUser",
   async (data: any) => {
@@ -182,6 +186,9 @@ const userSlice = createSlice({
       .addCase(getAllUserState.fulfilled, (state, action) => {
         state.users = action.payload;
       })
+      .addCase(getAllUserByPage.fulfilled, (state, action) => {
+        state.users = action.payload;
+      })
       .addCase(getUserByIdState.fulfilled, (state, action) => {
         state.user = action.payload;
       })
@@ -248,5 +255,5 @@ const userSlice = createSlice({
   },
 });
 
-export const {} = userSlice.actions;
+export const { } = userSlice.actions;
 export default userSlice.reducer;

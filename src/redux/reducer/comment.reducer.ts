@@ -43,16 +43,16 @@ const commentSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(getAllCommentByProductId.fulfilled, (state, action) => {
             state.comment = action.payload
-            
+
         })
-        builder.addCase(postComment.fulfilled, (state, action) => {
-            if(action.payload.data){
+        builder.addCase(postComment.fulfilled, (state, action: any) => {
+            if (action.payload.data) {
                 state.comment.unshift(action.payload.data)
                 state.message = action.payload.message
-            }else{
+            } else {
                 state.message = action.payload.message
             }
-           
+
 
         })
     },

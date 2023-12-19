@@ -6,7 +6,7 @@ import {
   postComment,
 } from "@/redux/reducer/comment.reducer";
 import { useUserInfo } from "@/hooks";
-import { getAllUserState } from "@/redux/reducer/user.reducer";
+import { getAllUserByPage } from "@/redux/reducer/user.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { createComment } from "@/services/comment/comment";
 import Image from "next/image";
@@ -20,20 +20,20 @@ const Comment = ({ productId }: props) => {
   const [message, setMessage] = useState<string>("");
   const dispatchThunk = useAppDispatch();
   const toasterRef = useRef<any>(null);
-  const comment = useAppSelector((state:any) => state.comment.comment);
-  const statusMessage = useAppSelector((state:any) => state.comment.message);
-  const users = useAppSelector((state:any) => state.user.users);
+  const comment = useAppSelector((state: any) => state.comment.comment);
+  const statusMessage = useAppSelector((state: any) => state.comment.message);
+  const users = useAppSelector((state: any) => state.user.users);
   const dataProductId = {
     productId: productId,
   };
   useEffect(() => {
     dispatchThunk(getAllCommentByProductId(dataProductId));
-    dispatchThunk(getAllUserState());
+    dispatchThunk(getAllUserByPage());
   }, [dispatchThunk, productId]);
   useEffect(() => {
-    if(statusMessage){
-        toasterRef.current.showToast("Success",`${statusMessage}`)
-      }
+    if (statusMessage) {
+      toasterRef.current.showToast("Success", `${statusMessage}`)
+    }
   }, [statusMessage]);
   const handleRatingChange = (newRating: number) => {
     setRating(newRating);
@@ -51,7 +51,7 @@ const Comment = ({ productId }: props) => {
 
   const userId = comment?.map((item: any, index: any) => item.user_id);
   const user = userId
-    ?.map((item:any) => {
+    ?.map((item: any) => {
       const userById = users.filter((items: any) => items._id == item);
       return userById;
     })
@@ -61,14 +61,14 @@ const Comment = ({ productId }: props) => {
     e.preventDefault();
     dispatchThunk(postComment(data));
     console.log(data);
-    
-    if(statusMessage){
-        toasterRef.current.showToast("Success",`${statusMessage}`)
-      }
+
+    if (statusMessage) {
+      toasterRef.current.showToast("Success", `${statusMessage}`)
+    }
   };
-  // console.log("comment all id user", user);
+  console.log("checked", isChecked)
   return <>
-   <Toaster ref={toasterRef} /> 
+    <Toaster ref={toasterRef} />
     <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">
       <div className="max-w-2xl mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
@@ -76,11 +76,11 @@ const Comment = ({ productId }: props) => {
             Discussion ({comment.length})
           </h2>
         </div>
-        {isChecked? <div className="flex w-[100%]">
+        {isChecked ? <div className="flex w-[100%]">
           <div className="flex-shrink-0 block">
             <Image
               src={
-                "https://flowbite.com/docs/images/people/profile-picture-4.jpg"
+                isChecked.avatar
               }
               alt="banner"
               width={36}
@@ -93,7 +93,7 @@ const Comment = ({ productId }: props) => {
               }}
             ></Image>
           </div>
-        
+
           <form className="mb-6 w-full" onSubmit={handleSubmit}>
             <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <span>Đánh giá:</span>
@@ -143,9 +143,9 @@ const Comment = ({ productId }: props) => {
           </form>
         </div> : <div>Vui lòng đăng nhập để comment</div>
         }
-        
+
         {comment?.map((item: any, index: any) => {
-          const userComment = user.find((i:any) => i._id == item.user_id);
+          const userComment = user.find((i: any) => i._id == item.user_id);
 
           return (
             <>
@@ -158,7 +158,7 @@ const Comment = ({ productId }: props) => {
                     <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
                       <Image
                         src={
-                          "https://flowbite.com/docs/images/people/profile-picture-4.jpg"
+                          userComment.avatar
                         }
                         alt="banner"
                         width={36}
@@ -173,7 +173,24 @@ const Comment = ({ productId }: props) => {
                       {userComment?.name}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <time dateTime="2022-02-08" title="February 8th, 2022">
+                      {[...Array(item?.rating)].map((star, i) => {
+                        const ratingValue = i + 1;
+                        return (
+                          <label key={i} className="cursor-pointer">
+
+                            <span
+                              className={
+                                ratingValue <= item?.rating
+                                  ? "text-orange-400 text-xl mx-1 cursor-pointer"
+                                  : "text-xl mx-2 cursor-pointer"
+                              }
+                            >
+                              ★
+                            </span>
+                          </label>
+                        );
+                      })}
+                      <time dateTime="2022-02-08" title="February 8th, 2022" className="ml-2">
                         {useChangeDate(item?.createdAt)}
                       </time>
                     </p>
