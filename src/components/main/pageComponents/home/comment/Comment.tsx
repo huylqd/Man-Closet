@@ -60,13 +60,13 @@ const Comment = ({ productId }: props) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     dispatchThunk(postComment(data));
-    console.log(data);
+ 
 
     if (statusMessage) {
       toasterRef.current.showToast("Success", `${statusMessage}`)
     }
   };
-  console.log("checked", isChecked)
+ 
   return <>
     <Toaster ref={toasterRef} />
     <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">

@@ -86,3 +86,7 @@ export const getInventoryOfProduct = (id: string, color:string, size: string) : 
   const response = instance.get<any, TGetInventoryOfProduct>(`api/products/${id}/inventory?color=${color}&&size=${size}`)
   return response
 }
+export const uploadFileExcel = (file:any) => {
+  const res = instance.post("api/upload",file);
+  return res
+}

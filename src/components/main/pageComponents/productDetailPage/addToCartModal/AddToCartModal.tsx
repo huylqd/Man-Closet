@@ -317,8 +317,9 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
                 {colorArray?.map((color) => (
                   <li key={uuidv4()}>
                     <button
+                    style={{backgroundColor:color}}
                       className={cn(
-                        "border border-gray-300 px-3 rounded py-1",
+                        `border border-gray-300 px-3 rounded py-1`,
                         colorSelected === color
                           ? "text-[--secondary-color] border-[--secondary-color]"
                           : "text-gray-800"

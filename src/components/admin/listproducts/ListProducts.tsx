@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { createPro, deletePro, getAll, moveToTrashProduct, updatePro } from "@/services/products/products";
-import React, { useEffect, useRef, useState } from "react";
+import { createPro, deletePro, getAll, moveToTrashProduct, updatePro, uploadFileExcel } from "@/services/products/products";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Fragment_Mono } from "next/font/google";
 import Link from "next/link";
 import ModalPro from "./ModalPro";
@@ -25,6 +25,17 @@ const ListProducts = () => {
     const [totalPages, setTotalPages] = useState<number>(1);
     const [key, setKey] = useState<string>('');
 
+    const handleUploadFile = async (e:ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+        const selectedFile = e.target.files
+        if(selectedFile !== null){
+            for (let i = 0; i < selectedFile.length; i++) {                        
+                  formData.append('file', selectedFile[i]);
+                }                
+              }
+             await uploadFileExcel(formData);
+        }
+    
     // useEffect(() => {
     //     getAll().then(({ data }: any) => setProducts(data))
     // }, [])
@@ -209,6 +220,7 @@ const ListProducts = () => {
                                     <path clipRule="evenodd" fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                                 </svg>
                             </button>
+                            <input type="file" onChange={handleUploadFile}/>
 
                         </div>
                     </div>
