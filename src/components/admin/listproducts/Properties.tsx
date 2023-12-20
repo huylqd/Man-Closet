@@ -30,7 +30,7 @@ const Properties = ({register,errors,handleChangeFile}:IProperties) => {
         {indexes.map((item,index) => {
             return (
             <fieldset className='flex flex-row justify-between items-center' >
-                <div className=" w-[15%]">
+                <div className=" w-[15%] mr-4">
                     <span className="block text-sm font-medium text-gray-900 dark:text-white"> Images</span>
                     <div className="flex justify-center items-center w-full">                                                                                            
                     <input type="file"
@@ -43,7 +43,12 @@ const Properties = ({register,errors,handleChangeFile}:IProperties) => {
                 <div className='w-[15%]'>
                     <label htmlFor="breadth" className="block  text-sm font-medium text-gray-900 dark:text-white">Color</label>
                     <input type="text" {...register(`properties[${index}].color`,{
-                        required:"Màu sắc bắt buộc nhập"
+                        required:"Màu sắc bắt buộc nhập",
+                        validate : (val) => {
+                            if (val.trim() === "") {
+                                return "Không được để trống";
+                              }
+                        }
                     })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-[80%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="red..."  />
                        <span className="text-red-600 text-sm">
                        

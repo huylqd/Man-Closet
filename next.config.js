@@ -12,7 +12,7 @@ module.exports = {
         hostname: "images.unsplash.com",
         port: "",
       },
-      
+
       {
         protocol: "https",
         hostname: "scontent.fhan3-3.fna.fbcdn.net",
@@ -67,6 +67,11 @@ module.exports = {
       {
         protocol: "https",
         hostname: "flowbite.com",
+        port: ""
+      },
+      {
+        protocol: "https",
+        hostname: "image.uniqlo.com",
         port: ""
       }
 

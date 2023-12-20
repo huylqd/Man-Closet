@@ -48,7 +48,7 @@ export const getProductsByCategoryId = createAsyncThunk(
   "product/getProductByCategoryId",
   async (data:any) => {
     const {page,categoryId,sort,order} = data;
-    console.log(page);
+ 
     
     const response:any = await getProductByCategoryId(page,categoryId,sort,order);
     return response;

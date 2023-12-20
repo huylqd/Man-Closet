@@ -49,7 +49,7 @@ const ChatWidget = ({ isOpen, onClose, showNotification }: any) => {
         to: dataAdmin?._id,
       }
       const response = await getAllMessage(dataGetAllMessage)
-      console.log('message,', response);
+ 
       setMessages(response);
     }
     getMessage()
@@ -78,7 +78,7 @@ const ChatWidget = ({ isOpen, onClose, showNotification }: any) => {
     setMessages(msgs);
   };
 
-  console.log('message', messages);
+
 
 
   useEffect(() => {

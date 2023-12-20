@@ -5,11 +5,11 @@ export const bannerData = [
   {
     label: "Khám phá sản phẩm trending",
     banner: homeNewProductBanner,
-    href: "/",
+    href: "/shop",
   },
   {
     label: "Danh sách yêu thích",
     banner: homeWishListBanner,
-    href: "/",
+    href: "/user/wishlist",
   },
 ];

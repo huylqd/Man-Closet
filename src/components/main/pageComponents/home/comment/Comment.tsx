@@ -73,7 +73,7 @@ const Comment = ({ productId }: props) => {
       <div className="max-w-2xl mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-            Discussion ({comment.length})
+            Bình luận ({comment.length})
           </h2>
         </div>
         {isChecked ? <div className="flex w-[100%]">
@@ -123,7 +123,7 @@ const Comment = ({ productId }: props) => {
                 );
               })}
               <label htmlFor="comment" className="sr-only">
-                Your comment
+                Bình luận của bạn
               </label>
               <textarea
                 id="comment"
@@ -138,10 +138,10 @@ const Comment = ({ productId }: props) => {
               type="submit"
               className="flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
             >
-              Post comment
+              Bình luận
             </button>
           </form>
-        </div> : <div>Vui lòng đăng nhập để comment</div>
+        </div> : <div>Vui lòng đăng nhập để bình luận</div>
         }
 
         {comment?.map((item: any, index: any) => {

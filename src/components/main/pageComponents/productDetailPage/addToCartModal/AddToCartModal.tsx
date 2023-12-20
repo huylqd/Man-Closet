@@ -317,7 +317,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
                 {colorArray?.map((color) => (
                   <li key={uuidv4()}>
                     <button
-                    style={{backgroundColor:color}}
+                    style={{backgroundColor:color,width:"50px",height:"30px"}}
                       className={cn(
                         `border border-gray-300 px-3 rounded py-1`,
                         colorSelected === color
@@ -326,7 +326,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
                       )}
                       onClick={() => setColorSelected(color)}
                     >
-                      {color}
+                     
                     </button>
                   </li>
                 ))}

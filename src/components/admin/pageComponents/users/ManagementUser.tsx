@@ -63,8 +63,14 @@ const ManagementUser = () => {
     fetchData(page, limit)
   }
   const handleLock = async (userId: string | undefined) => {
-    const user = await lockUser(userId)
-    fetchData(currentPage, limit)
+    try {
+      const user = await lockUser(userId)
+      fetchData(currentPage, limit)
+      commonSuccessToast("Khóa người dùng thành công")
+    } catch (error:any) {
+      commonErrorToast(`${error.response.data.message}`)
+    }
+   
   }
     const search = async () => {
 
@@ -175,7 +181,7 @@ const ManagementUser = () => {
                   <td className="px-6 py-4">{user.name}</td>
                   <td className="px-6 py-4">{user.email}</td>
                   <td className="px-6 py-4">{user.role}</td>
-                  <td className="px-6 py-4">{user.isBlocked ? "locked" : "unlocked"}</td>
+                  <td className="px-6 py-4">{user.isBlocked ? "Đã bị khóa" : "Đã mở khóa"}</td>
                   <td className="px-6 py-4 ">
                     <div className="flex items-center space-x-4">
                       <button
@@ -188,7 +194,7 @@ const ManagementUser = () => {
                         {user.isBlocked ? (<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5 " height="1em" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" /></svg>) : (<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5 " height="1em" viewBox="0 0 576 512"><path d="M352 144c0-44.2 35.8-80 80-80s80 35.8 80 80v48c0 17.7 14.3 32 32 32s32-14.3 32-32V144C576 64.5 511.5 0 432 0S288 64.5 288 144v48H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H352V144z" /></svg>)}
 
 
-                        Lock user
+                        Khóa người dùng
                       </button>
 
                       <button
@@ -219,7 +225,7 @@ const ManagementUser = () => {
               );
             }) : (
               <tr>
-                <td colSpan={3} className=" p-4  text-center bg-white  ">
+                <td colSpan={6} className=" p-4  text-center bg-white  ">
                   <div className="flex align-center justify-center ">
                     Không có dữ liệu <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="w-6 h-5 pl-2" width="100" height="100" viewBox="0 0 48 48">
                       <path d="M 8.5 8 C 6.019 8 4 10.019 4 12.5 L 4 18 L 16.052734 18 C 16.636734 18 17.202344 17.793922 17.652344 17.419922 L 23.5 12.546875 L 19.572266 9.2734375 C 18.586266 8.4524375 17.336734 8 16.052734 8 L 8.5 8 z M 27.644531 13 L 19.572266 19.724609 C 18.585266 20.546609 17.336734 21 16.052734 21 L 4 21 L 4 35.5 C 4 37.981 6.019 40 8.5 40 L 39.5 40 C 41.981 40 44 37.981 44 35.5 L 44 17.5 C 44 15.019 41.981 13 39.5 13 L 27.644531 13 z"></path>

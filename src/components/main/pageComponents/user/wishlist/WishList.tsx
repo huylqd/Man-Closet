@@ -27,11 +27,16 @@ const WishList = () => {
     fetchData()
   },[])
   const fetchData = async () => {
-    const getAllWishlists:any = await getListWishListByUserId(user._id,currentPage)
+    try {
+      const getAllWishlists:any = await getListWishListByUserId(user._id,currentPage)
     console.log(getAllWishlists);
     if(getAllWishlists){
       setWishlists(getAllWishlists.wishList)
     }    
+    } catch (error) {
+      
+    }
+    
   }
   const handleChangePage = (page: number) => {
     setCurrentPage(page)

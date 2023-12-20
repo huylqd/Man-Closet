@@ -56,7 +56,7 @@ const ModelCategory = ({
   return (
     <div
       aria-hidden="true"
-      className=" fixed inset-0 transition ease-in-out delay-150 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center"
+      className=" fixed inset-0 transition ease-in-out delay-150 backdrop-blur-sm flex justify-center items-center"
     >
       <div className="relative p-4 w-full max-w-2xl max-h-full">
         {/* <!-- Modal content --> */}
@@ -64,7 +64,7 @@ const ModelCategory = ({
           {/* <!-- Modal header --> */}
           <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {category ? "Update Category" : "Add Category"}
+              {category ? "Sửa danh mục" : "Thêm danh mục"}
             
             </h3>
             <button
@@ -87,14 +87,14 @@ const ModelCategory = ({
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="sr-only">Close modal</span>
+              <span className="sr-only">Đóng</span>
             </button>
           </div>
           {/* <!-- Modal body --> */}
           <form action="#" onSubmit={handleSubmit(onHandleSubmit)}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
-                <Input label="Category Name" id="name" placeholder="Category Name" register={register} errors={errors}/>
+                <Input label="Tên danh mục" id="name" placeholder="Tên danh mục" register={register} errors={errors}/>
                 <div>
                 <span className="text-red-600 text-sm">
                  {(errors.name as any) && (errors.name as any).message}
@@ -108,20 +108,20 @@ const ModelCategory = ({
               type="submit"
               className="text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mr-2"
             >
-              Save
+              Lưu
             </button>
             <button
               type="reset"
               className="text-white inline-flex items-center bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 mr-2"
             >
-              Reset
+              Đặt lại
             </button>
             <button
               type="button"
               onClick={() => restore()}
               className="text-white inline-flex items-center bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 mr-2"
             >
-              Restore
+              Khôi phục
             </button>
           </form>
         </div>

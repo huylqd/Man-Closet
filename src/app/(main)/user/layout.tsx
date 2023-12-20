@@ -1,9 +1,17 @@
-
+'use client'
 
 import { UserPageNavigation } from "@/components/main/pageComponents/user";
+import { useUserInfo } from "@/hooks";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
+  const user = useUserInfo();
+  const router = useRouter()
+  if(!user) {
+    router.push("/")
+    return null
+  }
   return (
     <section className="section_container">
       <div className="flex items-start md:gap-4">
