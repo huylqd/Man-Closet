@@ -33,7 +33,7 @@ const ChatWidget = ({ isOpen, onClose, showNotification }: any) => {
       getInfAdmin()
     // }
   }, []);
-
+  
   useEffect(() => {
     if (currentUser) {
       socket.current = io("http://localhost:8088");

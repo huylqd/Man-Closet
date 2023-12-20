@@ -16,8 +16,6 @@ export default function Contacts({ contacts, changeChat }: any) {
     changeChat(contact);
   };
 
-  console.log("contacts",contacts);
-  
   return (
     <>
       {currentUserImage && currentUserImage && (

@@ -57,11 +57,13 @@ export default function ChatContainer({ currentChat, socket }: any) {
         msgs.push({ fromSelf: true, message: msg });
         setMessages(msgs);
     };
-    console.log('message', messages);
+   
     useEffect(() => {
         if (socket.current) {
             socket.current.on("msg-recieve", (msg: string) => {
                 setArrivalMessage({ fromSelf: false, message: msg });
+                console.log("arrivalMessage",arrivalMessage);
+                
             });
         }
     }, []);

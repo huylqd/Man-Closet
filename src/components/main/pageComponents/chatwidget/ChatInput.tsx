@@ -23,10 +23,15 @@ const ChatInput = ({handleSendMsg}: any) => {
     const sendChat = (event: any) => {
       event.preventDefault();
       if (msg.length > 0) {
-        handleSendMsg(msg);
+        handleSendMsg(msg);  
         setMsg("");
       }
     };
+
+    const isOnlySpaces = (str:any) => {
+      return str.trim() === '';
+    };
+  
 return (
     <div className="container">
     <div className="button-container">
@@ -43,7 +48,7 @@ return (
         onChange={(e) => setMsg(e.target.value)}
         value={msg}
       />
-      <button type="submit">
+      <button type="submit" disabled={isOnlySpaces(msg)}>
         <IoMdSend />
       </button>
     </form>

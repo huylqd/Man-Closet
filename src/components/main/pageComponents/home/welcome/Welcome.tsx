@@ -9,6 +9,8 @@ const Welcome = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [notification, setNotification] = useState<number>();
 
+  const data = JSON.parse(localStorage.getItem('user') as string);
+
   const openChat = () => {
     setIsChatOpen(true);
   };
@@ -50,8 +52,14 @@ const Welcome = () => {
           gu thời trang của bạn.
         </p>
       </div>
-      <FloatingButton />
-      <ChatWidget isOpen={isChatOpen} onClose={closeChat} showNotification={showNotification} />
+    
+      {data !== null && (
+        <>
+        <FloatingButton />
+        <ChatWidget isOpen={isChatOpen} onClose={closeChat} showNotification={showNotification} />
+        
+        </>
+      )}
     </>
   );
 };
