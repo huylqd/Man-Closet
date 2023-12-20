@@ -68,6 +68,11 @@ module.exports = {
         protocol: "https",
         hostname: "flowbite.com",
         port: ""
+      },
+      {
+        protocol:"https",
+        hostname:"image.uniqlo.com",
+        port:''
       }
 
     ],
