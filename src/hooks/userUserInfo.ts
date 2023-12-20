@@ -12,6 +12,7 @@ type TUserInfo = {
   role: string;
   address: TAddress[];
   updatedAt: Date;
+  wishlist:[],
   phone: string
 };
 

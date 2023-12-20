@@ -14,8 +14,8 @@ export const lockUser = (userId: any) => {
     return res
 }
 
-export const getListWishListByUserId = (userId: any) => {
-    const res = instance.get(`/user/${userId}/wishlist`);
+export const getListWishListByUserId = (userId: any,page:number) => {
+    const res = instance.get(`/user/${userId}/wishlist?_page=${page}`);
     return res
 }
 
