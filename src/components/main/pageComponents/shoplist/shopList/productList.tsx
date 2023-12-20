@@ -37,7 +37,7 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
     if(filteredProduct.data){
       setProduct(filteredProduct.data)
       setCurrentPage(filteredProduct.pagination?.currentPage)
-      setTotalPages(filteredProduct.pagination?.totalsPages)
+      setTotalPages(filteredProduct.pagination?.totalPages)
     }else{
       fetchData(currentPage)
     }

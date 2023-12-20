@@ -177,10 +177,11 @@ const ListProducts = () => {
             
         const addProduct = await createPro(prod)
         if(addProduct){
-            const newProducts = [...products];
-            console.log(newProducts);
-            newProducts.push(addProduct.data);
-            setProducts(newProducts);
+            // const newProducts = [...products];
+            // console.log(newProducts);
+            // newProducts.push(addProduct.data);
+            // setProducts(newProducts);
+            fetchData()
             toasterRef.current.showToast("success", "Thêm sản phẩm thành công!");
             setshowModalPro(false);
         }

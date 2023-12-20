@@ -16,22 +16,8 @@ interface StatisticsTableItemProps {
 const StatisticsTableItem = ({ data, index }: StatisticsTableItemProps) => {
   const { product_id, totalAmountSold, totalQuantitySold } = data
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [product, setProduct] = useState({} as IProduct)
-  const productState = useAppSelector(state => state.product.product)
 
   const dispatchThunk = useAppDispatch()
-
-  useEffect(() => {
-    dispatchThunk(getProductState(product_id))
-  }, [dispatchThunk, product_id])
-
-  useEffect(() => {
-    setProduct(productState)
-  }, [productState])
-
-  const handleToggleModal = () => {
-    setIsOpenModal((curr) => !curr);
-  };
 
 
   return (
@@ -43,7 +29,7 @@ const StatisticsTableItem = ({ data, index }: StatisticsTableItemProps) => {
         <div className="flex-[2] flex justify-center items-center">
           <figure className="w-[80px] h-[80px] relative rounded overflow-hidden">
             <Image
-              src={product.properties?.[0]?.imageUrl}
+              src={data?.productImage}
               fill
               objectFit="contain"
               className="absolute"
@@ -52,18 +38,13 @@ const StatisticsTableItem = ({ data, index }: StatisticsTableItemProps) => {
           </figure>
         </div>
         <div className="flex-[6] flex justify-center items-center">
-          {product.productName}
+          {data?.productName}
         </div>
         <div className="flex-[3] flex justify-center items-center">
           {useCurrency(totalAmountSold)}
         </div>
         <div className="flex-[3] flex justify-center items-center">
           {totalQuantitySold}
-        </div>
-        <div className="flex-[2] flex justify-center items-center">
-          <Button onClick={() => handleToggleModal()} variant={"bordered"}>
-            Chi tiết
-          </Button>
         </div>
       </li>
     </>

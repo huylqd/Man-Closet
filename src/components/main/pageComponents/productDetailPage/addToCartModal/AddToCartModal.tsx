@@ -110,9 +110,13 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
     if (!arr) {
       return;
     }
+
+    
     const result = arr.map((item) => {
-      return item[0];
-    });
+
+      return item;
+    }).flat();
+
 
     return result;
   };
@@ -129,11 +133,13 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
     );
 
   // lay unique Size array
-  const sizeArray = variantArr
+  const sizeArray:any = variantArr
     ?.map((item) => item.size)
     ?.filter(
       (value, index, self) => self.findIndex((m) => m === value) === index
     );
+    console.log(variantArr);
+    
 
   // ===================================
 
@@ -294,7 +300,7 @@ const AddToCartModal = ({ isOpen, onClose, product }: AddToCardModalProps) => {
             <div className="py-2 md:py-4">
               <h4 className="pb-2  text-gray-600 font-medium">Kích cỡ</h4>
               <ul className="flex flex-wrap gap-2 gap-y-2">
-                {sizeArray?.map((size) => (
+                {sizeArray?.map((size:any) => (
                   <li key={uuidv4()}>
                     <button
                       className={cn(
