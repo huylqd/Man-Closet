@@ -26,9 +26,6 @@ const StatisticsTable = ({ data }: StatisticsTableProps) => {
             <div className="flex-[3] flex justify-center items-center">
               Đã bán
             </div>
-            <div className="flex-[2] flex justify-center items-center">
-              Chi tiết
-            </div>
           </div>
 
           <ul className="flex flex-col gap-2 py-1">

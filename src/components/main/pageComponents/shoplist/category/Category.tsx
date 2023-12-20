@@ -10,8 +10,8 @@ import { getAllCategory } from '@/services/categories/category';
 
 
 import { useAppDispatch, useAppSelector } from '@/redux/store';
-import { getProductByPrice, getProductBySize, getProductsByCategoryId, setPage, } from '@/redux/reducer/product.reducer';
-import { useSelector } from 'react-redux';
+import { getProductByPrice, getProductBySize, getProductsByCategoryId, setCurrentCateId, setPage, } from '@/redux/reducer/product.reducer';
+import { useDispatch, useSelector } from 'react-redux';
 interface CategoryProp {
     title: string;
     data: Array<any>;
@@ -95,6 +95,7 @@ const Category = ({ title, data, isOpen, onCategoryClick ,sort,sortOrder}:Catego
   const [selected,setSelected] = useState<any>([])
   const [currentPage,setCurrentPage] = useState<number>(1);
   const dispatchThunk = useAppDispatch();
+  const dispatch = useDispatch()
  
   const {pageNumber} = useAppSelector((state) => state.product.page)
 
@@ -110,7 +111,7 @@ const Category = ({ title, data, isOpen, onCategoryClick ,sort,sortOrder}:Catego
             sort:sort,
             order:sortOrder
           }
-     
+            dispatch(setCurrentCateId(data._id))
             dispatchThunk(getProductsByCategoryId(body))
  
          

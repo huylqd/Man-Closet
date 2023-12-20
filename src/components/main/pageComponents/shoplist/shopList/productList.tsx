@@ -13,7 +13,7 @@ import TitleGap from '@/components/titleGap';
 import { filterProduct } from '@/services/products/products';
 
 import { useAppDispatch, useAppSelector } from '@/redux/store';
-import { getsProduct, setPage } from '@/redux/reducer/product.reducer';
+import { getProductsByCategoryId, getsProduct, setPage } from '@/redux/reducer/product.reducer';
 import { useDispatch } from 'react-redux';
 interface ShopListProp {
   sort:string,
@@ -24,45 +24,40 @@ interface ShopListProp {
 const ShopList = ({sort, sortOrder}:ShopListProp) => {
 
 
-  const filteredProduct:any = useAppSelector((state) => state.product.productList);
+  const products = useAppSelector((state) => state.product.productList);
+  const pageNumber = useAppSelector(state => state.product.page.pageNumber)
+  const paginate = useAppSelector(state => state.product.paginate)
+  const currentCateId = useAppSelector(state => state.product.currentCateId)
 
   const dispatch = useAppDispatch();
   const [product,setProduct] = useState<IProduct[]>([])
   const [productAll,setProductAll] = useState<IProduct[]>([])
   const [currentPage,setCurrentPage] = useState(1)
-  const [totalPages,setTotalPages] = useState(1)
+  const [totalPages,setTotalPages] = useState(0)
 
   
-  useEffect(()=>{
-    if(filteredProduct.data){
-      setProduct(filteredProduct.data)
-      setCurrentPage(filteredProduct.pagination?.currentPage)
-      setTotalPages(filteredProduct.pagination?.totalsPages)
-    }else{
-      fetchData(currentPage)
-    }
-  },[filteredProduct,currentPage,sort,sortOrder])
+  useEffect(() => {
+    dispatch(getProductsByCategoryId({
+      categoryId: "",
+      order: "desc",
+      sort: "createdAt",
+      page: currentPage
+    }))
+  }, [dispatch])
 
-  // useEffect(() => {
-  //   setData() 
-  // },[sort,sortOrder]);
-  // const setData = () => {
-  //   setProduct(filteredProduct.data); 
-  //   setCurrentPage(filteredProduct.pagination?.currentPage)
-  //   setTotalItems(filteredProduct.pagination?.totalItem)
-  //   setTotalPages(filteredProduct.pagination?.totalsPages)
-  // }
- 
-  const fetchData = async (page:number) => {
-    const response:any = await filterProduct(page,sort,sortOrder)
-    setProduct(response.data)
-    setCurrentPage(response.pagination.currentPage)
-    setTotalPages(response.pagination.totalPages)
-  }
+  useEffect(() => {
+    setProduct(products)
+    setCurrentPage(paginate.currentPage + 1)
+    setTotalPages(paginate.totalPage)
+  }, [products, paginate])
+
   const handleChangePage = (page:number) => {
-    setCurrentPage(page)
-    dispatch(setPage(page))
-
+    dispatch(getProductsByCategoryId({
+      categoryId: currentCateId as string || "",
+      order: "desc",
+      sort: "createdAt",
+      page: page
+    }))
   }
 
   return (

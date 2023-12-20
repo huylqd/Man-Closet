@@ -61,6 +61,8 @@ export interface ProductSold {
   totalQuantitySold: number;
   totalAmountSold: number;
   product_id: string;
+  productImage: string,
+  productName: string
 }
 
 
