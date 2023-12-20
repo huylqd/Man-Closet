@@ -1,8 +1,9 @@
+import Toaster from '@/components/Toaster/Toaster';
 import { IProduct } from '@/interfaces/product'
-import { getAllCommentByProductId } from '@/redux/reducer/comment.reducer';
+import { deleteCommentState, getAllCommentByProductId } from '@/redux/reducer/comment.reducer';
 import { getAllUserByPage } from '@/redux/reducer/user.reducer';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 interface IModalProps {
     onClose: () => void,
     product: IProduct | undefined
@@ -12,6 +13,7 @@ const ModalComment = ({ onClose, product }: IModalProps) => {
     const comment = useAppSelector((state) => state.comment.comment);
     const users = useAppSelector((state) => state.user.users);
     const userId = comment?.map((item: any, index: any) => item.user_id);
+    const toasterRef = useRef<any>();
     const user = userId
         ?.map((item: any) => {
             const userById = users.filter((items: any) => items._id == item);
@@ -34,13 +36,20 @@ const ModalComment = ({ onClose, product }: IModalProps) => {
     } else {
         isChecked = true
     }
+    const handleDeleteComment = (id: string) => {
+        dispatchThunk(deleteCommentState(id)).then(() => {
+            toasterRef.current.showToast("success", "Xóa thành công");
 
+        })
+
+    }
     return (
         <>
             <div
                 aria-hidden="true"
                 className=" fixed inset-0 transition ease-in-out delay-150 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center "
             >
+                <Toaster ref={toasterRef} />
                 <div className="relative p-4 w-full max-w-2xl max-h-full overflow-y-scroll">
                     {/* <!-- Modal content --> */}
                     <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
@@ -122,7 +131,7 @@ const ModalComment = ({ onClose, product }: IModalProps) => {
                                                         item?.message
                                                     }</td>
                                                     <td scope="col" className="p-4">
-                                                        <button>Delete </button>
+                                                        <button className="text-red-500" onClick={() => handleDeleteComment(item._id)} >Delete </button>
                                                     </td>
                                                 </tr>
                                             </>
