@@ -12,6 +12,9 @@ export const getCommentByProductId = async (productId: string | string[]) => {
 }
 export const createComment = async (data: DataComment) => {
     const response = await instance.post(`/api/comment`, data);
- 
     return response
+}
+export const deleteCommentById = async (commentId: string | undefined) => {
+    const response = await instance.delete(`/api/comment/${commentId}`);
+    return response.data
 }
