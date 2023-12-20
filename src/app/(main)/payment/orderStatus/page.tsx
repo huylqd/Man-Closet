@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeftFromLine, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
@@ -34,12 +35,19 @@ const OrderStatusPage = () => {
               </>
             )}
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center ">
             <button
               onClick={() => router.push("/")}
-              className="w-fit h-[40px] md:h-[60px] border rounded px-4"
+              className="w-fit flex items-center h-[40px] md:h-[60px] border rounded px-4 mr-2"
             >
+              <ArrowLeftFromLine className="mr-2"/>
               Quay về trang chủ
+            </button>
+            <button
+              onClick={() => router.push("/user/orders")}
+              className="w-fit flex items-center  h-[40px] md:h-[60px] border rounded px-4 ml-2"
+            >
+              Đơn hàng <ShoppingCart className="ml-2"/>
             </button>
           </div>
         </div>
