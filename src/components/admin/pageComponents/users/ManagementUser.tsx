@@ -184,18 +184,21 @@ const ManagementUser = () => {
                   <td className="px-6 py-4">{user.isBlocked ? "Đã bị khóa" : "Đã mở khóa"}</td>
                   <td className="px-6 py-4 ">
                     <div className="flex items-center space-x-4">
-                      <button
+                      {user.role !== "admin" ? (
+                        <button
                         type="button"
                         onClick={() => handleLock(user._id)}
                         data-drawer-show="drawer-update-product"
                         aria-controls="drawer-update-product"
                         className="py-2 px-3 flex items-center text-sm font-medium text-center bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      >
+                        >
                         {user.isBlocked ? (<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5 " height="1em" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" /></svg>) : (<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 -ml-0.5 " height="1em" viewBox="0 0 576 512"><path d="M352 144c0-44.2 35.8-80 80-80s80 35.8 80 80v48c0 17.7 14.3 32 32 32s32-14.3 32-32V144C576 64.5 511.5 0 432 0S288 64.5 288 144v48H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H352V144z" /></svg>)}
 
 
                         Khóa người dùng
-                      </button>
+                        </button> 
+                      ) : ''}
+                     
 
                       <button
                         type="button"
