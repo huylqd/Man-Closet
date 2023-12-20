@@ -20,7 +20,8 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
         register,
         handleSubmit,
         formState: { errors  },
-        setError
+        setError,
+        reset,
     } = useForm<FieldValues>()
 
 
@@ -133,7 +134,7 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                         
                          
                             <div className="grid gap-4 sm:col-span-2 md:gap-6  ">
-                            <Properties errors={errors} register={register} handleChangeFile={handleChangeFile}/>
+                            <Properties reset={reset} errors={errors} register={register} handleChangeFile={handleChangeFile}/>
                                 
 
 

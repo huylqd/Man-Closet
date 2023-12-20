@@ -32,7 +32,7 @@ export default function RootLayout({
             storageKey="web-theme"
           >
             {children}
-            <ToastContainer position="top-right" />
+            <ToastContainer position="top-right" autoClose={1000}  />
           </ThemeProvider>
         </ReduxProvider>
       </body>

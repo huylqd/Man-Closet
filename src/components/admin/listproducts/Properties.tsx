@@ -7,9 +7,10 @@ import Image from 'next/image';
 interface IProperties{
     register: UseFormRegister<FieldValues>;
     errors: FieldErrors;
-    handleChangeFile:(e:any) => void
+    handleChangeFile:(e:any) => void,
+    reset:any
 }
-const Properties = ({register,errors,handleChangeFile}:IProperties) => {
+const Properties = ({reset,register,errors,handleChangeFile}:IProperties) => {
     
     const [indexes, setIndexes] = useState<number[]>([]);
     const [counter, setCounter] = useState(0);
@@ -20,6 +21,7 @@ const Properties = ({register,errors,handleChangeFile}:IProperties) => {
     const removeFriend = (index: any) => () => {
         setIndexes(indexes.filter(item => item !== index));
         setCounter(counter  - 1);
+        reset({[`properties[${index}]`]: null });
     };
   
   return (

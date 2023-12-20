@@ -97,6 +97,8 @@ const Category = ({ title, data, isOpen, onCategoryClick ,sort,sortOrder}:Catego
   const dispatchThunk = useAppDispatch();
  
   const {pageNumber} = useAppSelector((state) => state.product.page)
+  console.log(pageNumber);
+  
 
 
   
@@ -109,11 +111,8 @@ const Category = ({ title, data, isOpen, onCategoryClick ,sort,sortOrder}:Catego
             categoryId: data._id,
             sort:sort,
             order:sortOrder
-          }
-     
-            dispatchThunk(getProductsByCategoryId(body))
- 
-         
+          }  
+            dispatchThunk(getProductsByCategoryId(body))    
       } 
       if(title === "Giá"){
         const body = {
