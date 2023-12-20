@@ -81,3 +81,12 @@ export const moveUserToTrash = (id:string | undefined) => {
   const res = instance.delete(`/user/remove/${id}`)
   return res
 }
+
+export const forgotPassword = (email:any) => {
+  const res = instance.post("/user/forgotPassword",email);
+  return res
+}
+export const resetPassword = (data:any) => {
+  const res = instance.patch(`/user/resetpassword/${data.token}`,data);
+  return res
+}

@@ -22,13 +22,9 @@ const Shop = () => {
       };
       const handleChanSelect = async (e:any) => {
         const selectedValue = e.target.value;
-        let newSortOrder = "asc";
-        if (selectedValue === sort) {
-          newSortOrder = sortOrder === "desc" ? "asc" : "desc";
-        }else{
-          newSortOrder = sortOrder === "desc" ? "asc" : "desc";
-        }
-        setSort(selectedValue);
+        const [selectedSort, selectedOrder] = selectedValue.split('_');
+        let newSortOrder = selectedOrder === "desc" ? "asc" : "desc";
+        setSort(selectedSort);
         setSortOrder(newSortOrder);      
       }
 
@@ -45,10 +41,10 @@ const Shop = () => {
           <div className="flex flex-row justify-between">
             <div className="hidden md:block md:w-2/6">
               <div className="font-bold text-xl">
-                Ecommerce Acceories & Fashion item
+                Các mặt hàng thời trang ManCloset
               </div>
               <p className="text-xs text-gray-400">
-                About 100000 results
+                
               </p>
             </div>
             <div className="flex w-full md:w-1/2 flex-row justify-center align-center ">
@@ -61,17 +57,15 @@ const Shop = () => {
             
               <div className="md:flex   md:align-center md:items-center pr-2 mt-2 w-1/2">
                 
-                <span className="w-[100px] hidden md:block">
-                Sort by: 
-                </span>
+                
             
               <select onChange={handleChanSelect} className=" p-2 text-gray-700
               w-full ml-2 border-gray-300 cursor-pointer focus:outline-none pr-2 pl-2 border-2  hover:border-gray-400 transition ease-in-out rounded-sm" name='sort' >
            
-                  <option value="createdAt">Mới nhất</option>
-                  <option value="createdAt">Cũ nhất</option>
-                  <option value="price">Giá: Giảm dần</option>
-                  <option value="price">Giá: Tăng dần </option>
+                  <option value="createdAt_asc">Mới nhất</option>
+                  <option value="createdAt_desc">Cũ nhất</option>
+                  <option value="price_asc">Giá: Giảm dần</option>
+                  <option value="price_desc">Giá: Tăng dần </option>
                 </select>
   
               
@@ -84,7 +78,7 @@ const Shop = () => {
 
             <div className="flex-auto hidden w-full md:w-1/6  md:block mr-2">
               <div className="flex flex-row align-center justify-between md:flex-col  ">
-                <CategoryContainer />
+                <CategoryContainer sort={sort} sortOrder={sortOrder}/>
               </div>
             </div>
           
@@ -95,7 +89,7 @@ const Shop = () => {
 
 
       </section>
-      <ModalFilter isOpen={isOpen} onClose={handleCloseModal}/>
+      <ModalFilter  sort={sort} sortOrder={sortOrder} isOpen={isOpen} onClose={handleCloseModal}/>
     </div>
   )
 }

@@ -19,8 +19,12 @@ export const getProductById = (product_id: string) => {
   return response;
 };
 
-export const getProductByCategoryId = (page=1,id: string) => {
-  const response = instance.get(`api/products/cate/${id}?_page=${page}`);
+export const getProductByCategoryId = (page=1,id: string,sort:string,order:string) => {
+  console.log(sort);
+  
+  console.log(order);
+  
+  const response = instance.get(`api/products/cate/${id}?_page=${page}&_sort=${sort}&_order=${order}`);
   return response
 }
 
@@ -70,12 +74,12 @@ export const getAllProductDeleted = (page:number) => {
 
 
 // filter
-export const filterProductByPrice = (page=1,minPrice:any,maxPrice:any) => {
-  const res = instance.get(`api/products/price/filter?_page=${page}${minPrice ? `&minPrice=${minPrice}`: ""}${maxPrice ? `&maxPrice=${maxPrice}`: ""}`);
+export const filterProductByPrice = (page=1,minPrice:any,maxPrice:any,sort:string,order:string) => {
+  const res = instance.get(`api/products/price/filter?_page=${page}&_sort=${sort}&_order=${order}${minPrice ? `&minPrice=${minPrice}`: ""}${maxPrice ? `&maxPrice=${maxPrice}`: ""}`);
   return res;
 }
-export const filterProductBySize = (page=1,size:string) => {
-  const res = instance.get(`api/products/size/filter?_page=${page}&_size=${size}`);
+export const filterProductBySize = (page=1,size:string,sort:string,order:string) => {
+  const res = instance.get(`api/products/size/filter?_page=${page}&_sort=${sort}&_order=${order}&_size=${size}`);
   return res;
 }
 

@@ -17,10 +17,14 @@ interface CategoryProp {
     data: Array<any>;
     isOpen:boolean;
     onCategoryClick:(index:any) => void
-  
+    sort:string,
+    sortOrder:string
 }
-
-const CategoryContainer = () => {
+interface ICagoryContainer{
+  sort:string,
+  sortOrder:string
+}
+const CategoryContainer = ({sort,sortOrder}:ICagoryContainer) => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     fetchCategories();
@@ -74,6 +78,8 @@ const CategoryContainer = () => {
             key={index}
             title={data.title}
             data={data.data}
+            sort={sort}
+            sortOrder={sortOrder}
             isOpen={index === openCategory}
             onCategoryClick={() => handleCategoryClick(index)}
           />
@@ -83,40 +89,49 @@ const CategoryContainer = () => {
   };
   
 
-const Category = ({ title, data, isOpen, onCategoryClick }:CategoryProp) => {
+const Category = ({ title, data, isOpen, onCategoryClick ,sort,sortOrder}:CategoryProp) => {
+
+  
   const [selected,setSelected] = useState<any>([])
   const [currentPage,setCurrentPage] = useState<number>(1);
   const dispatchThunk = useAppDispatch();
  
   const {pageNumber} = useAppSelector((state) => state.product.page)
 
-  console.log(pageNumber);
+
   
   const handleChangeData = async (e: React.ChangeEvent<HTMLInputElement>,data:any) => {
     if(e.target.checked){
       setSelected((prev:any) => [...prev,data]) 
         if(title === "Loại sản phẩm"){
-        
           const body = { 
             page:pageNumber,
-            categoryId: data._id
+            categoryId: data._id,
+            sort:sort,
+            order:sortOrder
           }
-          dispatchThunk(getProductsByCategoryId(body))
+     
+            dispatchThunk(getProductsByCategoryId(body))
+ 
+         
       } 
       if(title === "Giá"){
         const body = {
           page:pageNumber,
           minPrice:data.minPrice,
-          maxPrice:data.maxPrice
+          maxPrice:data.maxPrice,
+          sort:sort,
+          order:sortOrder
         }
         dispatchThunk(getProductByPrice(body))
-
       }
       if(title === "Size"){
         // const fetchData = await filterProductBySize(0,data.size)
         const body = {
           page:pageNumber,
-          size:data.size
+          size:data.size,
+          sort:sort,
+          order:sortOrder
         }
         dispatchThunk(getProductBySize(body))
       }

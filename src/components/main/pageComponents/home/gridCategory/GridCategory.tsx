@@ -54,27 +54,27 @@ const GridCategory = () => {
     {
       title: "Hoodie",
       imageUrl: gc_1,
-      href: "/",
+      href: "/shop",
     },
     {
       title: "Sweater",
       imageUrl: gc_2,
-      href: "/",
+      href: "/shop",
     },
     {
       title: "Bomber",
       imageUrl: gc_3,
-      href: "/",
+      href: "/shop",
     },
     {
       title: "Cadigan",
       imageUrl: gc_4,
-      href: "/",
+      href: "/shop",
     },
     {
       title: "Quần ống suông",
       imageUrl: gc_5,
-      href: "/",
+      href: "/shop",
     },
   ];
 

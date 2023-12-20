@@ -7,11 +7,12 @@ import Image from 'next/image';
 import style from './authform.module.scss'
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import {loginWithGoogle, signIn, signUp } from '@/services/auth/auth';
+import { signIn, signUp } from '@/services/auth/auth';
 import Toaster from '@/components/Toaster/Toaster';
 import { useParams, useRouter } from 'next/navigation';
+import { forgotPassword } from '@/services/user/user';
 
-type Variant = "LOGIN" | "REGISTER" | "FORGOT_PASSWORD";
+type Variant = "LOGIN" | "REGISTER" | "FORGOT_PASSWORD" ;
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>('LOGIN');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +57,7 @@ const AuthForm = () => {
     return null;
   };
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
+
 
     setIsLoading(true);
     if (variant === "REGISTER") {
@@ -100,12 +101,27 @@ const AuthForm = () => {
       }
       //  Login
     }
+    if(variant === "FORGOT_PASSWORD"){
+      try {
+        const forgot:any = await forgotPassword(data)
+        console.log(forgot);
+        
+        if(forgot) {
+             toasterRef.current?.showToast('success', "Bạn vui lòng vào gmail của mình để lấy lại mật khẩu!");
+             localStorage.setItem("resetToken",forgot.resetToken)
+        }
+      } catch (error:any) {
+           toasterRef.current?.showToast('error', `${error.response.data.message!}`);
+      }
+    }
 
   };
   const socialAction = async (action: string) => {
     setIsLoading(true);
     if(action === "google"){
+      
        window.location.href = "http://localhost:8088/api/auth/google";  
+     
     }
   };
   return (
@@ -118,13 +134,13 @@ const AuthForm = () => {
   <img src="https://bcp.cdnchinhphu.vn/334894974524682240/2022/4/29/sontungmtp-1651230206152921306282.jpeg" alt="" className="w-full h-full object-cover"/>
 </div>
 
-<div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
+<div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto  md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
       flex items-center justify-center">
 
   <div className="w-full h-100">
 
    
-    <h1 className="text-xl flex items-center  md:text-2xl font-bold leading-tight mt-12 dark:text-gray-700">   {variant === 'LOGIN' ? 'Sign in to your account' : (variant === 'REGISTER' ? 'Register an account' : 'Forgot password')}</h1>
+    <h1 className="text-xl flex items-center  md:text-2xl font-bold leading-tight mt-12 dark:text-gray-700">   {variant === 'LOGIN' ? 'Đăng nhập vào tài khoản của bạn' : (variant === 'REGISTER' ? 'Đăng ký tài khoản' : 'Quên mật khẩu')}</h1>
 
     <form className="mt-6" onSubmit={handleSubmit(onSubmit)} >
     <div className="mt-4">
@@ -133,11 +149,11 @@ const AuthForm = () => {
                     <Input
                       id="name"
                       register={register}
-                      label="User name"
+                      label="Tên người dùng"
                       errors={errors}
                       disabled={isLoading}
                       watch={watch}
-                      placeholder='Enter Your Name'
+                      placeholder='Nhập tên ...'
 
 
                     />
@@ -154,11 +170,11 @@ const AuthForm = () => {
               <Input
                 id="email"
                 register={register}
-                label="Email Address"
+                label="Email"
                 type="email"
                 disabled={isLoading}
                 errors={errors}
-                placeholder="Enter Email Address"
+                placeholder="Nhập email ..."
                 watch={watch}
               />
               {displayError("email")}
@@ -173,11 +189,11 @@ const AuthForm = () => {
                       id="password"
                       type='password'
                       register={register}
-                      label="Password"
+                      label="Mật khẩu"
                       errors={errors}
                       disabled={isLoading}
                       watch={watch}
-                      placeholder='Enter Password'
+                      placeholder='Nhập mật khẩu ...'
 
                     />
                   )}
@@ -192,11 +208,11 @@ const AuthForm = () => {
                       type='password'
                       id="confirmPassword"
                       register={register}
-                      label="Confirm Password"
+                      label="Nhập lại mật khẩu"
                       errors={errors}
                       disabled={isLoading}
                       watch={watch}
-                      placeholder='Enter Password'
+                      placeholder='Nhập lại mật khẩu ...'
 
                     />
                   )}
@@ -204,15 +220,15 @@ const AuthForm = () => {
 
                 
       </div>
-
+                    
       <div className="text-right mt-2">
-        <a href="#" className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700 " onClick={toggleForgotPassword}>Forgot Password?</a>
+   
+        <a href="#" className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700 " onClick={toggleForgotPassword}>Quên mật khẩu?</a>
       </div>
 
 
              <Button variant="primary" className='w-full font-semibold rounded-lg px-4 py-6 flex mt-6 align-center dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white'>
-                  {variant === 'LOGIN' ? 'Log In' : (variant === 'REGISTER' ? 'Register' : 'Send email')}
-
+                  {variant === 'LOGIN' ? 'Đăng nhập' : (variant === 'REGISTER' ? 'Đăng ký' : 'Quên mật khẩu')}
                 </Button>
     </form>
 
@@ -230,7 +246,7 @@ const AuthForm = () => {
           </div>
         </button>
 
-    <p className="mt-8 dark:text-gray-700"> {variant === "LOGIN" ? "Don’t have an account yet?" : "Do you already have an account?"}   <a href="#" className="font-medium text-primary-600 hover:underline hover:text-blue-700 dark:text-primary-500" onClick={toggleVariant}> {variant === "LOGIN" ? "Create an account" : "Login"}</a></p>
+    <p className="mt-8 dark:text-gray-700"> {variant === "LOGIN" ? "Bạn chưa có tài khoản?" : "Bạn đã có tài khoản trước đây?"}   <a href="#" className="font-medium text-primary-600 hover:underline hover:text-blue-700 dark:text-primary-500" onClick={toggleVariant}> {variant === "LOGIN" ? "Đăng ký" : "Đăng nhập"}</a></p>
 
 
   </div>

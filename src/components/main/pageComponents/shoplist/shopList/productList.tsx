@@ -25,30 +25,23 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
 
 
   const filteredProduct:any = useAppSelector((state) => state.product.productList);
- console.log(filteredProduct);
- 
-  const dispatch = useDispatch();
+
+  const dispatch = useAppDispatch();
   const [product,setProduct] = useState<IProduct[]>([])
   const [productAll,setProductAll] = useState<IProduct[]>([])
   const [currentPage,setCurrentPage] = useState(1)
   const [totalPages,setTotalPages] = useState(1)
-  const [totalItems,setTotalItems] = useState(1)
+
   
   useEffect(()=>{
     if(filteredProduct.data){
-     
       setProduct(filteredProduct.data)
       setCurrentPage(filteredProduct.pagination?.currentPage)
-      setTotalItems(filteredProduct.pagination?.totalItem)
       setTotalPages(filteredProduct.pagination?.totalsPages)
     }else{
       fetchData(currentPage)
     }
   },[filteredProduct,currentPage,sort,sortOrder])
-
-
-
-
 
   // useEffect(() => {
   //   setData() 
@@ -64,15 +57,12 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
     const response:any = await filterProduct(page,sort,sortOrder)
     setProduct(response.data)
     setCurrentPage(response.pagination.currentPage)
-    setTotalItems(response.pagination.totalItems)
     setTotalPages(response.pagination.totalPages)
   }
-
-
   const handleChangePage = (page:number) => {
     setCurrentPage(page)
-    // fetchData(page)
     dispatch(setPage(page))
+
   }
 
   return (
@@ -118,7 +108,7 @@ const ShopList = ({sort, sortOrder}:ShopListProp) => {
         </div>
       </div>
     </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages} limit={8} totalItems={totalItems} onPageChange={handleChangePage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage}/>
     </div>
   );
 }

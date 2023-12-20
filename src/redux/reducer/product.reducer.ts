@@ -39,24 +39,26 @@ export const getProductState = createAsyncThunk(
 export const getProductByPrice = createAsyncThunk(
   "product/getProductByPrice",
   async (data:any) => {
-    const {page,minPrice,maxPrice} = data;
-    const response:any = await filterProductByPrice(page,minPrice,maxPrice);
+    const {page,minPrice,maxPrice,sort,order} = data;
+    const response:any = await filterProductByPrice(page,minPrice,maxPrice,sort,order);
     return response;
   }
 );
 export const getProductsByCategoryId = createAsyncThunk(
   "product/getProductByCategoryId",
   async (data:any) => {
-    const {page,categoryId} = data;
-    const response:any = await getProductByCategoryId(page,categoryId);
+    const {page,categoryId,sort,order} = data;
+    console.log(page);
+    
+    const response:any = await getProductByCategoryId(page,categoryId,sort,order);
     return response;
   }
 );
 export const getProductBySize = createAsyncThunk(
   "product/getProductBySize",
   async (data:any) => {
-    const {page,size} = data;
-    const response:any = await filterProductBySize(page,size);
+    const {page,size,sort,order} = data;
+    const response:any = await filterProductBySize(page,size,sort,order);
     // console.log(response);
     
     return response;
