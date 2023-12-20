@@ -10,8 +10,8 @@ import React, { useState, useEffect, ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Properties from './Properties'
-const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => {
-    if (!isvisibleUpdate) return null
+const ModalUpdate = ({  update, products, onClosePro }: any) => {
+   
     // const [product, setProduct] = useState({})
     const [cate, setCate] = useState<ICategory[]>([])
     const [selectImage,setSelectImage] = useState<FileList | any>([]);
@@ -77,7 +77,7 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
 
 
     return (
-        <div className="overflow-y-auto  pt-[40px] fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
+        <div className="overflow-y-auto  pt-[40px] fixed inset-0 backdrop-blur-sm flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full ">
         <div className=" overflow-y-auto relative p-4 w-full max-w-[70%] h-full ">
             <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
@@ -92,7 +92,7 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
                 <form action='' onSubmit={handleSubmit(onHandleSubmit)} encType="multipart/form-data">
                     <div className="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>                            
-                            <Input id="productName" register={register} errors={errors} label="Product Name" placeholder="Product Name" />
+                            <Input id="productName" register={register} errors={errors} label="Tên sản phẩm" placeholder="Product Name" />
                             <span className="text-red-600 text-sm">
              {(errors.productName as any) && (errors.productName as any).message}
 
@@ -103,7 +103,7 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
                             <select  {...register('categoryId',{
                                     required: `categoryId bắt buộc nhập`
                                 })} className=" dark:bg-white px-4 bg-gray-50  form-input block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 py-3.5">
-                                <option hidden >Select category</option>
+                                <option hidden >Chọn danh mục</option>
                                 {cate?.map((item: any) => {
                                     return (
                                         <option selected={products.categoryId === item._id ? products.categoryId : ''}  value={item._id}>{item.name}</option>
@@ -130,17 +130,14 @@ const ModalUpdate = ({ isvisibleUpdate, update, products, onClosePro }: any) => 
 
                             </div>
                      
-                        <div className="sm:col-span-2"><label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label><textarea  {...register('description')} rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Write product description here"></textarea></div>
+                        <div className="sm:col-span-2"><label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chi tiết</label><textarea  {...register('description')} rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Chi tiết sản phẩm..."></textarea></div>
                     </div>
 
                     <button type="submit" className="text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mr-2">
 
-                        Save
+                        Lưu
                     </button>
-                    <button type="reset" className="text-white inline-flex items-center bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
-
-                        Reset
-                    </button>
+                  
                 </form>
             </div>
         </div>

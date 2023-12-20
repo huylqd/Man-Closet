@@ -103,12 +103,12 @@ const ManagementComment = () => {
                         <thead className="text-xs  text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="p-4">STT</th>
-                                <th scope="col" className="p-4">Product</th>
-                                <th scope="col" className="p-4">Action</th>
+                                <th scope="col" className="p-4">Tên sản phẩm</th>
+                                <th scope="col" className="p-4">Chức năng</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {products.filter((data: IProduct) => data.deleted !== true).map((data: IProduct, index: number) => {
+                            {products.map((data: IProduct, index: number) => {
                                 return (
                                     <tr key={index} className="border-b bg-white dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                         <td className="p-4 w-4">

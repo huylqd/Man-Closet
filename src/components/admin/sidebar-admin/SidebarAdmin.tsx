@@ -11,7 +11,8 @@ import {
   Home,
   MessageSquare,
   MessageSquareDashed,
-  Trash2
+  Trash2,
+  LogOut
 } from "lucide-react";
 import Image from "next/image";
 // import Link from "next/link";
@@ -19,10 +20,11 @@ import React, { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Logo } from "@/components/Logo";
 import { v4 as uuidv4 } from "uuid";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import SidebarAdminItemLink from "./SidebarAdminItemLink";
 import { useUserInfo } from "@/hooks";
+import { commonSuccessToast } from "@/utils/notify";
 
 const data = [
   {
@@ -83,7 +85,7 @@ const SidebarAdmin = () => {
   const { name, avatar } = useUserInfo()
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const user = useUserInfo();
-
+  const router = useRouter()
   useEffect(() => {
     setActiveLink(pathName.split("/")[pathName.split("/").length - 1]);
   }, [pathName]);
@@ -91,7 +93,11 @@ const SidebarAdmin = () => {
   const toggleSidebar = () => {
     setIsOpenSidebar((curr) => !curr);
   };
-
+  const logout = () => {
+    localStorage.clear();
+    commonSuccessToast("Đăng xuất thành công");
+    router.push("/auth");
+  };
   return (
     <>
       {/* header sidebar hien khi width:768px */}
@@ -156,8 +162,17 @@ const SidebarAdmin = () => {
             );
           })}
         </ul>
+        <button
+                  onClick={() => logout()}
+                  className="bg-zinc-800 rounded overflow-hidden flex items-center justify-center w-[30px] h-[30px] md:w-full md:h-[50px] ml-auto hover:bg-zinc-600 transition-all"
+                >
+                 
+                  <LogOut className="w-4 h-4 text-white" />
+                </button>
         <div className="profile">
+          
           <div className="profile_details flex gap-2">
+          
             <div className="h-[60px] min-w-[50px] flex justify-center items-center">
               <div className="rounded-full relative overflow-hidden w-[34px] h-[34px]">
                 <Image
@@ -172,6 +187,7 @@ const SidebarAdmin = () => {
             <div className="profile_content">
               <div className="name">{name}</div>
               <div className="designation">Admin</div>
+            
             </div>
           </div>
         </div>

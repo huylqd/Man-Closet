@@ -99,7 +99,7 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                     <form action='' onSubmit={handleSubmit(onHandleSubmit)} encType="multipart/form-data">
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
                             <div>                            
-                                <Input id="productName" register={register} errors={errors} label="Product Name" placeholder="Product Name" />
+                                <Input id="productName" register={register} errors={errors} label="Tên sản phẩm" placeholder="tên sản phẩm" />
                                 <span className="text-red-600 text-sm">
                                 {( errors.productName as any) && (errors.productName as any).message}
         </span>
@@ -109,7 +109,7 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                                 <select  {...register('categoryId',{
                                     required: `categoryId bắt buộc nhập`
                                 })} className=" dark:bg-white px-4 bg-gray-50  form-input block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 py-3.5">
-                                    <option hidden value="">Select category</option>
+                                    <option hidden value="">Chọn danh mục</option>
                                     {cate?.map((item: any) => {
                                         return (
                                             <option  value={item._id}>{item.name}</option>
@@ -124,7 +124,7 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                             </div>
 
                             <div>
-                                <Input id="price" type="number" placeholder="123" label='Giá' register={register} errors={errors}/>   
+                                <Input id="price" type="number"  placeholder="123" label='Giá' register={register} errors={errors}/>   
                                 <span className="text-red-600 text-sm">
                                  {(errors.price as any) && (errors.price as any).message}
 
@@ -142,7 +142,7 @@ const ModalPro = ({  add, product, onClosePro }: any) => {
                             </div>
                        
                          
-                            <div className="sm:col-span-2"><label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chi tiết</label><textarea  {...register('description')} rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Write product description here"></textarea></div>
+                            <div className="sm:col-span-2"><label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chi tiết</label><textarea  {...register('description')} rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Chi tiết sản phẩm..."></textarea></div>
                         </div>
 
                         <button type="submit" className="text-white inline-flex items-center bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mr-2">

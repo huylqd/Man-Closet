@@ -1,9 +1,10 @@
 "use client"
 
+import { useUserInfo } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { FolderHeart, LayoutDashboard, Package, UserCog } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {v4 as uuidv4} from "uuid"
 

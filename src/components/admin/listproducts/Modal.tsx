@@ -19,7 +19,7 @@ const ModalShow = ({  id, onClose }: any) => {
         imgRef.current.src = imageUrl
     }
     return (
-        <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+        <div className='fixed inset-0 w-[50%] m-auto backdrop-blur-sm flex justify-center items-center'>
             <div className='flex flex-col justify-between lg:flex-row gap-16 lg:items-center p-12 bg-white'>
                 <div className='flex flex-col gap-6 lg:w-2/4'>
                     <img ref={imgRef} alt="" className='w-full h-80 aspect-square object-cover rounded-xl' src={detail.properties?.[0].imageUrl} />

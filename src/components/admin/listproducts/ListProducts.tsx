@@ -323,9 +323,14 @@ const ListProducts = () => {
           </ConfirmModal>
         </Modal>
 
+      )}    
+      {showModalUpdate && (
+        <Modal isOpen={showModalUpdate} handleClose={() => setshowModalUpdate(false)}>
+            <ModalUpdate  update={onhandleUpdate} products={product} onClosePro={() => setshowModalUpdate(false)} />
+        </Modal>
       )}
           
-            <ModalUpdate isvisibleUpdate={showModalUpdate} update={onhandleUpdate} products={product} onClosePro={() => setshowModalUpdate(false)} />
+            
 
         </div>
     )

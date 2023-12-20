@@ -18,8 +18,13 @@ const useProductQuantity = ({ _id, color, size, iniTialQuantity }: Params) => {
 
   useEffect(() => {
     const getInventory = async() => {
-      const data = await getInventoryOfProduct(_id, color, size)
-      setInventory(data.result)
+      try {
+        const data = await getInventoryOfProduct(_id, color, size)
+        setInventory(data.result)
+      } catch (error) {
+        
+      }
+     
     }
     getInventory()
   }, [_id, size, color]);

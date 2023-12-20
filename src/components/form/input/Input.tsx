@@ -28,6 +28,7 @@ const Input: React.FC<IputProp> = ({
   const emailPattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   const commonValidate = (val: string) => {
     // password
+
     if ( id === "confirmPassword") {
       if (watch('password') != val) {
         return "Mật khẩu không trùng khớp";
@@ -36,6 +37,12 @@ const Input: React.FC<IputProp> = ({
     // email
     if (id === "email") {
       return !emailPattern.test(val) ? "Email không đúng định dạng" : undefined;
+    }
+    if (val.trim() === "") {
+      return "Không được để trống";
+    }
+    if (Number(val) < 0) {
+      return "Phải nhập số lớn hơn 0";
     }
     return undefined;
   };

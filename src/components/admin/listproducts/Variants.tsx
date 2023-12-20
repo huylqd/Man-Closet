@@ -29,7 +29,12 @@ const Variants = ({register, errors,i}:IVariants) =>{
         return (<><div className='w-[30%]' key={uuidv4()} >
         <label htmlFor="length" className="block text-sm font-medium text-gray-900 dark:text-white">Size</label>
         <input type="text" {...register(`properties[${i}].variants[${index}].size`,{
-            required:"Size bắt buộc nhập"
+            required:"Size bắt buộc nhập",
+            validate : (val) => {
+                if (val.trim() === "") {
+                    return "Không được để trống";
+                  }
+            }
         })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="M..."  />
           <span className="text-red-600 text-sm">
             {(errors?.properties?.[i]?.variants?.[index]?.size as any) && (errors?.properties?.[i]?.variants?.[index]?.size as any).message}
@@ -44,6 +49,13 @@ const Variants = ({register, errors,i}:IVariants) =>{
                 if (isNaN(val)) {
                     return "Vui lòng nhập một số";
                   }
+                  if (val.trim() === "") {
+                    return "Không được để trống";
+                  }
+                if(val < 0){
+                    return "Không được nhập số âm"
+                }
+                
             }
         })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="23" />
         <span className="text-red-600 text-sm">

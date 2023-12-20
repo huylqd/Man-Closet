@@ -249,7 +249,7 @@ const ManagementCategory = () => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        Edit
+                        Sửa
                       </button>
 
                       <button
@@ -272,7 +272,7 @@ const ManagementCategory = () => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        Delete
+                        Xóa mềm
                       </button>
                     </div>
                   </td>

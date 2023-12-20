@@ -20,9 +20,6 @@ export const getProductById = (product_id: string) => {
 };
 
 export const getProductByCategoryId = (page=1,id: string,sort:string,order:string) => {
-  console.log(sort);
-  
-  console.log(order);
   
   const response = instance.get(`api/products/cate/${id}?_page=${page}&_sort=${sort}&_order=${order}`);
   return response
@@ -39,7 +36,6 @@ export const getAllProduct = () => {
 }
 
 export const filterProduct = (page=1,sort:string,order:string) => {
-  console.log(page);
   
   const res = instance.get<any, GetAllProductResponse>(`api/products?_page=${page}&_sort=${sort}&_order=${order}`);
   return res
