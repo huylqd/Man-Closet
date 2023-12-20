@@ -165,10 +165,10 @@ const orderSlice = createSlice({
         state.orders = action.payload;
       }),
       builder.addCase(getCountBillState.fulfilled, (state, action) => {
-        state.countBill = action.payload[0].totalOrders;
+        state.countBill = action.payload?.[0]?.totalOrders;
       });
     builder.addCase(getDoanhThuState.fulfilled, (state, action) => {
-      state.doanhthu = action.payload[0].totalAmountSold;
+      state.doanhthu = action.payload?.[0]?.totalAmountSold;
     });
     builder.addCase(topUserChiTieu.fulfilled, (state, action) => {
       state.users = action.payload;

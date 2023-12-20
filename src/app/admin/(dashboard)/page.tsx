@@ -28,6 +28,8 @@ const Dashboard = () => {
   });
   const dispatchThunk = useAppDispatch();
 
+  console.log(productSoldState)
+
   useEffect(() => {
     dispatchThunk(getProductSoldState(filter));
     dispatchThunk(getAllOrderBillState());
@@ -76,9 +78,6 @@ const Dashboard = () => {
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-[1] lg:flex-[3]">
             <StatisticsTable data={productSold} />
-          </div>
-          <div className="flex-[1] lg:flex-[1]">
-            <StatisticsChart />
           </div>
         </div>
       </section>

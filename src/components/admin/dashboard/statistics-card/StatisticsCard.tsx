@@ -36,8 +36,8 @@ const StatisticsCard = ({ filter }: any) => {
   useEffect(() => {
     setOrders(ordersState?.length);
     setUsers(usersState);
-    setCountBill(countBillState);
-    setDoanhThu(doanhThuState);
+    setCountBill(countBillState ? countBillState : 0);
+    setDoanhThu(doanhThuState ? doanhThuState : 0);
   }, [ordersState, usersState, countBillState, doanhThuState]);
 
   const statisticsData2 = [

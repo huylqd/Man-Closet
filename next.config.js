@@ -70,9 +70,9 @@ module.exports = {
         port: ""
       },
       {
-        protocol: "https",
-        hostname: "image.uniqlo.com",
-        port: ""
+        protocol:"https",
+        hostname:"image.uniqlo.com",
+        port:''
       }
 
     ],
