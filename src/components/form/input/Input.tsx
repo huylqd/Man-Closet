@@ -38,9 +38,7 @@ const Input: React.FC<IputProp> = ({
     if (id === "email") {
       return !emailPattern.test(val) ? "Email không đúng định dạng" : undefined;
     }
-    if (val.trim() === "") {
-      return "Không được để trống";
-    }
+ 
     if (Number(val) < 0) {
       return "Phải nhập số lớn hơn 0";
     }
