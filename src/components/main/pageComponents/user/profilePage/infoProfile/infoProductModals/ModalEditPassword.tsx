@@ -30,10 +30,18 @@ const ModalEditPassword = ({ initialValue, onClose, onUpdate }: Props) => {
       invalidToSubmit = true;
       errorMessage = "Các trường không được để rỗng";
     }
+    if (newPassword.length < 6) {
+      invalidToSubmit = true;
+      errorMessage = "Ít nhất 6 kí tự";
+    }
 
     if (confirmPassword.length === 0) {
       invalidToSubmit = true;
       errorMessage = "Các trường không được để rỗng";
+    }
+    if (confirmPassword.length <  6) {
+      invalidToSubmit = true;
+      errorMessage = "Ít nhất 6 kí tự";
     }
 
     if (!isMatch) {
